@@ -70,6 +70,7 @@ public class Task1a {
 				IntegerLib<T> lib = new IntegerLib<T>(env);
 
 				Statistics[] sta = PrepareData.readFile("data/case_chr2_29504091_30044866.txt", 1);
+				// Statistics[] sta = PrepareData.readFile("/home/kartik/code/idash_competition/data/case_chr2_29504091_30044866.txt", 1);
 				boolean[] input = new boolean[sta.length*Width];
 				int current = 0;
 				for(int i = 0; i <sta.length; ++i) {
@@ -119,6 +120,7 @@ public class Task1a {
 
 	static public void main(String[] args) throws Exception {
 		runThreads(args[0]);
+//		runThreads("/home/kartik/code/idash_competition/data/control_chr2_29504091_30044866.txt");
 	}
 
 }

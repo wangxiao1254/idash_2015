@@ -27,7 +27,7 @@ public class Task1b {
 				IntegerLib<T> lib = new IntegerLib<T>(env);
 
 				Statistics[] caseSta = PrepareData.readFile(filename1, 0);
-				Statistics[] controlSta = PrepareData.readFile(filename1, 1);
+				Statistics[] controlSta = PrepareData.readFile(filename2, 0);
 				boolean[] input = new boolean[caseSta.length*Width*2];
 				int current = 0;
 				for(int i = 0; i <caseSta.length; ++i) {
@@ -53,7 +53,7 @@ public class Task1b {
 					bobInput = Arrays.copyOfRange(bob, current, current+Width);
 					current += Width;
 					T[] c = lib.add(aliceInput, bobInput);
-					T[] d = lib.sub(all, a);
+					T[] d = lib.sub(all, c);
 					//compute n - 2*a*c/(a+c) - 2*b*d/(b+d)s 
 				}
 
@@ -80,8 +80,8 @@ public class Task1b {
 
 				IntegerLib<T> lib = new IntegerLib<T>(env);
 
-				Statistics[] caseSta = PrepareData.readFile(filename1, 0);
-				Statistics[] controlSta = PrepareData.readFile(filename1, 1);
+				Statistics[] caseSta = PrepareData.readFile(filename1, 1);
+				Statistics[] controlSta = PrepareData.readFile(filename2, 1);
 				boolean[] input = new boolean[caseSta.length*Width*2];
 				int current = 0;
 				for(int i = 0; i <caseSta.length; ++i) {
@@ -107,7 +107,7 @@ public class Task1b {
 					bobInput = Arrays.copyOfRange(bob, current, current+Width);
 					current += Width;
 					T[] c = lib.add(aliceInput, bobInput);
-					T[] d = lib.sub(all, a);
+					T[] d = lib.sub(all, c);
 					
 				}
 
