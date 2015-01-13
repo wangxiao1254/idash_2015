@@ -1,4 +1,4 @@
-package task1;
+package task1b;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -8,35 +8,35 @@ import java.util.Scanner;
 public class PrepareData {
 	
 	public static void CountFre(Statistics sta, String[] content) {
-		char[] tmp = new char[content.length*2];
-		int cnt = 0;
-		for(int i = 0; i< content.length; ++i){
-			tmp[cnt++] = content[i].charAt(0);
-			tmp[cnt++] = content[i].charAt(1);
-		}
-		sta.g1 = tmp[0];
-		sta.numOfG1 = 1;
-		sta.g2 = 'Z';
-		for(int i = 1; i < tmp.length; ++i) {
-			if(sta.g1 == tmp[i])
-				++sta.numOfG1;
-			else if(sta.g2 == 'Z') {
-				sta.numOfG2 = 1;
-				sta.g2 = tmp[i];
+		sta.g1 = content[0].charAt(0);
+		for(int i = 0; i < content.length; ++i) {
+			if(content[i].charAt(0) != sta.g1) {
+				sta.g2 = content[i].charAt(0); 
 			}
-			else if(sta.g2 == tmp[i])
-				++sta.numOfG2;
-			else {
-				System.out.println("Warning: there are 3 types!");
+			if(content[i].charAt(1) != sta.g1) {
+				sta.g2 = content[i].charAt(1); 
 			}
 		}
 		if(sta.g1 > sta.g2) {
 			char a = sta.g1;
 			sta.g1 = sta.g2;
 			sta.g2 = a;
-			int b = sta.numOfG1;
-			sta.numOfG1 = sta.numOfG2;
-			sta.numOfG2 = b;
+		}
+
+		String g1g2 = sta.g1 +""+sta.g2;
+		String g1g1 = sta.g1 +""+sta.g1;
+		String g2g2 = sta.g2 +""+sta.g2;
+		
+
+		for(int i = 0; i< content.length; ++i){
+			if(g1g2.equals(content[i]))
+				sta.numOfG1G2++;
+			else if(g1g1.equals(content[i]))
+				sta.numOfG1G1++;
+			else if(g2g2.equalsIgnoreCase(content[i]))
+				sta.numOfG2G2++;
+			else
+				System.out.println("How Come!");
 		}
 	}
 	
@@ -55,7 +55,7 @@ public class PrepareData {
 				res[i].genotype = scanner.nextLine().replace(" ", "");
 				String[] snp = Arrays.copyOfRange(scanner.nextLine().split(" "), party*100, 100*(party+1));
 				CountFre(res[i], snp);
-//				System.out.println(res[i].genotype + " "+ res[i].g1+" "+res[i].numOfG1+" "+res[i].g2+" "+res[i].numOfG2);
+				System.out.println(res[i].genotype + " "+ res[i].g1+res[i].g2+" "+res[i].numOfG1G1+" "+res[i].numOfG1G2+" "+res[i].numOfG2G2);
 			}
 			scanner.close();			
 		} catch (FileNotFoundException e) {

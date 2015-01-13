@@ -1,4 +1,4 @@
-package task1;
+package task1a;
 
 public class Statistics {
 	public String genotype;
