@@ -55,7 +55,7 @@ public class PrepareData {
 				res[i].genotype = scanner.nextLine().replace(" ", "");
 				String[] snp = Arrays.copyOfRange(scanner.nextLine().split(" "), party*100, 100*(party+1));
 				CountFre(res[i], snp);
-				System.out.println(res[i].genotype + " "+ res[i].g1+res[i].g2+" "+res[i].numOfG1G1+" "+res[i].numOfG1G2+" "+res[i].numOfG2G2);
+//				System.out.println(res[i].genotype + " "+ res[i].g1+res[i].g2+" "+res[i].numOfG1G1+" "+res[i].numOfG1G2+" "+res[i].numOfG2G2);
 			}
 			scanner.close();			
 		} catch (FileNotFoundException e) {

@@ -8,6 +8,7 @@ public class Statistics {
 	public int numOfG2G2;
 	public int numOfG1G2;
 	
+	
 	public static char[] LookupTable = {'A', 'G', 'C', 'T'};
 	
 	public static int getindex(char c){
