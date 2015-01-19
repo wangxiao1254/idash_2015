@@ -10,7 +10,7 @@ import flexsc.Flag;
 
 public class Task1b {
 	static public int Width = 9;
-	static public int FWidth = 35;
+	static public int FWidth = 40;
 	static public int FOffset = 20;
 
 	public static class Generator<T> extends GenRunnable<T> {
@@ -89,15 +89,14 @@ public class Task1b {
 
 		@Override
 		public void prepareOutput(CompEnv<T> gen) {
-			System.out.println(numOfTests);
+
 			for(int i = 0; i < numOfTests; ++i)
-				System.out.println(flib.outputToAlice(res[i]));
+				System.out.println(200*(flib.outputToAlice(res[i])-1));
 		}
 
 	}
 
 	public static class Evaluator<T> extends EvaRunnable<T> {
-
 		T[][][] aliceCase;
 		T[][][] bobCase;
 		T[][][] aliceControl;

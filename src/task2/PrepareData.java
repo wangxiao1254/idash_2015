@@ -17,6 +17,23 @@ public class PrepareData {
 		table.put("Y", 24);
 	}
 
+	public static int opToInt(String a) {
+		if(a.equals("SUB"))return 0;
+		else if(a.equals("SNP")) return 1;
+		else if(a.equals("DEL")) return 2;
+		else if(a.equals("INS")) return 3;
+		else{
+			try {
+				throw new Exception("unsupported op type!");
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				System.exit(1);
+			}
+			return -1;
+		}
+	}
+
 	public static int toInt(char a) {
 		if(a == 'A')
 			return 0;
@@ -28,10 +45,27 @@ public class PrepareData {
 			return 3;
 		return -1;
 	}
+	static HashMap<String, Integer> tmap = new HashMap<String, Integer>(); 
 
-	public static HashMap<Integer, Integer> readFile(String filename) {
+	public static void println(String a) {
+		if(tmap.containsKey(a))
+		{
+			int t = tmap.get(a);
+			tmap.put(a, t+1);
+		}
+		else tmap.put(a, 1);
+	}
+
+	public static  void println(){
+		Iterator<Entry<String, Integer>> it = tmap.entrySet().iterator();
+		while (it.hasNext()) {
+			Map.Entry pairs = (Map.Entry)it.next();
+			System.out.println(pairs.getKey()+" "+pairs.getValue());
+		}
+	}
+	public static HashMap<Integer, SNPEntry> readFile(String filename) {
 		File file = new File(filename);
-		HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
+		HashMap<Integer, SNPEntry> map = new HashMap<Integer, SNPEntry>();
 		Scanner scanner;
 		try {
 			scanner = new Scanner(file);
@@ -42,13 +76,16 @@ public class PrepareData {
 				String[] s = tmp.split("\\s+");
 				//				System.out.println(Arrays.toString(s));
 				int a  = table.get(s[0]);
-				if(!s[s.length-1].matches(".*DEL.*") && !s[s.length-1].matches(".*INS.*") 
-						&& s[3].length() == s[4].length()) {
-					for(int j = 0; j < s[4].length(); ++j) {
-						int index = (new Integer(s[1])+j);
-//						System.out.println(index +" "+s[3].charAt(j)+" "+s[4].charAt(j));
-						map.put((index<<5)+a, toInt(s[4].charAt(j)));
-					}
+
+				for(int j = 0; j < s[4].length(); ++j) {
+					int index = (new Integer(s[1])+j);
+					SNPEntry entry = new SNPEntry();
+					entry.op = opToInt(s[s.length-1].split(";")[0].split("=")[1]);
+					entry.location = (index<<5)+a;
+					entry.value = toInt(s[4].charAt(j));
+					//					System.out.println(index +" "+s[3].charAt(j)+" "+s[4].charAt(j));
+					map.put(entry.location, entry);
+					System.out.println(entry.ToString());
 				}
 			}
 
@@ -61,17 +98,19 @@ public class PrepareData {
 	}
 
 	public static void main(String[] args) {
-		HashMap<Integer, Integer> a = readFile("data/hu661AD0.snp");
-		HashMap<Integer, Integer> b = readFile("data/hu604D39.snp");
-		
-		
-		Iterator<Entry<Integer, Integer>> it = a.entrySet().iterator();
+		HashMap<Integer, SNPEntry> a = readFile("data/hu661AD0.snp");
+		println();
+		tmap = new HashMap<String, Integer>();
+		HashMap<Integer, SNPEntry> b = readFile("data/hu604D39.snp");
+		println();
+
+		Iterator<Entry<Integer, SNPEntry>> it = a.entrySet().iterator();
 		int cnt = 0;
-	    while (it.hasNext()) {
-	        Map.Entry pairs = (Map.Entry)it.next();
-	        if(b.containsKey(pairs.getKey()))
-	        		cnt++;
-	    }
-	    System.out.println(a.size()+" "+b.size()+" "+cnt);
+		while (it.hasNext()) {
+			Map.Entry pairs = (Map.Entry)it.next();
+			if(b.containsKey(pairs.getKey()))
+				cnt++;
+		}
+		System.out.println(a.size()+" "+b.size()+" "+cnt);
 	}
 }
