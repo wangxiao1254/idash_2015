@@ -16,9 +16,9 @@ public class SNPEntry implements Comparable<SNPEntry>{
 	public SNPEntry() {
 	}
 
-	
-	public String ToString() {
-		return ""+op+" "+location+" "+value;
+	@Override
+	public String toString() {
+		return ""+location+" "+op+" "+value;
 	}
 
 	@Override

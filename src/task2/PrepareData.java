@@ -94,7 +94,7 @@ public class PrepareData {
 						int index = (new Integer(s[1])+j);
 						SNPEntry entry = new SNPEntry();
 						entry.op = op;
-						entry.location = (index<<5)+a;
+						entry.location = index;//(index<<5)+a;
 						entry.value = toInt(s[3].charAt(j));
 						map.put(entry.location, entry);
 						println(s[s.length-1].split(";")[0].split("=")[1]);
@@ -105,7 +105,7 @@ public class PrepareData {
 						int index = (new Integer(s[1])+j);
 						SNPEntry entry = new SNPEntry();
 						entry.op = op;
-						entry.location = (index<<5)+a;
+						entry.location = index;//(index<<5)+a;
 						entry.value = 0;//does not matter what value it is
 						map.put(entry.location, entry);
 						println(s[s.length-1].split(";")[0].split("=")[1]);
@@ -116,7 +116,7 @@ public class PrepareData {
 						int index = (new Integer(s[1])+j);
 						SNPEntry entry = new SNPEntry();
 						entry.op = op;
-						entry.location = (index<<5)+a;
+						entry.location = index;//(index<<5)+a;
 						entry.value = toInt(s[4].charAt(j));
 						map.put(entry.location, entry);
 						println(s[s.length-1].split(";")[0].split("=")[1]);
@@ -139,8 +139,11 @@ public class PrepareData {
 		int cnt = 0;
 		while (it.hasNext()) {
 			Map.Entry pairs = (Map.Entry)it.next();
-			if(b.containsKey(pairs.getKey()))
+			if(b.containsKey(pairs.getKey())){
+				System.out.println(pairs.getKey());
 				cnt++;
+				}
+			
 		}
 		System.out.println(a.size()+" "+b.size()+" "+cnt);
 	}
