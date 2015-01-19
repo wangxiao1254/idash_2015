@@ -91,18 +91,15 @@ public class Task2Faster {
 			System.arraycopy(Bobvalue, 0, value, Alicevalue.length, Bobvalue.length);
 		}
 
-
 		@Override
 		public void secureCompute(CompEnv<T> gen) {
-			res = compute(gen, key, value);
-			
+			res = compute(gen, key, value);	
 		}
 
 		@Override
 		public void prepareOutput(CompEnv<T> gen) {
 			System.out.println(Utils.toInt(gen.outputToAlice(res)));
 		}
-
 	}
 
 	public static class Evaluator<T> extends EvaRunnable<T> {
