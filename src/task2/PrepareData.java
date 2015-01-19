@@ -43,8 +43,19 @@ public class PrepareData {
 			return 2;
 		if(a == 'G')
 			return 3;
-		return -1;
+		else{
+			try {
+				throw new Exception("unsupported format!");
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				System.exit(1);
+			}
+			return -1;
+		}
+
 	}
+
 	static HashMap<String, Integer> tmap = new HashMap<String, Integer>(); 
 
 	public static void println(String a) {
@@ -77,15 +88,39 @@ public class PrepareData {
 				//				System.out.println(Arrays.toString(s));
 				int a  = table.get(s[0]);
 
-				for(int j = 0; j < s[4].length(); ++j) {
-					int index = (new Integer(s[1])+j);
-					SNPEntry entry = new SNPEntry();
-					entry.op = opToInt(s[s.length-1].split(";")[0].split("=")[1]);
-					entry.location = (index<<5)+a;
-					entry.value = toInt(s[4].charAt(j));
-					//					System.out.println(index +" "+s[3].charAt(j)+" "+s[4].charAt(j));
-					map.put(entry.location, entry);
-					System.out.println(entry.ToString());
+				int op = opToInt(s[s.length-1].split(";")[0].split("=")[1]);
+				if(op == 3) {//insert
+					for(int j = 0; j < s[3].length(); ++j) {
+						int index = (new Integer(s[1])+j);
+						SNPEntry entry = new SNPEntry();
+						entry.op = op;
+						entry.location = (index<<5)+a;
+						entry.value = toInt(s[3].charAt(j));
+						map.put(entry.location, entry);
+						println(s[s.length-1].split(";")[0].split("=")[1]);
+					}
+				}
+				else if(op == 2) {//delete
+					for(int j = 0; j < s[3].length(); ++j) {
+						int index = (new Integer(s[1])+j);
+						SNPEntry entry = new SNPEntry();
+						entry.op = op;
+						entry.location = (index<<5)+a;
+						entry.value = 0;//does not matter what value it is
+						map.put(entry.location, entry);
+						println(s[s.length-1].split(";")[0].split("=")[1]);
+					}
+				}
+				else {
+					for(int j = 0; j < s[4].length(); ++j) {
+						int index = (new Integer(s[1])+j);
+						SNPEntry entry = new SNPEntry();
+						entry.op = op;
+						entry.location = (index<<5)+a;
+						entry.value = toInt(s[4].charAt(j));
+						map.put(entry.location, entry);
+						println(s[s.length-1].split(";")[0].split("=")[1]);
+					}
 				}
 			}
 
@@ -99,10 +134,7 @@ public class PrepareData {
 
 	public static void main(String[] args) {
 		HashMap<Integer, SNPEntry> a = readFile("data/hu661AD0.snp");
-		println();
-		tmap = new HashMap<String, Integer>();
 		HashMap<Integer, SNPEntry> b = readFile("data/hu604D39.snp");
-		println();
 
 		Iterator<Entry<Integer, SNPEntry>> it = a.entrySet().iterator();
 		int cnt = 0;
