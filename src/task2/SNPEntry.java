@@ -4,7 +4,7 @@ import java.util.Comparator;
 
 public class SNPEntry implements Comparable<SNPEntry>{
 	int op;//0: SUB 1: SNP 2: DEL 3: INS
-	int location;
+	long location;
 	int value;// ATCG: 0123
 
 	public SNPEntry(int loc, int val, int o) {

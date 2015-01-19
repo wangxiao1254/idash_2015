@@ -32,9 +32,9 @@ public class Task2Faster {
 			T[] val2 = Arrays.copyOfRange(value[i+1], 0, 2);
 			
 			T posEq = lib.eq(pos1, pos2);
-			
 			T valEq = lib.eq(val1, val2);
 			resBit[i] = lib.and(posEq, valEq);
+			resBit[i] = lib.not(resBit[i]);
 		}
 		System.out.println("linear scanned");
 		T[] raw = lib.numberOfOnes(resBit);

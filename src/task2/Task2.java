@@ -15,8 +15,7 @@ import util.Utils;
 import flexsc.CompEnv;
 
 public class Task2 {
-	static final int LengthOfLocation = 32; 
-
+	static final int LengthOfLocation = 33;
 	public static<T> T[] compute(CompEnv<T> env, T[][] key, T[][] value) {
 		ObliviousMergeLib<T> lib = new ObliviousMergeLib<T>(env);
 		System.out.println(key.length);
@@ -37,17 +36,18 @@ public class Task2 {
 			T valEq = lib.eq(val1, val2);
 			resBit[i] = lib.and(posEq, valEq);
 			resBit[i] = lib.and(resBit[i], opEq);
+			resBit[i] = lib.not(resBit[i]);
 		}
 		System.out.println("linear scanned");
 		return lib.numberOfOnes(resBit);
 	}
 		
-	public static SNPEntry[]  sortKeyValue(HashMap<Integer, SNPEntry> map, boolean asc) {
+	public static SNPEntry[]  sortKeyValue(HashMap<Long, SNPEntry> map, boolean asc) {
 		SNPEntry[] res = new SNPEntry[map.size()];
-		Iterator<Entry<Integer, SNPEntry>> it = map.entrySet().iterator();
+		Iterator<Entry<Long, SNPEntry>> it = map.entrySet().iterator();
 		int cnt = 0;
 		while (it.hasNext()) {
-			Map.Entry<Integer, SNPEntry> pairs = it.next();
+			Map.Entry<Long, SNPEntry> pairs = it.next();
 			res[cnt++] = pairs.getValue();
 		}
 		Arrays.sort(res, asc? new SNPEntry.AscComparator() : new SNPEntry.DscComparator());
@@ -61,13 +61,13 @@ public class Task2 {
 		
 		@Override
 		public void prepareInput(CompEnv<T> gen) {
-			HashMap<Integer, SNPEntry> data = PrepareData.readFile(args[0]);
+			HashMap<Long, SNPEntry> data = PrepareData.readFile(args[0]);
 			SNPEntry[] sorted = sortKeyValue(data, true);
 			
 			boolean[][] keyClear = new boolean[sorted.length][];
 			boolean[][] valClear = new boolean[sorted.length][];
 			for(int i = 0; i < keyClear.length; ++i ) {
-				keyClear[i] = Utils.fromInt(sorted[i].location, LengthOfLocation);
+				keyClear[i] = Utils.fromLong(sorted[i].location, LengthOfLocation);
 				valClear[i] = new boolean[4];
 				System.arraycopy(Utils.fromInt(sorted[i].value, 2), 0, valClear[i], 0, 2);
 				System.arraycopy(Utils.fromInt(sorted[i].op, 2), 0, valClear[i], 2, 2);
@@ -117,13 +117,13 @@ public class Task2 {
 		
 		@Override
 		public void prepareInput(CompEnv<T> gen) {
-			HashMap<Integer, SNPEntry> data = PrepareData.readFile(args[0]);
+			HashMap<Long, SNPEntry> data = PrepareData.readFile(args[0]);
 			SNPEntry[] sorted = sortKeyValue(data, false);
 			
 			boolean[][] keyClear = new boolean[sorted.length][];
 			boolean[][] valClear = new boolean[sorted.length][];
 			for(int i = 0; i < keyClear.length; ++i ) {
-				keyClear[i] = Utils.fromInt(sorted[i].location, LengthOfLocation);
+				keyClear[i] = Utils.fromLong(sorted[i].location, LengthOfLocation);
 				valClear[i] = new boolean[4];
 				System.arraycopy(Utils.fromInt(sorted[i].value, 2), 0, valClear[i], 0, 2);
 				System.arraycopy(Utils.fromInt(sorted[i].op, 2), 0, valClear[i], 2, 2);
