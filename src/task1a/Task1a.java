@@ -10,6 +10,7 @@ import flexsc.CompEnv;
 
 public class Task1a {
 	static public int Width = 9;
+	
 	public static<T> void compute(CompEnv<T> env, IntegerLib<T> lib,
 			T[] alice,
 			T[] bob,
@@ -24,7 +25,6 @@ public class Task1a {
 			T g1IsMinod = lib.leq(freOfG1, half);
 			res[i] = lib.mux(lib.sub(all, freOfG1), freOfG1, g1IsMinod);
 		}
-
 	}
 	public static class Generator<T> extends GenRunnable<T> {
 		IntegerLib<T> lib;
