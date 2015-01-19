@@ -123,7 +123,6 @@ public class PrepareData {
 					}
 				}
 			}
-
 			scanner.close();			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

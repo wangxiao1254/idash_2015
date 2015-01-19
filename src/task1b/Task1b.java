@@ -13,6 +13,48 @@ public class Task1b {
 	static public int FWidth = 40;
 	static public int FOffset = 20;
 
+	public static<T> void compute(CompEnv<T> gen, T[][] res, T[][][] aliceCase,
+			T[][][] bobCase,
+			T[][][] aliceControl,
+			T[][][] bobControl, int numOfTests, FixedPointLib<T> flib) {
+		res = gen.newTArray(numOfTests, 0);
+		IntegerLib<T> lib = new IntegerLib<T>(gen);
+		flib = new FixedPointLib<T>(gen, FWidth, FOffset);
+		for(int i = 0; i < numOfTests; ++i) {
+			T[][] caseFre = gen.newTArray(3, 0);
+			T[][] controlFre = gen.newTArray(3, 0);
+			for(int j = 0; j < 3; ++j) {
+				caseFre[j] = lib.add(aliceCase[i][j], bobCase[i][j]);
+				controlFre[j] = lib.add(aliceControl[i][j], bobControl[i][j]);
+			}
+
+			T[] resCase = flib.publicValue(0);
+			T[] resControl = flib.publicValue(0);
+			for(int k = 0; k < 3; ++k) {
+				T[] sq = lib.multiplyFull(caseFre[k], caseFre[k]);
+				T[] sq2 = lib.multiplyFull(controlFre[k], controlFre[k]);
+
+				T[] sum = lib.add(caseFre[k], controlFre[k]);
+				//compute sum_i sq_i/sum_i
+				T[] fsq = lib.padSignal(sq, FWidth);
+				fsq = lib.leftPublicShift(fsq, FOffset);
+				T[] fsq2 = lib.padSignal(sq2, FWidth);
+				fsq2 = lib.leftPublicShift(fsq2, FOffset);
+				T[] fsum = lib.padSignal(sum, FWidth);
+				fsum= lib.leftPublicShift(fsum, FOffset);					
+				T[] div = flib.div(fsq, fsum);
+				resCase = flib.add(resCase, div);
+
+				T[] div2 = flib.div(fsq2, fsum);
+				resControl = flib.add(resControl, div2);
+			}
+			resCase = flib.multiply(resCase, flib.publicValue(1.0/200));
+			resControl = flib.multiply(resControl, flib.publicValue(1.0/200));
+			res[i] = flib.add(resCase, resControl);
+			System.out.println(i+" "+Flag.sw.ands);
+		}
+
+	}
 	public static class Generator<T> extends GenRunnable<T> {
 		T[][][] aliceCase;
 		T[][][] bobCase;
@@ -48,43 +90,7 @@ public class Task1b {
 		FixedPointLib<T> flib;
 		@Override
 		public void secureCompute(CompEnv<T> gen) {
-			res = gen.newTArray(numOfTests, 0);
-			IntegerLib<T> lib = new IntegerLib<T>(gen);
-			flib = new FixedPointLib<T>(gen, FWidth, FOffset);
-			// TODO Auto-generated method stub
-			for(int i = 0; i < numOfTests; ++i) {
-				T[][] caseFre = gen.newTArray(3, 0);
-				T[][] controlFre = gen.newTArray(3, 0);
-				for(int j = 0; j < 3; ++j) {
-					caseFre[j] = lib.add(aliceCase[i][j], bobCase[i][j]);
-					controlFre[j] = lib.add(aliceControl[i][j], bobControl[i][j]);
-				}
-
-				T[] resCase = flib.publicValue(0);
-				T[] resControl = flib.publicValue(0);
-				for(int k = 0; k < 3; ++k) {
-					T[] sq = lib.multiplyFull(caseFre[k], caseFre[k]);
-					T[] sq2 = lib.multiplyFull(controlFre[k], controlFre[k]);
-					
-					T[] sum = lib.add(caseFre[k], controlFre[k]);
-					//compute sum_i sq_i/sum_i
-					T[] fsq = lib.padSignal(sq, FWidth);
-					fsq = lib.leftPublicShift(fsq, FOffset);
-					T[] fsq2 = lib.padSignal(sq2, FWidth);
-					fsq2 = lib.leftPublicShift(fsq2, FOffset);
-					T[] fsum = lib.padSignal(sum, FWidth);
-					fsum= lib.leftPublicShift(fsum, FOffset);					
-					T[] div = flib.div(fsq, fsum);
-					resCase = flib.add(resCase, div);
-
-					T[] div2 = flib.div(fsq2, fsum);
-					resControl = flib.add(resControl, div2);
-				}
-				resCase = flib.multiply(resCase, flib.publicValue(1.0/200));
-				resControl = flib.multiply(resControl, flib.publicValue(1.0/200));
-				res[i] = flib.add(resCase, resControl);
-				System.out.println(i+" "+Flag.sw.ands);
-			}
+			compute(gen, res, aliceCase, bobCase, aliceControl, bobControl, numOfTests, flib);
 		}
 
 		@Override
@@ -120,8 +126,6 @@ public class Task1b {
 				controlData[i][1] = Utils.fromInt(controlSta[i].numOfG1G2, Width);
 				controlData[i][2] = Utils.fromInt(controlSta[i].numOfG2G2, Width);
 			}
-
-
 			aliceCase = gen.inputOfAlice(caseData);
 			aliceControl = gen.inputOfAlice(controlData);
 			bobCase = gen.inputOfBob(caseData);
@@ -132,45 +136,7 @@ public class Task1b {
 
 		@Override
 		public void secureCompute(CompEnv<T> gen) {
-			res = gen.newTArray(numOfTests, 0);
-			IntegerLib<T> lib = new IntegerLib<T>(gen);
-			flib = new FixedPointLib<T>(gen, FWidth, FOffset);
-			// TODO Auto-generated method stub
-			for(int i = 0; i < numOfTests; ++i) {
-				T[][] caseFre = gen.newTArray(3, 0);
-				T[][] controlFre = gen.newTArray(3, 0);
-				for(int j = 0; j < 3; ++j) {
-					caseFre[j] = lib.add(aliceCase[i][j], bobCase[i][j]);
-					controlFre[j] = lib.add(aliceControl[i][j], bobControl[i][j]);
-				}
-
-				T[] resCase = flib.publicValue(0);
-				T[] resControl = flib.publicValue(0);
-				for(int k = 0; k < 3; ++k) {
-					//					System.out.println(Arrays.toString(caseFre[k])+" "+i+""+k);
-					T[] sq = lib.multiplyFull(caseFre[k], caseFre[k]);
-					T[] sq2 = lib.multiplyFull(controlFre[k], controlFre[k]);
-
-					T[] sum = lib.add(caseFre[k], controlFre[k]);
-					//compute sum_i sq_i/sum_i
-					T[] fsq = lib.padSignal(sq, FWidth);
-					fsq = lib.leftPublicShift(fsq, FOffset);
-					T[] fsq2 = lib.padSignal(sq2, FWidth);
-					fsq2 = lib.leftPublicShift(fsq2, FOffset);
-					T[] fsum = lib.padSignal(sum, FWidth);
-					fsum= lib.leftPublicShift(fsum, FOffset);
-
-					T[] div = flib.div(fsq, fsum);
-					resCase = flib.add(resCase, div);
-
-					T[] div2 = flib.div(fsq2, fsum);
-					resControl = flib.add(resControl, div2);
-
-				}
-				resCase = flib.multiply(resCase, flib.publicValue(1.0/200));
-				resControl = flib.multiply(resControl, flib.publicValue(1.0/200));
-				res[i] = flib.add(resCase, resControl);
-			}
+			compute(gen, res, aliceCase, bobCase, aliceControl, bobControl, numOfTests, flib);
 		}
 
 		@Override

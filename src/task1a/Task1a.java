@@ -10,6 +10,22 @@ import flexsc.CompEnv;
 
 public class Task1a {
 	static public int Width = 9;
+	public static<T> void compute(CompEnv<T> env, IntegerLib<T> lib,
+			T[] alice,
+			T[] bob,
+			int numberOfSta, T[][] res) {
+		T[] half = lib.toSignals(200, Width);
+		T[] all = lib.toSignals(400, Width);
+		res = env.newTArray(numberOfSta, 0);
+		for(int i = 0; i < numberOfSta; ++i) {
+			T[] aliceInput = Arrays.copyOfRange(alice, i*Width, i*Width+Width);
+			T[] bobInput = Arrays.copyOfRange(bob, i*Width, i*Width+Width);
+			T[] freOfG1 = lib.add(aliceInput, bobInput);
+			T g1IsMinod = lib.leq(freOfG1, half);
+			res[i] = lib.mux(lib.sub(all, freOfG1), freOfG1, g1IsMinod);
+		}
+
+	}
 	public static class Generator<T> extends GenRunnable<T> {
 		IntegerLib<T> lib;
 		T[] alice;
@@ -34,16 +50,7 @@ public class Task1a {
 		T[][] res;
 		@Override
 		public void secureCompute(CompEnv<T> env) {
-			T[] half = lib.toSignals(200, Width);
-			T[] all = lib.toSignals(400, Width);
-			res = env.newTArray(numberOfSta, 0);
-			for(int i = 0; i < numberOfSta; ++i) {
-				T[] aliceInput = Arrays.copyOfRange(alice, i*Width, i*Width+Width);
-				T[] bobInput = Arrays.copyOfRange(bob, i*Width, i*Width+Width);
-				T[] freOfG1 = lib.add(aliceInput, bobInput);
-				T g1IsMinod = lib.leq(freOfG1, half);
-				res[i] = lib.mux(lib.sub(all, freOfG1), freOfG1, g1IsMinod);
-			}
+			compute(env, lib, alice, bob, numberOfSta, res);
 		}
 
 		@Override
@@ -80,16 +87,7 @@ public class Task1a {
 		T[][] res;
 		@Override
 		public void secureCompute(CompEnv<T> env) {
-			T[] half = lib.toSignals(200, Width);
-			T[] all = lib.toSignals(400, Width);
-			res = env.newTArray(numberOfSta, 0);
-			for(int i = 0; i < numberOfSta; ++i) {
-				T[] aliceInput = Arrays.copyOfRange(alice, i*Width, i*Width+Width);
-				T[] bobInput = Arrays.copyOfRange(bob, i*Width, i*Width+Width);
-				T[] freOfG1 = lib.add(aliceInput, bobInput);
-				T g1IsMinod = lib.leq(freOfG1, half);
-				res[i] = lib.mux(lib.sub(all, freOfG1), freOfG1, g1IsMinod);
-			}
+			compute(env, lib, alice, bob, numberOfSta, res);
 		}
 
 		@Override
