@@ -1,5 +1,6 @@
 package task2;
 
+import java.util.Arrays;
 import java.util.HashMap;
 
 import util.EvaRunnable;
@@ -9,17 +10,28 @@ import flexsc.CompEnv;
 
 public class Task1b {
 	static final int LengthOfLocation = 35;
-	static final int LengthOfResult = 10;
 	static final int LengthOfEntry = LengthOfLocation + 4; 
 
-	public static<T> void compute(CompEnv<T> env, T[][] key, T[][] value, T[] res) {
+	public static<T> T[] compute(CompEnv<T> env, T[][] key, T[][] value) {
 		ObliviousMergeLib<T> lib = new ObliviousMergeLib<T>(env);
 		lib.bitonicMergeWithPayload(key, value, lib.SIGNAL_ZERO);
-		res = lib.zeros(LengthOfResult);
 		
+		T[] resBit = lib.zeros(key.length);
 		for(int i = 0; i < key.length-1; ++i) {
+			T[] pos1 = key[i];
+			T[] op1 = Arrays.copyOfRange(value[i], 0, 2);
+			T[] val1 = Arrays.copyOfRange(value[i], 2, 4);
+			T[] pos2 = key[i+1];
+			T[] op2 = Arrays.copyOfRange(value[i+1], 0, 2);
+			T[] val2 = Arrays.copyOfRange(value[i+1], 2, 4);
 			
+			T posEq = lib.eq(pos1, pos2);
+			T opEq = lib.eq(op1, op2);
+			T valEq = lib.eq(val1, val2);
+			resBit[i] = lib.and(posEq, opEq);
+			resBit[i] = lib.and(resBit[i], valEq);
 		}
+		return lib.numberOfOnes(resBit);
 	}
 	
 	public static class Generator<T> extends GenRunnable<T> {
@@ -35,7 +47,7 @@ public class Task1b {
 
 		@Override
 		public void secureCompute(CompEnv<T> gen) {
-			compute(gen, key, value, res);
+			res = compute(gen, key, value);
 			
 		}
 
@@ -58,7 +70,7 @@ public class Task1b {
 
 		@Override
 		public void secureCompute(CompEnv<T> gen) {
-			compute(gen, key, value, res);
+			res = compute(gen, key, value);
 		}
 
 		@Override
