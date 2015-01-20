@@ -6,7 +6,6 @@ import util.Utils;
 import circuits.arithmetic.FixedPointLib;
 import circuits.arithmetic.IntegerLib;
 import flexsc.CompEnv;
-import flexsc.Flag;
 
 public class Task1b {
 	static public int Width = 9;

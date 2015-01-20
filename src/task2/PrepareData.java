@@ -70,10 +70,10 @@ public class PrepareData {
 
 	public static  void println(){
 		Iterator<Entry<String, Integer>> it = tmap.entrySet().iterator();
-//		System.out.println(tmap.size());
+		//		System.out.println(tmap.size());
 		while (it.hasNext()) {
-			Map.Entry pairs = (Map.Entry)it.next();
-			if((int)pairs.getValue() > 1)
+			Map.Entry<String, Integer> pairs = (Entry<String, Integer>)it.next();
+			if(pairs.getValue() > 1)
 				System.out.println(pairs.getKey()+" "+pairs.getValue());
 		}
 	}
@@ -98,8 +98,8 @@ public class PrepareData {
 						SNPEntry entry = new SNPEntry();
 						entry.op = op;
 						entry.location = index;
-						if(globalPosition == false) entry.location = index*25+a;
-						
+						if(! globalPosition ) entry.location = index*25+a;
+
 						entry.value = toInt(s[3].charAt(j));
 						map.put(entry.location, entry);
 						println(""+entry.location);
@@ -111,7 +111,8 @@ public class PrepareData {
 						SNPEntry entry = new SNPEntry();
 						entry.op = op;
 						entry.location = index;//(index*25)+a;
-						if(globalPosition == false) entry.location = index*25+a;
+						if(! globalPosition ) entry.location = index*25+a;
+
 						entry.value = 0;//does not matter what value it is
 						map.put(entry.location, entry);
 						println(""+entry.location);
@@ -123,7 +124,8 @@ public class PrepareData {
 						SNPEntry entry = new SNPEntry();
 						entry.op = op;
 						entry.location = index;//(index*25)+a;
-						if(globalPosition == false) entry.location = index*25+a;
+						if(! globalPosition ) entry.location = index*25+a;
+
 						entry.value = toInt(s[4].charAt(j));
 						map.put(entry.location, entry);
 						println(""+entry.location);
@@ -144,16 +146,15 @@ public class PrepareData {
 		tmap.clear();
 		HashMap<Long, SNPEntry> b = readFile("data/hu604D39.snp");
 		println();
-		
+
 		Iterator<Entry<Long, SNPEntry>> it = a.entrySet().iterator();
 		int cnt = 0;
 		while (it.hasNext()) {
-			Map.Entry pairs = (Map.Entry)it.next();
+			Map.Entry<Long, SNPEntry> pairs = (Entry<Long, SNPEntry>)it.next();
 			if(b.containsKey(pairs.getKey())){
 				//System.out.println(pairs.getKey());
 				cnt++;
-				}
-			
+			}
 		}
 		System.out.println(a.size()+" "+b.size()+" "+cnt);
 	}

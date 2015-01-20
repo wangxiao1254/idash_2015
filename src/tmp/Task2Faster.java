@@ -1,4 +1,4 @@
-package task2;
+package tmp;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -9,6 +9,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import network.Server;
+import task2.ObliviousMergeLib;
+import task2.PrepareData;
+import task2.SNPEntry;
+import task2.SNPEntry.AscComparator;
+import task2.SNPEntry.DscComparator;
 import util.EvaRunnable;
 import util.GenRunnable;
 import util.Utils;
