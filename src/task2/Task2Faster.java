@@ -61,12 +61,12 @@ public class Task2Faster {
 		return res;
 	}
 	
-	public static SNPEntry[]  sortKeyValue(HashMap<Integer, SNPEntry> map, boolean asc) {
+	public static SNPEntry[]  sortKeyValue(HashMap<Long, SNPEntry> map, boolean asc) {
 		SNPEntry[] res = new SNPEntry[map.size()];
-		Iterator<Entry<Integer, SNPEntry>> it = map.entrySet().iterator();
+		Iterator<Entry<Long, SNPEntry>> it = map.entrySet().iterator();
 		int cnt = 0;
 		while (it.hasNext()) {
-			Map.Entry<Integer, SNPEntry> pairs = it.next();
+			Map.Entry<Long, SNPEntry> pairs = it.next();
 			res[cnt++] = pairs.getValue();
 		}
 		Arrays.sort(res, asc? new SNPEntry.AscComparator() : new SNPEntry.DscComparator());
@@ -82,7 +82,7 @@ public class Task2Faster {
 		
 		@Override
 		public void prepareInput(CompEnv<T> gen) {
-			HashMap<Integer, SNPEntry> data = PrepareData.readFile(args[0]);
+			HashMap<Long, SNPEntry> data = PrepareData.readFile(args[0]);
 			SNPEntry[] sorted = sortKeyValue(data, true);
 			int lengthBefore = sorted.length;
 			sorted = filter(sorted);
@@ -91,7 +91,7 @@ public class Task2Faster {
 			boolean[][] keyClear = new boolean[sorted.length][];
 			boolean[][] valClear = new boolean[sorted.length][];
 			for(int i = 0; i < keyClear.length; ++i ) {
-				keyClear[i] = Utils.fromInt(sorted[i].location, LengthOfLocation);
+				keyClear[i] = Utils.fromLong(sorted[i].location, LengthOfLocation);
 				valClear[i] = Utils.fromInt(sorted[i].value, 2);
 			}
 			
@@ -143,7 +143,7 @@ public class Task2Faster {
 		
 		@Override
 		public void prepareInput(CompEnv<T> gen) {
-			HashMap<Integer, SNPEntry> data = PrepareData.readFile(args[0]);
+			HashMap<Long, SNPEntry> data = PrepareData.readFile(args[0]);
 			SNPEntry[] sorted = sortKeyValue(data, false);
 			int lengthBefore = sorted.length;
 			sorted = filter(sorted);
@@ -152,7 +152,7 @@ public class Task2Faster {
 			boolean[][] keyClear = new boolean[sorted.length][];
 			boolean[][] valClear = new boolean[sorted.length][];
 			for(int i = 0; i < keyClear.length; ++i ) {
-				keyClear[i] = Utils.fromInt(sorted[i].location, LengthOfLocation);
+				keyClear[i] = Utils.fromLong(sorted[i].location, LengthOfLocation);
 				valClear[i] = Utils.fromInt(sorted[i].value, 2);
 			}
 			

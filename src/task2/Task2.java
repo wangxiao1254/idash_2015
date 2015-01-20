@@ -23,19 +23,10 @@ public class Task2 {
 		lib.bitonicMergeWithPayload(key, value, lib.SIGNAL_ZERO);
 		System.out.println("linear scaning");
 		T[] resBit = lib.zeros(key.length);
-		for(int i = 0; i < key.length-1; ++i) {
-			T[] pos1 = key[i];
-			T[] val1 = Arrays.copyOfRange(value[i], 0, 2);
-			T[] op1 = Arrays.copyOfRange(value[i], 2, 4);
-			T[] pos2 = key[i+1];
-			T[] val2 = Arrays.copyOfRange(value[i+1], 0, 2);
-			T[] op2 = Arrays.copyOfRange(value[i+1], 2, 4);
-			
-			T posEq = lib.eq(pos1, pos2);
-			T opEq = lib.eq(op1, op2);
-			T valEq = lib.eq(val1, val2);
+		for(int i = 0; i < key.length-1; ++i) {			
+			T posEq = lib.eq(key[i], key[i+1]);
+			T valEq = lib.eq(value[i], value[i+1]);
 			resBit[i] = lib.and(posEq, valEq);
-			resBit[i] = lib.and(resBit[i], opEq);
 			resBit[i] = lib.not(resBit[i]);
 		}
 		System.out.println("linear scanned");

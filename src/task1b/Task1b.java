@@ -13,13 +13,13 @@ public class Task1b {
 	static public int FWidth = 40;
 	static public int FOffset = 20;
 
-	public static<T> void compute(CompEnv<T> gen, T[][] res, T[][][] aliceCase,
+	public static<T> T[][] compute(CompEnv<T> gen, T[][][] aliceCase,
 			T[][][] bobCase,
 			T[][][] aliceControl,
-			T[][][] bobControl, int numOfTests, FixedPointLib<T> flib) {
-		res = gen.newTArray(numOfTests, 0);
+			T[][][] bobControl, int numOfTests) {
+		T[][] res = gen.newTArray(numOfTests, 0);
 		IntegerLib<T> lib = new IntegerLib<T>(gen);
-		flib = new FixedPointLib<T>(gen, FWidth, FOffset);
+		FixedPointLib<T> flib = new FixedPointLib<T>(gen, FWidth, FOffset);
 		for(int i = 0; i < numOfTests; ++i) {
 			T[][] caseFre = gen.newTArray(3, 0);
 			T[][] controlFre = gen.newTArray(3, 0);
@@ -51,8 +51,8 @@ public class Task1b {
 			resCase = flib.multiply(resCase, flib.publicValue(1.0/200));
 			resControl = flib.multiply(resControl, flib.publicValue(1.0/200));
 			res[i] = flib.add(resCase, resControl);
-			System.out.println(i+" "+Flag.sw.ands);
 		}
+		return res;
 
 	}
 	public static class Generator<T> extends GenRunnable<T> {
@@ -87,15 +87,14 @@ public class Task1b {
 		}
 
 		T[][] res;
-		FixedPointLib<T> flib;
 		@Override
 		public void secureCompute(CompEnv<T> gen) {
-			compute(gen, res, aliceCase, bobCase, aliceControl, bobControl, numOfTests, flib);
+			res = compute(gen, aliceCase, bobCase, aliceControl, bobControl, numOfTests);
 		}
 
 		@Override
 		public void prepareOutput(CompEnv<T> gen) {
-
+			FixedPointLib<T> flib = new FixedPointLib<T>(gen, FWidth, FOffset);
 			for(int i = 0; i < numOfTests; ++i)
 				System.out.println(200*(flib.outputToAlice(res[i])-1));
 		}
@@ -107,7 +106,6 @@ public class Task1b {
 		T[][][] bobCase;
 		T[][][] aliceControl;
 		T[][][] bobControl;
-		FixedPointLib<T> flib;
 		int numOfTests;
 		@Override
 		public void prepareInput(CompEnv<T> gen) {
@@ -136,11 +134,12 @@ public class Task1b {
 
 		@Override
 		public void secureCompute(CompEnv<T> gen) {
-			compute(gen, res, aliceCase, bobCase, aliceControl, bobControl, numOfTests, flib);
+			res = compute(gen, aliceCase, bobCase, aliceControl, bobControl, numOfTests);
 		}
 
 		@Override
 		public void prepareOutput(CompEnv<T> gen) {
+			FixedPointLib<T> flib = new FixedPointLib<T>(gen, FWidth, FOffset);
 			for(int i = 0; i < numOfTests; ++i)
 				flib.outputToAlice(res[i]);
 		}

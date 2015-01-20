@@ -9,6 +9,7 @@ import java.util.Scanner;
 
 public class PrepareData {
 
+	public static final boolean globalPosition = false;
 	static public HashMap<String, Integer> table = new HashMap<String, Integer>();
 	static{
 		for(int i = 1; i < 23; ++i)
@@ -96,7 +97,9 @@ public class PrepareData {
 						int index = (new Integer(s[1])+j);
 						SNPEntry entry = new SNPEntry();
 						entry.op = op;
-						entry.location = index;//(index*25)+a;
+						entry.location = index;
+						if(globalPosition == false) entry.location = index*25+a;
+						
 						entry.value = toInt(s[3].charAt(j));
 						map.put(entry.location, entry);
 						println(""+entry.location);
@@ -108,6 +111,7 @@ public class PrepareData {
 						SNPEntry entry = new SNPEntry();
 						entry.op = op;
 						entry.location = index;//(index*25)+a;
+						if(globalPosition == false) entry.location = index*25+a;
 						entry.value = 0;//does not matter what value it is
 						map.put(entry.location, entry);
 						println(""+entry.location);
@@ -119,6 +123,7 @@ public class PrepareData {
 						SNPEntry entry = new SNPEntry();
 						entry.op = op;
 						entry.location = index;//(index*25)+a;
+						if(globalPosition == false) entry.location = index*25+a;
 						entry.value = toInt(s[4].charAt(j));
 						map.put(entry.location, entry);
 						println(""+entry.location);
