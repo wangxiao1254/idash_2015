@@ -19,7 +19,7 @@ public class Task2 {
 	public static<T> T[] compute(CompEnv<T> env, T[][] key, T[][] value) {
 		ObliviousMergeLib<T> lib = new ObliviousMergeLib<T>(env);
 		System.out.println(key.length);
-		System.out.println("sorting data");
+		System.out.println("merging data");
 		lib.bitonicMergeWithPayload(key, value, lib.SIGNAL_ZERO);
 		System.out.println("linear scaning");
 		T[] resBit = lib.zeros(key.length);
