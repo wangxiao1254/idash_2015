@@ -42,13 +42,10 @@ public class SNPEntry implements Comparable<SNPEntry>{
 
 	public long toNum(){
 		long res = i_dloc;
-		
 		res <<=2;
 		res +=op;
-		
 		res<<=2;
 		res+=value;
-		
 		res<<=Task2.LengthOfLocation;
 		res+= location;
 		return res;

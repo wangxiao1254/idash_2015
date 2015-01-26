@@ -14,7 +14,7 @@ import circuits.arithmetic.IntegerLib;
 import flexsc.CompEnv;
 
 public class Task2 {
-	public static final int NoM = 10;
+	public static final int NoM = 20;
 	
 	public static<T> T[] compute(CompEnv<T> env, T[] aliceBF, T[] bobBF) {
 		IntegerLib<T> lib = new IntegerLib<>(env);
@@ -28,6 +28,7 @@ public class Task2 {
 		T[] bobBF;
 		T[] res;
 		BF bf;
+		int totalSize = 0;
 		
 		@Override
 		public void prepareInput(CompEnv<T> gen) {
@@ -43,7 +44,7 @@ public class Task2 {
 				e.printStackTrace();
 			}
 			int boblength = ByteBuffer.wrap(boblengthraw).getInt();
-			
+			totalSize = boblength+alicelength;
 			bf = new BF(boblength+alicelength, NoM*(boblength+alicelength));
 			try {
 				for(int i = 0; i < bf.k; ++i)
@@ -71,8 +72,8 @@ public class Task2 {
 		public void prepareOutput(CompEnv<T> gen) {
 			int r = Utils.toInt(gen.outputToAlice(res));
 			r = bf.countToSize(r);
-			System.out.println(r);
-		}
+			System.out.println(2*r- totalSize);
+		}		
 	}
 
 	public static class Evaluator<T> extends EvaRunnable<T> {

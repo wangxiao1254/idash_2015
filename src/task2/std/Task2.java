@@ -15,8 +15,8 @@ import util.Utils;
 import flexsc.CompEnv;
 
 public class Task2 {
-	public static final int LengthOfLocation = 35;
-	public static final int LengthOfIdLoc = 8;
+	public static final int LengthOfLocation = 33;
+	public static final int LengthOfIdLoc = 7;
 	
 	public static<T> T[] compute(CompEnv<T> env, T[][] scData) {
 		ObliviousMergeLib<T> lib = new ObliviousMergeLib<T>(env);
@@ -48,6 +48,7 @@ public class Task2 {
 	
 	public static class Generator<T> extends GenRunnable<T> {
 		T[][] scData;
+		int totalSize;
 		T[] res;
 		
 		@Override
@@ -70,7 +71,8 @@ public class Task2 {
 				e.printStackTrace();
 			}
 			int boblength = ByteBuffer.wrap(boblengthraw).getInt();
-			
+			totalSize = boblength+data.size();
+
 			T[][] Alice = gen.inputOfAlice(clear);
 			T[][] Bob = gen.inputOfBob(new boolean[boblength][LengthOfLocation+4+LengthOfIdLoc]);
 			
@@ -87,7 +89,9 @@ public class Task2 {
 
 		@Override
 		public void prepareOutput(CompEnv<T> gen) {
-			System.out.println(Utils.toInt(gen.outputToAlice(res)));
+			int r = Utils.toInt(gen.outputToAlice(res));
+			System.out.println(2*r- totalSize);
+
 		}
 	}
 
