@@ -14,10 +14,10 @@ import circuits.arithmetic.IntegerLib;
 import flexsc.CompEnv;
 
 public class Task2 {
-	public static final int NoM = 15;
+	public static final int NoM = 10;
 	
 	public static<T> T[] compute(CompEnv<T> env, T[] aliceBF, T[] bobBF) {
-		IntegerLib<T> lib= new IntegerLib<>(env);
+		IntegerLib<T> lib = new IntegerLib<>(env);
 		System.out.println("Bloom Filter Size: "+aliceBF.length);
 		T[] aUb = lib.or(aliceBF, bobBF);
 		return lib.numberOfOnes(aUb);
@@ -28,6 +28,7 @@ public class Task2 {
 		T[] bobBF;
 		T[] res;
 		BF bf;
+		
 		@Override
 		public void prepareInput(CompEnv<T> gen) {
 			HashSet<SNPEntry> data = PrepareData.readFile(args[0]);

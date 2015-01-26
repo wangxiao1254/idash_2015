@@ -15,8 +15,8 @@ import util.Utils;
 import flexsc.CompEnv;
 
 public class Task2 {
-	public static final int LengthOfLocation = 40;
-	public static final int LengthOfIdLoc = 10;
+	public static final int LengthOfLocation = 35;
+	public static final int LengthOfIdLoc = 8;
 	
 	public static<T> T[] compute(CompEnv<T> env, T[][] scData) {
 		ObliviousMergeLib<T> lib = new ObliviousMergeLib<T>(env);

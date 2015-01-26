@@ -14,7 +14,7 @@ public class BF {
 	SecureRandom rnd = new SecureRandom();
 	
 	public BF(int n, int m, double constant) {
-		init(n,m,Math.log(constant));	
+		init(n,m,constant);	
 	}
 
 	public BF(int n, int m) {
@@ -29,6 +29,7 @@ public class BF {
 		sks = new byte[k][10];
 		for(int i = 0; i < k ; ++i)
 			rnd.nextBytes(sks[i]);
+		
 		try {
 			sha1 = MessageDigest.getInstance("SHA-1");
 		} catch (NoSuchAlgorithmException e) {
@@ -81,6 +82,5 @@ public class BF {
 		f = f*m;
 		f = -1*(f / k);
 		return (int)f;
-
 	}
 }
