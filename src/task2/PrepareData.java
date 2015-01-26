@@ -1,10 +1,10 @@
 package task2;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Scanner;
 
 public class PrepareData {
@@ -57,29 +57,10 @@ public class PrepareData {
 
 	}
 
-	static HashMap<String, Integer> tmap = new HashMap<String, Integer>(); 
 
-	public static void println(String a) {
-		if(tmap.containsKey(a))
-		{
-			int t = tmap.get(a);
-			tmap.put(a, t+1);
-		}
-		else tmap.put(a, 1);
-	}
-
-	public static  void println(){
-		Iterator<Entry<String, Integer>> it = tmap.entrySet().iterator();
-		//		System.out.println(tmap.size());
-		while (it.hasNext()) {
-			Map.Entry<String, Integer> pairs = (Entry<String, Integer>)it.next();
-			if(pairs.getValue() > 1)
-				System.out.println(pairs.getKey()+" "+pairs.getValue());
-		}
-	}
-	public static HashMap<Long, SNPEntry> readFile(String filename) {
+	public static HashSet<SNPEntry> readFile(String filename) {
 		File file = new File(filename);
-		HashMap<Long, SNPEntry> map = new HashMap<Long, SNPEntry>();
+		HashSet<SNPEntry> map = new HashSet<SNPEntry>();
 		Scanner scanner;
 		try {
 			scanner = new Scanner(file);
@@ -88,34 +69,31 @@ public class PrepareData {
 			while(scanner.hasNextLine()) {
 				String tmp = scanner.nextLine();
 				String[] s = tmp.split("\\s+");
-				//				System.out.println(Arrays.toString(s));
 				int a  = table.get(s[0]);
 
 				int op = opToInt(s[s.length-1].split(";")[0].split("=")[1]);
 				if(op == 3) {//insert
 					for(int j = 0; j < s[3].length(); ++j) {
-						int index = (new Integer(s[1])+j);
+						int index = new Integer(s[1]);
 						SNPEntry entry = new SNPEntry();
 						entry.op = op;
 						entry.location = index;
 						if(! globalPosition ) entry.location = index*25+a;
-
 						entry.value = toInt(s[3].charAt(j));
-						map.put(entry.location, entry);
-						println(""+entry.location);
+						entry.i_dloc = j;
+						map.add(entry);
 					}
 				}
 				else if(op == 2) {//delete
 					for(int j = 0; j < s[3].length(); ++j) {
-						int index = (new Integer(s[1])+j);
+						int index = new Integer(s[1]);
 						SNPEntry entry = new SNPEntry();
 						entry.op = op;
 						entry.location = index;//(index*25)+a;
 						if(! globalPosition ) entry.location = index*25+a;
-
 						entry.value = 0;//does not matter what value it is
-						map.put(entry.location, entry);
-						println(""+entry.location);
+						entry.i_dloc = j;
+						map.add(entry);
 					}
 				}
 				else {
@@ -127,8 +105,7 @@ public class PrepareData {
 						if(! globalPosition ) entry.location = index*25+a;
 
 						entry.value = toInt(s[4].charAt(j));
-						map.put(entry.location, entry);
-						println(""+entry.location);
+						map.add(entry);
 					}
 				}
 			}
@@ -139,23 +116,32 @@ public class PrepareData {
 		}
 		return map;
 	}
-
-	public static void main(String[] args) {
-		HashMap<Long, SNPEntry> a = readFile("data/hu661AD0.snp");
-		println();
-		tmap.clear();
-		HashMap<Long, SNPEntry> b = readFile("data/hu604D39.snp");
-		println();
-
-		Iterator<Entry<Long, SNPEntry>> it = a.entrySet().iterator();
+	
+	public static SNPEntry[]  sortKeyValue(HashSet<SNPEntry> map, boolean asc) {
+		SNPEntry[] res = new SNPEntry[map.size()];
+		Iterator<SNPEntry> it = map.iterator();
 		int cnt = 0;
 		while (it.hasNext()) {
-			Map.Entry<Long, SNPEntry> pairs = (Entry<Long, SNPEntry>)it.next();
-			if(b.containsKey(pairs.getKey())){
-				//System.out.println(pairs.getKey());
-				cnt++;
-			}
+			res[cnt++] = it.next();
 		}
-		System.out.println(a.size()+" "+b.size()+" "+cnt);
+		Arrays.sort(res, asc? new SNPEntry.AscComparator() : new SNPEntry.DscComparator());
+		return res;
+	}
+	
+	public static void main(String[] args) {
+		HashSet<SNPEntry> a = readFile("data/hu661AD0.snp");
+		HashSet<SNPEntry> b = readFile("data/hu604D39.snp");
+		HashSet<SNPEntry> aub = new HashSet<SNPEntry>();
+		aub.addAll(b);
+		aub.addAll(a);
+		
+		HashSet<Long> aa = new HashSet<Long>();
+		for(SNPEntry o : a) {
+			aa.add(o.toNum());
+		}
+		for(SNPEntry o : b) {
+			aa.add(o.toNum());
+		}
+		System.out.println(a.size()+" "+b.size()+" "+aa.size());
 	}
 }

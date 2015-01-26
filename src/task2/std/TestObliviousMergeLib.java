@@ -1,4 +1,4 @@
-package task2;
+package task2.std;
 
 import flexsc.CompEnv;
 import harness.TestHarness;
