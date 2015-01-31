@@ -1,5 +1,7 @@
-package task1b;
+package task1b.std;
 
+import task1b.PrepareData;
+import task1b.Statistics;
 import util.EvaRunnable;
 import util.GenRunnable;
 import util.Utils;
