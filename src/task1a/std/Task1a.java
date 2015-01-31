@@ -1,7 +1,7 @@
-package task1a;
+package task1a.std;
 
-import java.util.Arrays;
-
+import task1a.PrepareData;
+import task1a.Statistics;
 import util.EvaRunnable;
 import util.GenRunnable;
 import util.Utils;
@@ -12,16 +12,14 @@ public class Task1a {
 	static public int Width = 9;
 	
 	public static<T> T[][] compute(CompEnv<T> env, IntegerLib<T> lib,
-			T[] alice,
-			T[] bob,
+			T[][] alice,
+			T[][] bob,
 			int numberOfSta) {
 		T[] half = lib.toSignals(200, Width);
 		T[] all = lib.toSignals(400, Width);
 		T[][] res = env.newTArray(numberOfSta, Width);
 		for(int i = 0; i < numberOfSta; ++i) {
-			T[] aliceInput = Arrays.copyOfRange(alice, i*Width, i*Width+Width);
-			T[] bobInput = Arrays.copyOfRange(bob, i*Width, i*Width+Width);
-			T[] freOfG1 = lib.add(aliceInput, bobInput);
+			T[] freOfG1 = lib.add(alice[i], bob[i]);
 			T g1IsMinod = lib.leq(freOfG1, half);
 			res[i] = lib.mux(lib.sub(all, freOfG1), freOfG1, g1IsMinod);
 		}
@@ -29,19 +27,17 @@ public class Task1a {
 	}
 	public static class Generator<T> extends GenRunnable<T> {
 		IntegerLib<T> lib;
-		T[] alice;
-		T[] bob;
+		T[][] alice;
+		T[][] bob;
 		int numberOfSta;
 		@Override
 		public void prepareInput(CompEnv<T> env) {
 			lib = new IntegerLib<T>(env);
 			Statistics[] sta = PrepareData.readFile(args[0], 0);
-			boolean[] input = new boolean[sta.length*Width];
+			boolean[][] input = new boolean[sta.length][Width];
 			int current = 0;
 			for(int i = 0; i < sta.length; ++i) {
-				boolean[] g1 = Utils.fromInt(sta[i].numOfG1, Width);
-				System.arraycopy(g1, 0, input, current, Width);
-				current += Width;
+				input[i]= Utils.fromInt(sta[i].numOfG1, Width);
 			}
 			numberOfSta = sta.length;
 			alice = env.inputOfAlice(input);
@@ -66,19 +62,17 @@ public class Task1a {
 
 	public static class Evaluator<T> extends EvaRunnable<T> {
 		IntegerLib<T> lib;
-		T[] alice;
-		T[] bob;
+		T[][] alice;
+		T[][] bob;
 		int numberOfSta;
 		@Override
 		public void prepareInput(CompEnv<T> env) {
 			lib = new IntegerLib<T>(env);
 			Statistics[] sta = PrepareData.readFile(args[0], 1);
-			boolean[] input = new boolean[sta.length*Width];
+			boolean[][] input = new boolean[sta.length][Width];
 			int current = 0;
-			for(int i = 0; i <sta.length; ++i) {
-				boolean[] g1 = Utils.fromInt(sta[i].numOfG1, Width);
-				System.arraycopy(g1, 0, input, current, Width);
-				current += Width;
+			for(int i = 0; i < sta.length; ++i) {
+				input[i]= Utils.fromInt(sta[i].numOfG1, Width);
 			}
 			numberOfSta = sta.length;
 			alice = env.inputOfAlice(input);
