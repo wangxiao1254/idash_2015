@@ -17,7 +17,6 @@ void Task2Automated@m@n.obliviousMerge(int@m[public 1] key, public int32 lo, pub
       public int32 k = 1;
       while (k < l) k = k << 1;
       k = k >> 1;
-
       for (public int32 i = lo; i < lo + l - k; i = i + 1)
          this.compare(key, i, i + k);
       this.obliviousMerge(key, lo, k);
@@ -28,11 +27,9 @@ void Task2Automated@m@n.obliviousMerge(int@m[public 1] key, public int32 lo, pub
 void Task2Automated@m@n.compare(int@m[public 1] key, public int32 i, public int32 j) {
    int@m tmp = key[j];
    int@m tmp2 = key[i];
-   if( key[i] < key[j] )  {
+   if( key[i] < key[j] )
       tmp = key[i];
-   }
    tmp = tmp ^ key[i];
    key[i] = tmp ^ key[j];
    key[j] = tmp ^ tmp2;
 }
-

@@ -1,8 +1,9 @@
-package task1a;
+package task1;
+
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.Scanner;
 
 public class PrepareData {
@@ -40,31 +41,35 @@ public class PrepareData {
 		}
 	}
 	
-	public static Statistics[] readFile(String filename, int party) {
+	public static class StatisticsData {
+		public Statistics[] data;
+		public int numberOftuples;
+	}
+	
+	public static StatisticsData readFile(String filename) {
 		File file = new File(filename);
-		Statistics[] res = null;
-		Scanner scanner;
+		Scanner scanner; 
+		StatisticsData d = new StatisticsData(); 
+		LinkedList<Statistics> lsta = new LinkedList<Statistics>();
 		try {
 			scanner = new Scanner(file);
-			String a = scanner.nextLine();
-			int testCases = a.split(" ").length;
-			res = new Statistics[testCases];
-			for(int i = 0; i < testCases; ++i) {
+			d.numberOftuples = scanner.nextLine().split(" ").length;
+			while(scanner.hasNextLine()) {
 				scanner.nextLine();
-				res[i] = new Statistics();
-				res[i].genotype = scanner.nextLine().replace(" ", "");
-				String[] snp = Arrays.copyOfRange(scanner.nextLine().split(" "), party*100, 100*(party+1));
-				CountFre(res[i], snp);
-//				System.out.println(res[i].genotype + " "+ res[i].g1+" "+res[i].numOfG1+" "+res[i].g2+" "+res[i].numOfG2);
+				Statistics sta = new Statistics();
+				String[] snp = scanner.nextLine().split(" ");
+				CountFre(sta, snp);
+				lsta.add(sta);
 			}
 			scanner.close();			
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-		return res;
+		d.data = lsta.toArray(new Statistics[0]); 
+		return d;
 	}
 	
 	public static void main(String[] args) {
-		readFile("data/case_chr2_29504091_30044866.txt", 0);
+		readFile("data/case_chr2_29504091_30044866.txt");
 	}
 }

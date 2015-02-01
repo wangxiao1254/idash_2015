@@ -1,4 +1,5 @@
-package task1a;
+package task1;
+
 
 
 public class Statistics {

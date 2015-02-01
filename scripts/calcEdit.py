@@ -70,9 +70,9 @@ def calcEdit(args):
 			if t[0] != '' and t[1] != '':
 				nEdit += len(t[1])
 			elif t[0] == '':
-				nEdit += 0 + len(t[1])
+				nEdit += len(t[1])
 			elif t[1] == '':
-				nEdit += 0 + len(t[0])
+				nEdit += len(t[0])
 			else:
 				print 'wrong'
 				sys.exit()
@@ -84,9 +84,9 @@ def calcEdit(args):
 			if t0[0] != '' and t0[1] != '':
 				n0 += len(t0[1])
 			elif t0[0] == '':
-				n0 += 0 + len(t0[1])
+				n0 += len(t0[1])
 			elif t0[1] == '':
-				n0 += 0 + len(t0[0])
+				n0 += len(t0[0])
 			else:
 				print 'wrong'
 				sys.exit()
@@ -96,9 +96,9 @@ def calcEdit(args):
 			if t1[0] != '' and t1[1] != '':
 				n1 += len(t1[1])
 			elif t1[0] == '':
-				n1 += 0 + len(t1[1])
+				n1 += len(t1[1])
 			elif t1[1] == '':
-				n1 += 0 + len(t1[0])
+				n1 += len(t1[0])
 			else:
 				print 'wrong'
 				sys.exit()
