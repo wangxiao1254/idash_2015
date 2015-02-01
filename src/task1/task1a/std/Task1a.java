@@ -47,6 +47,7 @@ public class Task1a {
 			}
 			numberOfSta = 2*(boblength + staData.numberOftuples);
 			width = (int) Math.ceil(Math.log(numberOfSta)/Math.log(2));
+//			System.out.println("!!"+width);
 			
 			boolean[][] input = new boolean[sta.length][width];
 			for(int i = 0; i < sta.length; ++i) {
