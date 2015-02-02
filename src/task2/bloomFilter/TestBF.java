@@ -1,4 +1,4 @@
-package task2.faster;
+package task2.bloomFilter;
 
 
 import java.io.FileNotFoundException;

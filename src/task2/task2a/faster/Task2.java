@@ -1,12 +1,13 @@
-package task2.faster;
+package task2.task2a.faster;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.HashSet;
 
 import network.Server;
-import task2.PrepareData;
-import task2.SNPEntry;
+import task2.bloomFilter.BF;
+import task2.task2a.PrepareData;
+import task2.task2a.SNPEntry;
 import util.EvaRunnable;
 import util.GenRunnable;
 import util.Utils;

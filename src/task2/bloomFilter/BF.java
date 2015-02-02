@@ -1,4 +1,4 @@
-package task2.faster;
+package task2.bloomFilter;
 
 
 import java.nio.ByteBuffer;
@@ -7,10 +7,10 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
 public class BF {
-	MessageDigest sha1;
-	int n, m, k;
-	boolean[] bs;
-	byte[][]sks;
+	public MessageDigest sha1;
+	public int n, m, k;
+	public boolean[] bs;
+	public byte[][]sks;
 	SecureRandom rnd = new SecureRandom();
 	
 	public BF(int n, int m, double constant) {

@@ -1,8 +1,9 @@
-package task2;
+package task2.task2a;
 
 import java.util.Comparator;
 
-import task2.std.Task2;
+import task2.Constants;
+
 
 public class SNPEntry implements Comparable<SNPEntry>{
 	public long location;
@@ -46,7 +47,7 @@ public class SNPEntry implements Comparable<SNPEntry>{
 		res +=op;
 		res<<=2;
 		res+=value;
-		res<<=Task2.LengthOfLocation;
+		res<<= Constants.LengthOfLocation;
 		res+= location;
 		return res;
 	}

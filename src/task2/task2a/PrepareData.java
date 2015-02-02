@@ -1,4 +1,4 @@
-package task2;
+package task2.task2a;
 
 import java.io.File;
 import java.util.Arrays;

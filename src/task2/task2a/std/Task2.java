@@ -1,4 +1,4 @@
-package task2.automated;
+package task2.task2a.std;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -7,29 +7,31 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 import network.Server;
-import task2.PrepareData;
-import task2.SNPEntry;
+import task2.obliviousmerge.ObliviousMergeLib;
+import task2.task2a.PrepareData;
+import task2.task2a.SNPEntry;
 import util.EvaRunnable;
 import util.GenRunnable;
 import util.Utils;
 import flexsc.CompEnv;
-import gc.GCSignal;
-
+import task2.Constants;
 public class Task2 {
-	public static final int LengthOfLocation = 33;
-	public static final int LengthOfIdLoc = 7;
 	
-	public static GCSignal[] compute(CompEnv<GCSignal> env, GCSignal[][] scData, int length) {
-		Task2Automated a;
-		GCSignal[] ret = null;
-		try {
-			a = new Task2Automated(env, scData[0].length, (int) Math.ceil(Math.log(length)/Math.log(2)) );
-			ret = a.funct(scData, scData.length);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	public static<T> T[] compute(CompEnv<T> env, T[][] scData) {
+		ObliviousMergeLib<T> lib = new ObliviousMergeLib<T>(env);
+		System.out.println(scData.length);
+		System.out.println("merging data");
+		lib.bitonicMerge(scData, lib.SIGNAL_ZERO);
+		System.out.println("linear scaning");
+		T[] resBit = lib.zeros(scData.length);
+		for(int i = 0; i < scData.length-1; ++i) {			
+			T eq = lib.eq(scData[i], scData[i+1]);
+			resBit[i] = lib.not(eq);
 		}
-		return ret;
+		System.out.println("linear scanned");
+		T[] res = lib.numberOfOnes(resBit);
+		res = lib.add(res, lib.toSignals(1, res.length));
+		return res;
 	}
 		
 	public static SNPEntry[]  sortKeyValue(HashSet<SNPEntry> map, boolean asc) {
@@ -43,19 +45,20 @@ public class Task2 {
 		return res;
 	}
 	
-	public static class Generator extends GenRunnable<GCSignal> {
-		GCSignal[][] scData;
+	public static class Generator<T> extends GenRunnable<T> {
+		T[][] scData;
 		int totalSize;
-		GCSignal[] res;
+		T[] res;
+		int totallength = Constants.LengthOfIdLoc+4+Constants.LengthOfLocation;
 		
 		@Override
-		public void prepareInput(CompEnv<GCSignal> gen) {
+		public void prepareInput(CompEnv<T> gen) {
 			HashSet<SNPEntry> data = PrepareData.readFile(args[0]);
 			SNPEntry[] sorted = sortKeyValue(data, true);
 			
 			boolean[][] clear = new boolean[sorted.length][];
 			for(int i = 0; i < clear.length; ++i ) {
-				clear[i] = Utils.fromLong(sorted[i].toNum(), LengthOfLocation+4+LengthOfIdLoc);
+				clear[i] = Utils.fromLong(sorted[i].toNum(), totallength);
 			}
 			
 			byte[] boblengthraw = null;
@@ -70,40 +73,40 @@ public class Task2 {
 			int boblength = ByteBuffer.wrap(boblengthraw).getInt();
 			totalSize = boblength+data.size();
 
-			GCSignal[][] Alice = gen.inputOfAlice(clear);
-			GCSignal[][] Bob = gen.inputOfBob(new boolean[boblength][LengthOfLocation+4+LengthOfIdLoc]);
+			T[][] Alice = gen.inputOfAlice(clear);
+			T[][] Bob = gen.inputOfBob(new boolean[boblength][totallength]);
 			
-			scData = gen.newTArray(Alice.length+Bob.length, LengthOfLocation+4+LengthOfIdLoc);
+			scData = gen.newTArray(Alice.length+Bob.length, totallength);
 			
 			System.arraycopy(Alice, 0, scData, 0, Alice.length);
 			System.arraycopy(Bob, 0, scData, Alice.length, Bob.length);
 		}
 
 		@Override
-		public void secureCompute(CompEnv<GCSignal> gen) {
-			res = compute(gen, scData, totalSize);
+		public void secureCompute(CompEnv<T> gen) {
+			res = compute(gen, scData);
 		}
 
 		@Override
-		public void prepareOutput(CompEnv<GCSignal> gen) {
+		public void prepareOutput(CompEnv<T> gen) {
 			int r = Utils.toInt(gen.outputToAlice(res));
 			System.out.println(2*r- totalSize);
 
 		}
 	}
 
-	public static class Evaluator extends EvaRunnable<GCSignal> {
-		GCSignal[][] scData;
-		GCSignal[] res;
-		int totalSize;
+	public static class Evaluator<T> extends EvaRunnable<T> {
+		T[][] scData;
+		T[] res;
+		int totallength = Constants.LengthOfIdLoc+4+Constants.LengthOfLocation;
 
-		public void prepareInput(CompEnv<GCSignal> gen) {
+		public void prepareInput(CompEnv<T> gen) {
 			HashSet<SNPEntry> data = PrepareData.readFile(args[0]);
 			SNPEntry[] sorted = sortKeyValue(data, false);
 			
 			boolean[][] clear = new boolean[sorted.length][];
 			for(int i = 0; i < clear.length; ++i ) {
-				clear[i] = Utils.fromLong(sorted[i].toNum(), LengthOfLocation+4+LengthOfIdLoc);
+				clear[i] = Utils.fromLong(sorted[i].toNum(), totallength);
 			}
 			
 			byte[] alicelengthraw = null;
@@ -115,25 +118,24 @@ public class Task2 {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			int alicelength = ByteBuffer.wrap(alicelengthraw).getInt();
-			totalSize = alicelength+data.size();
+			int boblength = ByteBuffer.wrap(alicelengthraw).getInt();
 			
-			GCSignal[][] Alice = gen.inputOfAlice(new boolean[alicelength][LengthOfLocation+4+LengthOfIdLoc]);
-			GCSignal[][] Bob = gen.inputOfBob(clear);
+			T[][] Alice = gen.inputOfAlice(new boolean[boblength][totallength]);
+			T[][] Bob = gen.inputOfBob(clear);
 			
-			scData = gen.newTArray(Alice.length+Bob.length, LengthOfLocation+4+LengthOfIdLoc);
+			scData = gen.newTArray(Alice.length+Bob.length, totallength);
 			
 			System.arraycopy(Alice, 0, scData, 0, Alice.length);
 			System.arraycopy(Bob, 0, scData, Alice.length, Bob.length);
 		}
 
 		@Override
-		public void secureCompute(CompEnv<GCSignal> gen) {
-			res = compute(gen, scData, totalSize);
+		public void secureCompute(CompEnv<T> gen) {
+			res = compute(gen, scData);
 		}
 
 		@Override
-		public void prepareOutput(CompEnv<GCSignal> gen) {
+		public void prepareOutput(CompEnv<T> gen) {
 			gen.outputToAlice(res);
 		}
 	}

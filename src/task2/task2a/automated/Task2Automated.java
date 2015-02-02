@@ -1,4 +1,4 @@
-package task2.automated;
+package task2.task2a.automated;
 import java.security.SecureRandom;
 import oram.SecureArray;
 import oram.CircuitOram;

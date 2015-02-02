@@ -1,4 +1,4 @@
-package task2.std;
+package task2.obliviousmerge;
 
 import circuits.BitonicSortLib;
 import flexsc.CompEnv;
