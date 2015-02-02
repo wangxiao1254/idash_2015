@@ -1,9 +1,14 @@
 package task1.task1b.std;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
 
 import network.Server;
+
+import org.apache.commons.cli.BasicParser;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.Options;
+
 import task1.PrepareData;
 import task1.PrepareData.StatisticsData;
 import task1.Statistics;
@@ -22,6 +27,7 @@ public class Task1b {
 			return new FloatLib<T>(env, 30, 10);
 		else return new FloatLib<T>(env, 20, 10);
 	}
+	
 	public static<T> T[][] compute(CompEnv<T> env, T[][][] aliceCase,
 			T[][][] bobCase,
 			T[][][] aliceControl,
@@ -36,14 +42,14 @@ public class Task1b {
 			T[] d = lib.add(aliceControl[i][1], bobControl[i][1]);
 			T[] g = lib.add(a, c);
 			T[] k = lib.add(b, d);
-						
+
 			T[] fa = lib.toSecureFloat(a, flib);
 			T[] fb = lib.toSecureFloat(b, flib);
 			T[] fc = lib.toSecureFloat(c, flib);
 			T[] fd = lib.toSecureFloat(d, flib);
 			T[] fg = lib.toSecureFloat(g, flib);
 			T[] fk = lib.toSecureFloat(k, flib);
-						
+
 			T[] tmp = flib.sub(flib.multiply(fa, fd), flib.multiply(fb, fc));
 			tmp = flib.multiply(tmp, tmp);
 			res[i] = flib.div(tmp, flib.multiply(fg, fk));
@@ -58,29 +64,37 @@ public class Task1b {
 		T[][][] bobControl;
 
 		int numOfTests;
-		int numberOfSta;
+		double extraFactor;
 		boolean precise;
 		@Override
-		public void prepareInput(CompEnv<T> env) {
-			if(args[0].equals("pre"))
-				precise = true;
-			else precise = false;
-			StatisticsData caseInput = PrepareData.readFile(args[1]);
-			StatisticsData controlInput = PrepareData.readFile(args[2]);
+		public void prepareInput(CompEnv<T> env) throws Exception {
+			Options options = new Options();
+			options.addOption("h", false, "high precision");
+			options.addOption("s", "case", true, "case");
+			options.addOption("t", "control", true, "control");
+
+			CommandLineParser parser = new BasicParser();
+			CommandLine cmd = parser.parse(options, args);
+
+			precise = cmd.hasOption("t");
+			if(!cmd.hasOption("s") || !cmd.hasOption("t")) {
+				throw new Exception("wrong input");
+			}
+			StatisticsData caseInput = PrepareData.readFile(cmd.getOptionValue("s"));
+			StatisticsData controlInput = PrepareData.readFile(cmd.getOptionValue("t"));
 			Statistics[] caseSta = caseInput.data;
 			Statistics[] controlSta = controlInput.data;
 			boolean[][][] caseData = new boolean[caseSta.length][2][Width];
-			int boblength = 0;
-			try {
-				env.os.write(ByteBuffer.allocate(4).putInt(caseInput.numberOftuples).array());
-				env.os.flush();
-				boblength = ByteBuffer.wrap(Server.readBytes(env.is, 4)).getInt();
-			} catch (IOException e) {
-				// TODO Auto-enverated catch block
-				e.printStackTrace();
-			}
+
+			int caseLength = ByteBuffer.wrap(Server.readBytes(env.is, 4)).getInt();
+			int controlLength = ByteBuffer.wrap(Server.readBytes(env.is, 4)).getInt();
+
+			//extraFactor = n/(r*s)
 			
-			numberOfSta = 2*(boblength + caseInput.numberOftuples);
+			extraFactor = 2*(caseLength + controlLength + caseInput.numberOftuples+ controlInput.numberOftuples);
+			extraFactor /= 2*(caseLength + caseInput.numberOftuples);
+			extraFactor /= 2*(controlLength + controlInput.numberOftuples);
+			
 			for(int i = 0; i < caseSta.length; ++i) {
 				caseData[i][0] = Utils.fromInt(caseSta[i].numOfG1, Width);
 				caseData[i][1] = Utils.fromInt(caseSta[i].numOfG2, Width);
@@ -108,7 +122,7 @@ public class Task1b {
 		public void prepareOutput(CompEnv<T> env) {
 			FloatLib<T> flib = getfloatLib(env, precise);
 			for(int i = 0; i < res.length; ++i)
-				System.out.println(flib.outputToAlice(res[i])/200.0);
+				System.out.println(flib.outputToAlice(res[i])*extraFactor);
 		}
 
 	}
@@ -119,29 +133,32 @@ public class Task1b {
 		T[][][] aliceControl;
 		T[][][] bobControl;
 		int numOfTests;
-		int numberOfSta;
 		boolean precise;
 		@Override
-		public void prepareInput(CompEnv<T> env) {
-			if(args[0].equals("pre"))
-				precise = true;
-			else precise = false;
-			
-			StatisticsData caseInput = PrepareData.readFile(args[1]);
-			StatisticsData controlInput = PrepareData.readFile(args[2]);
+		public void prepareInput(CompEnv<T> env) throws Exception {
+			Options options = new Options();
+			options.addOption("h", "high_precision", false, "high precision");
+			options.addOption("s", "case", true, "case");
+			options.addOption("t", "control", true, "control");
+
+			CommandLineParser parser = new BasicParser();
+			CommandLine cmd = parser.parse(options, args);
+
+			precise = cmd.hasOption("h");
+			if(!cmd.hasOption("s") || !cmd.hasOption("t")) {
+				throw new Exception("wrong input");
+			}
+
+			StatisticsData caseInput = PrepareData.readFile(cmd.getOptionValue("s"));
+			StatisticsData controlInput = PrepareData.readFile(cmd.getOptionValue("t"));
 			Statistics[] caseSta = caseInput.data;
 			Statistics[] controlSta = controlInput.data;
 			boolean[][][] caseData = new boolean[caseSta.length][2][Width];
-			int boblength = 0;
-			try {
-				env.os.write(ByteBuffer.allocate(4).putInt(caseInput.numberOftuples).array());
-				env.os.flush();
-				boblength = ByteBuffer.wrap(Server.readBytes(env.is, 4)).getInt();
-			} catch (IOException e) {
-				// TODO Auto-enverated catch block
-				e.printStackTrace();
-			}
-			numberOfSta = 2*(boblength + caseInput.numberOftuples);
+
+			env.os.write(ByteBuffer.allocate(4).putInt(caseInput.numberOftuples).array());
+			env.os.write(ByteBuffer.allocate(4).putInt(controlInput.numberOftuples).array());
+			env.os.flush();
+
 			for(int i = 0; i < caseSta.length; ++i) {
 				caseData[i][0] = Utils.fromInt(caseSta[i].numOfG1, Width);
 				caseData[i][1] = Utils.fromInt(caseSta[i].numOfG2, Width);
@@ -158,6 +175,7 @@ public class Task1b {
 			bobControl = env.inputOfBob(controlData);
 			numOfTests = caseSta.length;
 		}
+		
 		T[][] res;
 
 		@Override

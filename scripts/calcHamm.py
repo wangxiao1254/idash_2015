@@ -63,8 +63,10 @@ def calcHamm(args):
 	nHamm = 0
 	for k in mHamm:
 		if len(mHamm[k]) == 1:
+			if len(mHamm[k][0][3]) > 1:
+				print mHamm[k][0][3]
 			nOne += 1
-			nHamm += 1
+			nHamm += 1;#len(mHamm[k][0][0])
 		elif len(mHamm[k]) == 2:
 			nTwo += 1
 			t0 = mHamm[k][0]
@@ -78,7 +80,9 @@ def calcHamm(args):
 				if t0[1] != t1[1]:
 					if args.v:
 						print 'countable records:', k, mHamm[k]
-					nHamm += 1
+					nHamm += 1#len(t0[1])
+					print "wocao"#nHamm += 1#len(t0[1])
+
 	
 	print 'hamming distance is', nHamm
 
