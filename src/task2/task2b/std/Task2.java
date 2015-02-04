@@ -7,15 +7,14 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 import network.Server;
-import task2.Constants;
 import task2.obliviousmerge.ObliviousMergeLib;
-import task2.task2b.PrepareData;
-import task2.task2b.SNPEntry;
+import task2.task2a.PrepareData;
+import task2.task2a.SNPEntry;
 import util.EvaRunnable;
 import util.GenRunnable;
 import util.Utils;
 import flexsc.CompEnv;
-
+import task2.Constants;
 public class Task2 {
 	
 	public static<T> T[] compute(CompEnv<T> env, T[][] scData) {
@@ -50,7 +49,7 @@ public class Task2 {
 		T[][] scData;
 		int totalSize;
 		T[] res;
-		int totallength = 2+Constants.LengthOfLocation;
+		int totallength = Constants.LengthOfIdLoc+4+Constants.LengthOfLocation;
 		
 		@Override
 		public void prepareInput(CompEnv<T> gen) {
@@ -99,7 +98,7 @@ public class Task2 {
 	public static class Evaluator<T> extends EvaRunnable<T> {
 		T[][] scData;
 		T[] res;
-		int totallength = 2+Constants.LengthOfLocation;
+		int totallength = Constants.LengthOfIdLoc+4+Constants.LengthOfLocation;
 
 		public void prepareInput(CompEnv<T> gen) {
 			HashSet<SNPEntry> data = PrepareData.readFile(args[0]);

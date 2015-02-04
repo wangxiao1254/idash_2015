@@ -73,14 +73,34 @@ public class PrepareData {
 
 				int op = opToInt(s[s.length-1].split(";")[0].split("=")[1]);
 				if(op == 3) {//insert
+					for(int j = 0; j < s[3].length(); ++j) {
+						int index = new Integer(s[1]);
+						SNPEntry entry = new SNPEntry();
+						entry.op = op;
+						entry.location = index;
+						if(! globalPosition ) entry.location = index*25+a;
+						entry.value = toInt(s[3].charAt(j));
+						entry.i_dloc = j;
+						map.add(entry);
+					}
 				}
 				else if(op == 2) {//delete
-
+					for(int j = 0; j < s[3].length(); ++j) {
+						int index = new Integer(s[1]);
+						SNPEntry entry = new SNPEntry();
+						entry.op = op;
+						entry.location = index;//(index*25)+a;
+						if(! globalPosition ) entry.location = index*25+a;
+						entry.value = 0;//does not matter what value it is
+						entry.i_dloc = j;
+						map.add(entry);
+					}
 				}
 				else {
 					for(int j = 0; j < s[4].length(); ++j) {
 						int index = (new Integer(s[1])+j);
 						SNPEntry entry = new SNPEntry();
+						entry.op = op;
 						entry.location = index;//(index*25)+a;
 						if(! globalPosition ) entry.location = index*25+a;
 
