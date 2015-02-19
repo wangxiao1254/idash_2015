@@ -49,6 +49,7 @@ public class BF {
 		long res = buffer.getLong();		  
 		long ret =  (res % m);
 		ret = Math.abs(ret);
+//		System.out.println(str+" "+ret);
 		return (int) ret;
 	}
 
