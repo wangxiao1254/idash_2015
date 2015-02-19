@@ -37,10 +37,23 @@ public class BF {
 			e.printStackTrace();
 		}
 	}
+	
+	public int hash(byte[] sk, String str) {
+		sha1.update(str.getBytes());
+		sha1.update(sk);
+		byte[] a = sha1.digest();
 
+		ByteBuffer buffer = ByteBuffer.allocate(a.length);
+		buffer.put(a);
+		buffer.flip();
+		long res = buffer.getLong();		  
+		long ret =  (res % m);
+		ret = Math.abs(ret);
+		return (int) ret;
+	}
 
 	public int hash(byte[] sk, long index) {
-		sha1.update(ByteBuffer.allocate(10+8).putLong(index).put(sk).array());
+		sha1.update(ByteBuffer.allocate(10+8).putLong(index).put(sk));
 		byte[] a = sha1.digest();
 
 		ByteBuffer buffer = ByteBuffer.allocate(a.length);
@@ -55,6 +68,12 @@ public class BF {
 	public void insert(long index) {
 		for(int i = 0; i < k; ++i) {
 			bs[hash(sks[i], index)] = true;
+		}
+	}
+	
+	public void insert(String s) {
+		for(int i = 0; i < k; ++i) {
+			bs[hash(sks[i], s)] = true;
 		}
 	}
 

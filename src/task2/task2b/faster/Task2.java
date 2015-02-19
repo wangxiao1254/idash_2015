@@ -6,8 +6,8 @@ import java.util.HashSet;
 
 import network.Server;
 import task2.bloomFilter.BF;
-import task2.task2a.PrepareData;
-import task2.task2a.SNPEntry;
+import task2.task2b.PrepareData;
+import task2.task2b.SNPEntry;
 import util.EvaRunnable;
 import util.GenRunnable;
 import util.Utils;

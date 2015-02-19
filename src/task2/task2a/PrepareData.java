@@ -1,21 +1,19 @@
 package task2.task2a;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Scanner;
 
 public class PrepareData {
 
-	public static final boolean globalPosition = false;
 	static public HashMap<String, Integer> table = new HashMap<String, Integer>();
 	static{
 		for(int i = 1; i < 23; ++i)
 			table.put(String.valueOf(i), i);
 		table.put("X", 23);
 		table.put("Y", 24);
+		table.put("M", 25);
 	}
 
 	public static int opToInt(String a) {
@@ -70,43 +68,16 @@ public class PrepareData {
 				String tmp = scanner.nextLine();
 				String[] s = tmp.split("\\s+");
 				int a  = table.get(s[0]);
-
 				int op = opToInt(s[s.length-1].split(";")[0].split("=")[1]);
-				if(op == 3) {//insert
-					for(int j = 0; j < s[3].length(); ++j) {
-						int index = new Integer(s[1]);
-						SNPEntry entry = new SNPEntry();
-						entry.op = op;
-						entry.location = index;
-						if(! globalPosition ) entry.location = index*25+a;
-						entry.value = toInt(s[3].charAt(j));
-						entry.i_dloc = j;
-						map.add(entry);
-					}
-				}
-				else if(op == 2) {//delete
-					for(int j = 0; j < s[3].length(); ++j) {
-						int index = new Integer(s[1]);
-						SNPEntry entry = new SNPEntry();
-						entry.op = op;
-						entry.location = index;//(index*25)+a;
-						if(! globalPosition ) entry.location = index*25+a;
-						entry.value = 0;//does not matter what value it is
-						entry.i_dloc = j;
-						map.add(entry);
-					}
+				if(op == 3 || op == 2) {//insert
 				}
 				else {
-					for(int j = 0; j < s[4].length(); ++j) {
-						int index = (new Integer(s[1])+j);
+						long index = new Long(s[1]);
 						SNPEntry entry = new SNPEntry();
-						entry.op = op;
-						entry.location = index;//(index*25)+a;
-						if(! globalPosition ) entry.location = index*25+a;
-
-						entry.value = toInt(s[4].charAt(j));
+						entry.location = index*26+a;
+						entry.value = s[4];
+//						System.out.println(entry);
 						map.add(entry);
-					}
 				}
 			}
 			scanner.close();			
@@ -117,17 +88,6 @@ public class PrepareData {
 		return map;
 	}
 	
-	public static SNPEntry[]  sortKeyValue(HashSet<SNPEntry> map, boolean asc) {
-		SNPEntry[] res = new SNPEntry[map.size()];
-		Iterator<SNPEntry> it = map.iterator();
-		int cnt = 0;
-		while (it.hasNext()) {
-			res[cnt++] = it.next();
-		}
-		Arrays.sort(res, asc? new SNPEntry.AscComparator() : new SNPEntry.DscComparator());
-		return res;
-	}
-	
 	public static void main(String[] args) {
 		HashSet<SNPEntry> a = readFile("data/hu661AD0.snp");
 		HashSet<SNPEntry> b = readFile("data/hu604D39.snp");
@@ -135,12 +95,12 @@ public class PrepareData {
 		aub.addAll(b);
 		aub.addAll(a);
 		
-		HashSet<Long> aa = new HashSet<Long>();
+		HashSet<String> aa = new HashSet<String>();
 		for(SNPEntry o : a) {
-			aa.add(o.toNum());
+			aa.add(o.toString());
 		}
 		for(SNPEntry o : b) {
-			aa.add(o.toNum());
+			aa.add(o.toString());
 		}
 		System.out.println(a.size()+" "+b.size()+" "+aa.size());
 	}

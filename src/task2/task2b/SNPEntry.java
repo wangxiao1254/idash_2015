@@ -1,11 +1,23 @@
 package task2.task2b;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Comparator;
 
 import task2.Constants;
 
 
 public class SNPEntry implements Comparable<SNPEntry>{
+	static public MessageDigest sha1;
+	static {
+		try {
+			sha1 = MessageDigest.getInstance("SHA-1");
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
 	public long location;
 	public int i_dloc;
 	public int op;//0: SUB 1: SNP 2: DEL 3: INS

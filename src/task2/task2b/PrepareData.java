@@ -16,6 +16,7 @@ public class PrepareData {
 			table.put(String.valueOf(i), i);
 		table.put("X", 23);
 		table.put("Y", 24);
+		table.put("M", 25);
 	}
 
 	public static int opToInt(String a) {
@@ -78,7 +79,7 @@ public class PrepareData {
 						SNPEntry entry = new SNPEntry();
 						entry.op = op;
 						entry.location = index;
-						if(! globalPosition ) entry.location = index*25+a;
+						if(! globalPosition ) entry.location = index*26+a;
 						entry.value = toInt(s[3].charAt(j));
 						entry.i_dloc = j;
 						map.add(entry);
@@ -90,7 +91,7 @@ public class PrepareData {
 						SNPEntry entry = new SNPEntry();
 						entry.op = op;
 						entry.location = index;//(index*25)+a;
-						if(! globalPosition ) entry.location = index*25+a;
+						if(! globalPosition ) entry.location = index*26+a;
 						entry.value = 0;//does not matter what value it is
 						entry.i_dloc = j;
 						map.add(entry);
@@ -102,7 +103,7 @@ public class PrepareData {
 						SNPEntry entry = new SNPEntry();
 						entry.op = op;
 						entry.location = index;//(index*25)+a;
-						if(! globalPosition ) entry.location = index*25+a;
+						if(! globalPosition ) entry.location = index*26+a;
 
 						entry.value = toInt(s[4].charAt(j));
 						map.add(entry);

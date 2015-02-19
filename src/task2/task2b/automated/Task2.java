@@ -7,8 +7,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 import network.Server;
-import task2.task2a.PrepareData;
-import task2.task2a.SNPEntry;
+import task2.task2b.PrepareData;
+import task2.task2b.SNPEntry;
 import util.EvaRunnable;
 import util.GenRunnable;
 import util.Utils;
