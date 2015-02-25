@@ -1,8 +1,18 @@
 \documentclass{article}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{algorithmicx}
 
 \title{Implementing iDASH Competition}
 \begin{document}
+\section{Overview}
+All the implementation are implemented using the framework {\tt ObliVM}. For each test, we provide 2 or 3 solutions:
+\begin{enumerate}
+\item A solution with manually created circuits.
+\item A solution with automatically generated circuits.
+\item A solution that allows a trade off between speed and accuracy.
+\end{enumerate}
 \input{task1}
 \input{task2}
-\input{eval}
+%\input{eval}
 \end{document} 
