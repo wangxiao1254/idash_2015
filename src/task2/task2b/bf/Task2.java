@@ -1,4 +1,4 @@
-package task2.task2b.faster;
+package task2.task2b.bf;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;

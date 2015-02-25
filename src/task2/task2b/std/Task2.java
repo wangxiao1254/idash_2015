@@ -1,4 +1,4 @@
-package task2.task2b.automated;
+package task2.task2b.std;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -6,7 +6,14 @@ import java.util.Arrays;
 import java.util.HashSet;
 
 import network.Server;
-import task2.task2a.automated.Task2Automated;
+
+import org.apache.commons.cli.BasicParser;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.Options;
+
+import task2.circuit_from_compiler.Task2Automated;
+import task2.obliviousmerge.ObliviousMergeLib;
 import task2.task2b.PrepareData;
 import task2.task2b.SNPEntry;
 import util.EvaRunnable;
@@ -16,30 +23,60 @@ import circuits.arithmetic.IntegerLib;
 import flexsc.CompEnv;
 
 public class Task2 {
-	public static int SP = 10;
-	
+	public static final int SP = 30;
+
 	public static<T> T[] compute(CompEnv<T> env, T[][] scData) {
-		Task2Automated<T> a;
-		T[] ret = null;
-		try {
-			a = new Task2Automated<T>(env, scData[0].length, (int) Math.ceil(Math.log(scData.length)/Math.log(2)) );
-			ret = a.funct(scData, scData.length);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		ObliviousMergeLib<T> lib = new ObliviousMergeLib<T>(env);
+		lib.bitonicMerge(scData, lib.SIGNAL_ZERO);
+		T[] resBit = lib.zeros(scData.length);
+		for(int i = 0; i < scData.length-1; ++i) {			
+			T eq = lib.eq(scData[i], scData[i+1]);
+			resBit[i] = lib.not(eq);
 		}
-		return ret;
+		T[] res = lib.numberOfOnes(resBit);
+		res = lib.add(res, lib.toSignals(1, res.length));
+		return res;
 	}
-	
+
+	public static<T> T[] computeAuto(CompEnv<T> env, T[][] scData) {
+			Task2Automated<T> a;
+			T[] ret = null;
+			try {
+				a = new Task2Automated<T>(env, scData[0].length, (int) Math.ceil(Math.log(scData.length)/Math.log(2)) );
+				ret = a.funct(scData, scData.length);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return ret;
+		}
+
 	public static class Generator<T> extends GenRunnable<T> {
 		T[][] scData;
 		T[][] scData2;
 		T[] res, res2;
 		int totalSize;
-		
+		boolean automated;
 		@Override
-		public void prepareInput(CompEnv<T> gen) {
-			HashSet<SNPEntry> data = PrepareData.readFile(args[0]);
+		public void prepareInput(CompEnv<T> gen) throws Exception {
+			Options options = new Options();
+			options.addOption("a", false, "automated");
+			options.addOption("f", "file", true, "file");
+
+			CommandLineParser parser = new BasicParser();
+			CommandLine cmd = parser.parse(options, args);
+
+			automated = cmd.hasOption("a");
+			if(!cmd.hasOption("f")) {
+				throw new Exception("wrong input");
+			}
+			if(automated)
+				System.out.println("Running the program with automatically generated circuits");
+			else
+				System.out.println("Running the program with manually generated circuits");
+
+			HashSet<SNPEntry> data = PrepareData.readFile(cmd.getOptionValue("f"));
+
 			int alicelength = 0;			for(SNPEntry e : data) alicelength +=e.value.length();
 
 			byte[] boblengthraw = null;
@@ -123,10 +160,27 @@ public class Task2 {
 		T[][] scData2;
 		T[] res, res2;
 		int totalSize;
-		
+		boolean automated;
 		@Override
-		public void prepareInput(CompEnv<T> gen) {
-			HashSet<SNPEntry> data = PrepareData.readFile(args[0]);
+		public void prepareInput(CompEnv<T> gen) throws Exception {
+			Options options = new Options();
+			options.addOption("a", false, "automated");
+			options.addOption("f", "file", true, "file");
+
+			CommandLineParser parser = new BasicParser();
+			CommandLine cmd = parser.parse(options, args);
+
+			automated = cmd.hasOption("a");
+			if(!cmd.hasOption("f")) {
+				throw new Exception("wrong input");
+			}
+			if(automated)
+				System.out.println("Running the program with automatically generated circuits");
+			else
+				System.out.println("Running the program with manually generated circuits");
+
+			HashSet<SNPEntry> data = PrepareData.readFile(cmd.getOptionValue("f"));
+
 			int boblength = 0;			for(SNPEntry e : data) boblength +=e.value.length();
 			byte[] alicelengthraw = null;
 			try {

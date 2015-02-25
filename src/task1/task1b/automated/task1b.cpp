@@ -1,6 +1,6 @@
-struct Task1b{};
+struct Task1bAutomated{};
 
-float32[public 200] Task1b.func(
+float32[public 200] Task1bAutomated.func(
       float32[public 200][public 3] alice_case, float32[public 200][public 3] alice_control,
       float32[public 200][public 3] bob_case, float32[public 200][public 3] bob_control,
       public int32 testcases ) {
