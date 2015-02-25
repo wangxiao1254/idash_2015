@@ -1,6 +1,5 @@
 package task2.task2b.std;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -23,7 +22,7 @@ import circuits.arithmetic.IntegerLib;
 import flexsc.CompEnv;
 
 public class Task2 {
-	public static final int SP = 30;
+	public static int SP = 10;
 
 	public static<T> T[] compute(CompEnv<T> env, T[][] scData) {
 		ObliviousMergeLib<T> lib = new ObliviousMergeLib<T>(env);
@@ -39,17 +38,37 @@ public class Task2 {
 	}
 
 	public static<T> T[] computeAuto(CompEnv<T> env, T[][] scData) {
-			Task2Automated<T> a;
-			T[] ret = null;
-			try {
-				a = new Task2Automated<T>(env, scData[0].length, (int) Math.ceil(Math.log(scData.length)/Math.log(2)) );
-				ret = a.funct(scData, scData.length);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			return ret;
+		Task2Automated<T> a;
+		T[] ret = null;
+		try {
+			a = new Task2Automated<T>(env, scData[0].length, (int) Math.ceil(Math.log(scData.length)/Math.log(2)) );
+			ret = a.funct(scData, scData.length);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		return ret;
+	}
+
+	static CommandLine processArgs(String[] args) throws Exception {
+		Options options = new Options();
+		options.addOption("a", false, "automated");
+		options.addOption("f", "file", true, "file");
+		options.addOption("p", "precision", true, "precision");
+
+		CommandLineParser parser = new BasicParser();
+		CommandLine cmd = parser.parse(options, args);
+
+		if(!cmd.hasOption("f")) {
+			throw new Exception("wrong input");
+		}
+		if(cmd.hasOption("a"))
+			System.out.println("Running the program with automatically generated circuits");
+		else
+			System.out.println("Running the program with manually generated circuits");
+		return cmd;
+	}
+
 
 	public static class Generator<T> extends GenRunnable<T> {
 		T[][] scData;
@@ -59,39 +78,21 @@ public class Task2 {
 		boolean automated;
 		@Override
 		public void prepareInput(CompEnv<T> gen) throws Exception {
-			Options options = new Options();
-			options.addOption("a", false, "automated");
-			options.addOption("f", "file", true, "file");
-
-			CommandLineParser parser = new BasicParser();
-			CommandLine cmd = parser.parse(options, args);
-
+			CommandLine cmd = processArgs(args);
 			automated = cmd.hasOption("a");
-			if(!cmd.hasOption("f")) {
-				throw new Exception("wrong input");
-			}
-			if(automated)
-				System.out.println("Running the program with automatically generated circuits");
-			else
-				System.out.println("Running the program with manually generated circuits");
-
+			if(cmd.hasOption("p"))
+				SP = Math.max(new Integer(cmd.getOptionValue("p")), SP);
 			HashSet<SNPEntry> data = PrepareData.readFile(cmd.getOptionValue("f"));
 
-			int alicelength = 0;			for(SNPEntry e : data) alicelength +=e.value.length();
+			int alicelength = 0;			
+			for(SNPEntry e : data) alicelength +=e.value.length();
 
-			byte[] boblengthraw = null;
-			try {
-				gen.os.write(ByteBuffer.allocate(4).putInt(alicelength).array());
-				gen.os.flush();
-				boblengthraw = Server.readBytes(gen.is, 4);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			int boblength = ByteBuffer.wrap(boblengthraw).getInt();
+			gen.os.write(ByteBuffer.allocate(4).putInt(alicelength).array());
+			gen.os.flush();
+			int boblength = ByteBuffer.wrap(Server.readBytes(gen.is, 4)).getInt();
 			totalSize = boblength+alicelength;
 			int LEN = (int) (Math.log(totalSize)/Math.log(2)+SP);
-			
+
 			long[] in = new long[alicelength];
 			long[] in2 = new long[alicelength];
 			int cnt = 0;
@@ -108,32 +109,32 @@ public class Task2 {
 					cnt++;
 				}
 			}
-			
+
 			Arrays.sort(in);
 			Arrays.sort(in2);
-						
-			
+
+
 			boolean[][] clear = new boolean[alicelength][];
 			for(int i = 0; i < in.length;  ++i)
 				clear[i] = Utils.fromLong(in[i], LEN);
-			
+
 			T[][] Alice = gen.inputOfAlice(clear);
 			T[][] Bob = gen.inputOfBob(new boolean[boblength][LEN]);
-			
+
 			scData = gen.newTArray(totalSize, LEN);
-			
+
 			System.arraycopy(Alice, 0, scData, 0, Alice.length);
 			System.arraycopy(Bob, 0, scData, Alice.length, Bob.length);
 
 			clear = new boolean[alicelength][];
 			for(int i = 0; i < in.length;  ++i)
 				clear[i] = Utils.fromLong(in2[i], LEN);
-			
+
 			Alice = gen.inputOfAlice(clear);
 			Bob = gen.inputOfBob(new boolean[boblength][LEN]);
-			
+
 			scData2 = gen.newTArray(totalSize, LEN);
-			
+
 			System.arraycopy(Alice, 0, scData2, 0, Alice.length);
 			System.arraycopy(Bob, 0, scData2, Alice.length, Bob.length);
 		}
@@ -163,35 +164,18 @@ public class Task2 {
 		boolean automated;
 		@Override
 		public void prepareInput(CompEnv<T> gen) throws Exception {
-			Options options = new Options();
-			options.addOption("a", false, "automated");
-			options.addOption("f", "file", true, "file");
-
-			CommandLineParser parser = new BasicParser();
-			CommandLine cmd = parser.parse(options, args);
-
+			CommandLine cmd = processArgs(args);
 			automated = cmd.hasOption("a");
-			if(!cmd.hasOption("f")) {
-				throw new Exception("wrong input");
-			}
-			if(automated)
-				System.out.println("Running the program with automatically generated circuits");
-			else
-				System.out.println("Running the program with manually generated circuits");
-
+			if(cmd.hasOption("p"))
+				SP = Math.max(new Integer(cmd.getOptionValue("p")), SP);
 			HashSet<SNPEntry> data = PrepareData.readFile(cmd.getOptionValue("f"));
 
-			int boblength = 0;			for(SNPEntry e : data) boblength +=e.value.length();
-			byte[] alicelengthraw = null;
-			try {
-				gen.os.write(ByteBuffer.allocate(4).putInt(boblength).array());
-				gen.os.flush();
-				alicelengthraw = Server.readBytes(gen.is, 4);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			int alicelength = ByteBuffer.wrap(alicelengthraw).getInt();
+			int boblength = 0;			
+			for(SNPEntry e : data) boblength +=e.value.length();
+			gen.os.write(ByteBuffer.allocate(4).putInt(boblength).array());
+			gen.os.flush();
+
+			int alicelength = ByteBuffer.wrap(Server.readBytes(gen.is, 4)).getInt();
 			totalSize  = alicelength+boblength;
 			int LEN = (int) (Math.log(totalSize)/Math.log(2)+SP);
 
@@ -211,32 +195,32 @@ public class Task2 {
 					cnt++;
 				}
 			}
-			
+
 			Arrays.sort(in);
 			Arrays.sort(in2);
-						
-			
+
+
 			boolean[][] clear = new boolean[boblength][];
 			for(int i = 0; i < in.length;  ++i)
 				clear[i] = Utils.fromLong(-1*in[i], LEN);
-			
+
 			T[][] Alice = gen.inputOfAlice(new boolean[alicelength][LEN]);
 			T[][] Bob = gen.inputOfBob(clear);
-			
+
 			scData = gen.newTArray(totalSize, LEN);
-			
+
 			System.arraycopy(Alice, 0, scData, 0, Alice.length);
 			System.arraycopy(Bob, 0, scData, Alice.length, Bob.length);
 
 			clear = new boolean[boblength][];
 			for(int i = 0; i < in.length;  ++i)
 				clear[i] = Utils.fromLong(-1*in2[i], LEN);
-			
+
 			Alice = gen.inputOfAlice(new boolean[alicelength][LEN]);
 			Bob = gen.inputOfBob(clear);
-			
+
 			scData2 = gen.newTArray(totalSize, LEN);
-			
+
 			System.arraycopy(Alice, 0, scData2, 0, Alice.length);
 			System.arraycopy(Bob, 0, scData2, Alice.length, Bob.length);
 		}

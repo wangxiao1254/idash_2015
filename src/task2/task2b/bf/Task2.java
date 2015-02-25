@@ -4,6 +4,11 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.HashSet;
 
+import org.apache.commons.cli.BasicParser;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.Options;
+
 import network.Server;
 import task2.bloomFilter.BF;
 import task2.task2b.PrepareData;
@@ -15,14 +20,28 @@ import circuits.arithmetic.IntegerLib;
 import flexsc.CompEnv;
 
 public class Task2 {
-	public static final int NoM = 60;
-	
+	public static int NoM = 40;
+
 	public static<T> T[] compute(CompEnv<T> env, T[] aliceBF, T[] bobBF) {
 		IntegerLib<T> lib = new IntegerLib<>(env);
 		T[] aUb = lib.or(aliceBF, bobBF);
 		return lib.numberOfOnes(aUb);
 	}
-	
+
+	static CommandLine processArgs(String[] args) throws Exception {
+		Options options = new Options();
+		options.addOption("f", "file", true, "file");
+		options.addOption("p", "filprecisione", true, "precision");
+
+		CommandLineParser parser = new BasicParser();
+		CommandLine cmd = parser.parse(options, args);
+
+		if(!cmd.hasOption("f")) {
+			throw new Exception("wrong input");
+		}
+		return cmd;
+	}
+
 	public static class Generator<T> extends GenRunnable<T> {
 		T[] aliceBF, aliceBF2;
 		T[] bobBF, bobBF2;
@@ -30,48 +49,41 @@ public class Task2 {
 		BF bf;
 		BF bf2;
 		int totalSize = 0;
-		
+
 		@Override
-		public void prepareInput(CompEnv<T> gen) {
-			HashSet<SNPEntry> data = PrepareData.readFile(args[0]);
+		public void prepareInput(CompEnv<T> gen) throws Exception {
+			CommandLine cmd = processArgs(args);
+			if(cmd.hasOption("p"))
+				NoM = Math.max(new Integer(cmd.getOptionValue("p")), NoM);
+			HashSet<SNPEntry> data = PrepareData.readFile(cmd.getOptionValue("f"));
+
 			int alicelength = 0;			for(SNPEntry e : data) alicelength +=e.value.length();
 
-			byte[] boblengthraw = null;
-			try {
-				gen.os.write(ByteBuffer.allocate(4).putInt(alicelength).array());
-				gen.os.flush();
-				boblengthraw = Server.readBytes(gen.is, 4);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			int boblength = ByteBuffer.wrap(boblengthraw).getInt();
+			gen.os.write(ByteBuffer.allocate(4).putInt(alicelength).array());
+			gen.os.flush();
+
+			int boblength = ByteBuffer.wrap(Server.readBytes(gen.is, 4)).getInt();
 			totalSize = boblength+alicelength;
 			bf = new BF(boblength+alicelength, NoM*(boblength+alicelength));
 			bf2 = new BF(boblength+alicelength, NoM*(boblength+alicelength));
 			bf2.sks = bf.sks;
-			try {
-				for(int i = 0; i < bf.k; ++i)
-					gen.os.write(bf.sks[i]);
-				gen.os.flush();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
+			for(int i = 0; i < bf.k; ++i)
+				gen.os.write(bf.sks[i]);
+			gen.os.flush();
+
 			for(SNPEntry e : data) {
 				//for every pos: d+=max(d(x), d(y))
 				for(int i = 0; i < e.value.length(); ++i){
 					bf.insert(e.Pos(i));
 				}
 			}
-			
+
 			for(SNPEntry e : data) {
 				// compute intersection which means: posx==posy & x==y
 				for(int i = 0; i < e.value.length(); ++i)
 					bf2.insert(e.PosVal(i));
 			}
-			
+
 			aliceBF = gen.inputOfAlice(bf.bs);
 			aliceBF2 = gen.inputOfAlice(bf2.bs);
 			bobBF =  gen.inputOfBob(bf.bs);
@@ -106,22 +118,20 @@ public class Task2 {
 		T[] bobBF2;
 		T[] res, res2;
 		BF bf;
-		
+
 		@Override
-		public void prepareInput(CompEnv<T> gen) {
-			HashSet<SNPEntry> data = PrepareData.readFile(args[0]);
+		public void prepareInput(CompEnv<T> gen) throws Exception {
+			CommandLine cmd = processArgs(args);
+			if(cmd.hasOption("p"))
+				NoM = Math.max(new Integer(cmd.getOptionValue("p")), NoM);
+			HashSet<SNPEntry> data = PrepareData.readFile(cmd.getOptionValue("f"));
+
 			int boblength = 0;			for(SNPEntry e : data) boblength +=e.value.length();
-			byte[] alicelengthraw = null;
-			try {
-				gen.os.write(ByteBuffer.allocate(4).putInt(boblength).array());
-				gen.os.flush();
-				alicelengthraw = Server.readBytes(gen.is, 4);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			int alicelength = ByteBuffer.wrap(alicelengthraw).getInt();
-			
+			gen.os.write(ByteBuffer.allocate(4).putInt(boblength).array());
+			gen.os.flush();
+
+			int alicelength = ByteBuffer.wrap(Server.readBytes(gen.is, 4)).getInt();
+
 
 			bf = new BF(boblength+alicelength, NoM*(boblength+alicelength));
 			BF bf2 = new BF(boblength+alicelength, NoM*(boblength+alicelength));
@@ -133,18 +143,18 @@ public class Task2 {
 					e1.printStackTrace();
 				}
 			bf2.sks = bf.sks;
-			
-			
+
+
 			for(SNPEntry e : data) {
 				for(int i = 0; i < e.value.length(); ++i)
 					bf.insert(e.Pos(i));
 			}
-			
+
 			for(SNPEntry e : data) {
 				for(int i = 0; i < e.value.length(); ++i)
 					bf2.insert(e.PosVal(i));
 			}
-			
+
 			aliceBF = gen.inputOfAlice(bf.bs);
 			aliceBF2 = gen.inputOfAlice(bf2.bs);
 			bobBF =  gen.inputOfBob(bf.bs);
