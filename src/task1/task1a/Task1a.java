@@ -46,6 +46,26 @@ public class Task1a {
 		return ret;
 	}
 	
+	
+	static CommandLine processArgs(String[] args) throws Exception {
+		Options options = new Options();
+		options.addOption("a", false, "automated");
+		options.addOption("c", "case", true, "case");
+		options.addOption("t", "control", true, "control");
+
+		CommandLineParser parser = new BasicParser();
+		CommandLine cmd = parser.parse(options, args);
+
+		if(!cmd.hasOption("c") || !cmd.hasOption("t")) {
+			throw new Exception("wrong input");
+		}
+		if(cmd.hasOption("a"))
+			System.out.println("Running the program with automatically generated circuits");
+		else
+			System.out.println("Running the program with manually generated circuits");
+		return cmd;
+	}
+	
 	public static class Generator<T> extends GenRunnable<T> {
 		T[][] alice;
 		T[][] bob;
@@ -54,34 +74,36 @@ public class Task1a {
 		boolean automated;
 		@Override
 		public void prepareInput(CompEnv<T> env) throws Exception {
-			Options options = new Options();
-			options.addOption("a", false, "automated");
-			options.addOption("f", "case", true, "file");
-
-			CommandLineParser parser = new BasicParser();
-			CommandLine cmd = parser.parse(options, args);
-
+			CommandLine cmd = processArgs(args);
 			automated = cmd.hasOption("a");
-			if(!cmd.hasOption("f")) {
-				throw new Exception("wrong input");
+			StatisticsData staDataCase = PrepareData.readFile(cmd.getOptionValue("c"));
+			StatisticsData staDataControl = PrepareData.readFile(cmd.getOptionValue("t"));
+			Statistics[] sta = staDataCase.data;
+			for(int i = 0; i < sta.length; ++i) {
+				if(sta[i].g1 == staDataControl.data[i].g1 &&
+						sta[i].g2 == staDataControl.data[i].g2)
+				{
+					sta[i].numOfG1 += staDataControl.data[i].numOfG1;
+					sta[i].numOfG2 += staDataControl.data[i].numOfG2;
+				}
+				else {
+					System.out.println("input is wrong!");
+				}
 			}
-			if(automated)
-				System.out.println("Running the program with automatically generated circuits");
-			else
-				System.out.println("Running the program with manually generated circuits");
+			int numberOftuples = staDataCase.numberOftuples + staDataControl.numberOftuples; 
 			
-			StatisticsData staData = PrepareData.readFile(cmd.getOptionValue("f"));
-			Statistics[] sta = staData.data;
+			
+			
 			int boblength = 0;
 			try {
-				env.os.write(ByteBuffer.allocate(4).putInt(staData.numberOftuples).array());
+				env.os.write(ByteBuffer.allocate(4).putInt(numberOftuples).array());
 				env.os.flush();
 				boblength = ByteBuffer.wrap(Server.readBytes(env.is, 4)).getInt();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			numberOfSta = 2*(boblength + staData.numberOftuples);
+			numberOfSta = 2*(boblength + numberOftuples);
 			width = (int) Math.ceil(Math.log(numberOfSta)/Math.log(2));
 			
 			boolean[][] input = new boolean[sta.length][width];
@@ -90,7 +112,8 @@ public class Task1a {
 			}
 			
 			alice = env.inputOfAlice(input);
-			bob = env.inputOfBob(input);		}
+			bob = env.inputOfBob(input);		
+		}
 
 		T[][] res;
 		@Override
@@ -121,31 +144,34 @@ public class Task1a {
 		boolean automated;
 		@Override
 		public void prepareInput(CompEnv<T> env) throws Exception {
-			Options options = new Options();
-			options.addOption("a", false, "automated");
-			options.addOption("f", "case", true, "file");
-
-			CommandLineParser parser = new BasicParser();
-			CommandLine cmd = parser.parse(options, args);
-
+			CommandLine cmd = processArgs(args);
 			automated = cmd.hasOption("a");
-			if(!cmd.hasOption("f")) {
-				throw new Exception("wrong input");
+			StatisticsData staDataCase = PrepareData.readFile(cmd.getOptionValue("c"));
+			StatisticsData staDataControl = PrepareData.readFile(cmd.getOptionValue("t"));
+			Statistics[] sta = staDataCase.data;
+			for(int i = 0; i < sta.length; ++i) {
+				if(sta[i].g1 == staDataControl.data[i].g1 &&
+						sta[i].g2 == staDataControl.data[i].g2)
+				{
+					sta[i].numOfG1 += staDataControl.data[i].numOfG1;
+					sta[i].numOfG2 += staDataControl.data[i].numOfG2;
+				}
+				else {
+					System.out.println("input is wrong!");
+				}
 			}
-
+			int numberOftuples = staDataCase.numberOftuples + staDataControl.numberOftuples; 
 			
-			StatisticsData staData = PrepareData.readFile(cmd.getOptionValue("f"));
-			Statistics[] sta = staData.data;
 			int boblength = 0;
 			try {
-				env.os.write(ByteBuffer.allocate(4).putInt(staData.numberOftuples).array());
+				env.os.write(ByteBuffer.allocate(4).putInt(numberOftuples).array());
 				env.os.flush();
 				boblength = ByteBuffer.wrap(Server.readBytes(env.is, 4)).getInt();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			numberOfSta = 2*(boblength + staData.numberOftuples);
+			numberOfSta = 2*(boblength + numberOftuples);
 			width = (int) Math.ceil(Math.log(numberOfSta)/Math.log(2));
 			
 			boolean[][] input = new boolean[sta.length][width];
