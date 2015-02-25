@@ -2,6 +2,7 @@ package task2.task2a.automated;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 import java.util.HashSet;
 
 import network.Server;
@@ -11,23 +12,27 @@ import task2.task2a.SNPEntry;
 import util.EvaRunnable;
 import util.GenRunnable;
 import util.Utils;
-import circuits.arithmetic.IntegerLib;
 import flexsc.CompEnv;
 
 public class Task2 {
-	public static final int NoM = 80;
+	public static final int LEN = 25;
 	
-	public static<T> T[] compute(CompEnv<T> env, T[] aliceBF, T[] bobBF) throws Exception {
-		IntegerLib<T> lib = new IntegerLib<>(env);
-		System.out.println("Bloom Filter Size: "+aliceBF.length);
-		T[] aUb = lib.or(aliceBF, bobBF);
-		Task2aAutomated<T> circuit = new Task2aAutomated<T>(env); 
-		return circuit.countOnes(aUb.length, aUb);
+	public static<T> T[] compute(CompEnv<T> env, T[][] scData, int length) {
+		Task2Automated<T> a;
+		T[] ret = null;
+		try {
+			a = new Task2Automated<T>(env, scData[0].length, (int) Math.ceil(Math.log(length)/Math.log(2)) );
+			ret = a.funct(scData, scData.length);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return ret;
 	}
+
 	
 	public static class Generator<T> extends GenRunnable<T> {
-		T[] aliceBF;
-		T[] bobBF;
+		T[][] scData;
 		T[] res;
 		BF bf;
 		int totalSize = 0;
@@ -36,52 +41,56 @@ public class Task2 {
 		public void prepareInput(CompEnv<T> gen) {
 			HashSet<SNPEntry> data = PrepareData.readFile(args[0]);
 			int alicelength = data.size();
+			
 			byte[] boblengthraw = null;
 			try {
 				gen.os.write(ByteBuffer.allocate(4).putInt(data.size()).array());
 				gen.os.flush();
 				boblengthraw = Server.readBytes(gen.is, 4);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			int boblength = ByteBuffer.wrap(boblengthraw).getInt();
 			totalSize = boblength+alicelength;
-			bf = new BF(boblength+alicelength, NoM*(boblength+alicelength));
-			try {
-				for(int i = 0; i < bf.k; ++i)
-					gen.os.write(bf.sks[i]);
-				gen.os.flush();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 			
+			long[] in = new long[alicelength];
+			int cnt = 0;
 			for(SNPEntry e : data) {
-				bf.insert(e.toString());
+				in[cnt] = SNPEntry.HashToLong(e.toString(), LEN);
+				cnt++;
 			}
+			Arrays.sort(in);
 			
-			aliceBF = gen.inputOfAlice(bf.bs);
-			bobBF =  gen.inputOfBob(bf.bs);
+			boolean[][] clear = new boolean[alicelength][];
+			for(int i = 0; i < in.length;  ++i)
+				clear[i] = Utils.fromLong(in[i], LEN);
+			
+			T[][] Alice = gen.inputOfAlice(clear);
+			T[][] Bob = gen.inputOfBob(new boolean[boblength][LEN]);
+			
+			scData = gen.newTArray(totalSize, LEN);
+			
+			System.arraycopy(Alice, 0, scData, 0, Alice.length);
+			System.arraycopy(Bob, 0, scData, Alice.length, Bob.length);
 		}
 
 		@Override
-		public void secureCompute(CompEnv<T> gen) throws Exception {
-			res = compute(gen, aliceBF, bobBF);
+		public void secureCompute(CompEnv<T> gen) {
+			res = compute(gen, scData, totalSize);
 		}
 
 		@Override
 		public void prepareOutput(CompEnv<T> gen) {
 			int r = Utils.toInt(gen.outputToAlice(res));
-			r = bf.countToSize(r);
-			System.out.println(2*r-totalSize);
+//			r = bf.countToSize(r);
+			System.out.println("res"+(2*r-totalSize));
 		}		
 	}
 
 	public static class Evaluator<T> extends EvaRunnable<T> {
-		T[] aliceBF;
-		T[] bobBF;
+		T[][] scData;
 		T[] res;
+		int totalSize;
 		
 		@Override
 		public void prepareInput(CompEnv<T> gen) {
@@ -97,28 +106,30 @@ public class Task2 {
 				e.printStackTrace();
 			}
 			int alicelength = ByteBuffer.wrap(alicelengthraw).getInt();
-			
-
-			BF bf = new BF(boblength+alicelength, NoM*(boblength+alicelength));
-			for(int i = 0; i < bf.k; ++i)
-				try {
-					bf.sks[i] = Server.readBytes(gen.is, bf.sks[i].length);
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			
+			long[] in = new long[boblength];
+			int cnt = 0;
 			for(SNPEntry e : data) {
-				bf.insert(e.toString());
+				in[cnt] = -1*SNPEntry.HashToLong(e.toString(), LEN);
+				cnt++;
 			}
+			totalSize = alicelength+boblength;
+			Arrays.sort(in);
 			
-			aliceBF = gen.inputOfAlice(bf.bs);
-			bobBF =  gen.inputOfBob(bf.bs);
+			boolean[][] clear = new boolean[boblength][];
+			for(int i = 0; i < in.length;  ++i)
+				clear[i] = Utils.fromLong(-1*in[i], LEN);
+
+			T[][] Alice = gen.inputOfAlice(new boolean[alicelength][LEN]);
+			T[][] Bob = gen.inputOfBob(clear);
+			scData = gen.newTArray(Alice.length+Bob.length, LEN);
+			
+			System.arraycopy(Alice, 0, scData, 0, Alice.length);
+			System.arraycopy(Bob, 0, scData, Alice.length, Bob.length);
 		}
 
 		@Override
-		public void secureCompute(CompEnv<T> gen) throws Exception {
-			res = compute(gen, aliceBF, bobBF);
+		public void secureCompute(CompEnv<T> gen) {
+			res = compute(gen, scData, totalSize);
 		}
 
 		@Override

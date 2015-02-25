@@ -1,13 +1,16 @@
 package task2.task2b;
 
+import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Comparator;
 
-import task2.Constants;
 
 
-public class SNPEntry implements Comparable<SNPEntry>{
+
+
+public class SNPEntry  implements Comparable<SNPEntry>{
 	static public MessageDigest sha1;
 	static {
 		try {
@@ -17,22 +20,24 @@ public class SNPEntry implements Comparable<SNPEntry>{
 			e.printStackTrace();
 		}
 	}
-
 	public long location;
-	public int i_dloc;
-	public int op;//0: SUB 1: SNP 2: DEL 3: INS
-	public int value;// ATCG: 0123
-
-	public SNPEntry(int loc, int val, int idloc, int o) {
-		op = o;
+	public String value;// ATCG: 0123
+	public int op;
+	public SNPEntry(long loc, String val, int op) {
 		location = loc;
 		value = val;
-		i_dloc = idloc;
+		this.op = op;
 	}
 
 	public SNPEntry() {
-		location=op=value=i_dloc=0;
 	}
+	
+	public static long HashToLong(String a, int range){
+		sha1.update(a.getBytes());
+		long res = ByteBuffer.wrap( sha1.digest()).getLong();
+		return Math.abs(res >> (64-range));
+	}
+	
 	@Override
 	public boolean  equals(Object obj) {
 		if(this == obj){
@@ -40,9 +45,7 @@ public class SNPEntry implements Comparable<SNPEntry>{
 		}
 		SNPEntry o = (SNPEntry) obj;
 		if (o!=null ) {
-			if(i_dloc == o.i_dloc &&
-					value == o.value &&
-					op == o.op &&
+			if(value == o.value &&
 					location == o.location
 					)
 				return true;
@@ -53,57 +56,44 @@ public class SNPEntry implements Comparable<SNPEntry>{
 		}
 	};
 
-	public long toNum(){
-		long res = i_dloc;
-		res <<=2;
-		res +=op;
-		res<<=2;
-		res+=value;
-		res<<= Constants.LengthOfLocation;
-		res+= location;
-		return res;
-	}
 	@Override
 	public String toString() {
-		return ""+location+" "+op+" "+" "+i_dloc+" "+value;
+		return location+""+value;
 	}
+	
+	public BigInteger hash() {
+		sha1.update(value.getBytes());
+		sha1.update(ByteBuffer.allocate(8).putLong(location));
+		return new BigInteger(sha1.digest());
+	}
+	
+	public String hashPos(int i) {
+		sha1.update(ByteBuffer.allocate(8).putLong(location).array());
+		sha1.update(ByteBuffer.allocate(4).putInt(i).array());
+		return new String(sha1.digest());
+	}
+	public String hashPosVal(int i) {
+		sha1.update(ByteBuffer.allocate(8).putLong(location).array());
+		sha1.update(ByteBuffer.allocate(4).putInt(i).array());
+		sha1.update(value.getBytes());
+		String a = new String(sha1.digest());
+//		System.out.println(a);
+		return a;
+	}
+	
+	public String Pos(int i) {
+		return location+""+i;
+	}
+	
+	public String PosVal(int i) {
+		return value+""+location+""+i;
+	}
+	
 	@Override
-	public int compareTo(SNPEntry o) {//according to all
-		if(this == o){
-			return 0;            
-		}
-		else if (o!=null ) {
-			if(i_dloc < o.i_dloc){
-				return -1;
-			} else if (i_dloc > o.i_dloc) {
-				return 1;
-			}
-			else {
-				if(op < o.op){
-					return -1;
-				} else if (op > o.op) {
-					return 1;
-				}
-				else {
-					if(value < o.value){
-						return -1;
-					} else if (value > o.value) {
-						return 1;
-					}
-					else {
-						if(location < o.location){
-							return -1;
-						} else {//if (location >= o.location) {
-							return 1;
-						}
-					}	
-				}				
-			}
-		}else{
-			return -1;
-		}
+	public int compareTo(SNPEntry o) { 
+		return hash().compareTo(o.hash());
 	}
-
+	
 	public static class AscComparator implements Comparator<SNPEntry> {
 		@Override
 		public int compare(SNPEntry o1, SNPEntry o2) {
@@ -117,5 +107,4 @@ public class SNPEntry implements Comparable<SNPEntry>{
 			return o2.compareTo(o1);
 		}
 	}
-
 }

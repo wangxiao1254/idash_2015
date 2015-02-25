@@ -76,7 +76,7 @@ public class Task1b {
 			CommandLineParser parser = new BasicParser();
 			CommandLine cmd = parser.parse(options, args);
 
-			precise = cmd.hasOption("t");
+			precise = cmd.hasOption("h");
 			if(!cmd.hasOption("s") || !cmd.hasOption("t")) {
 				throw new Exception("wrong input");
 			}

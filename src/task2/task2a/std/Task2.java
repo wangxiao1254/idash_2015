@@ -15,13 +15,13 @@ import circuits.arithmetic.IntegerLib;
 import flexsc.CompEnv;
 
 public class Task2 {
-	public static final int NoM = 80;
+	public static final int NoM = 150;
 	
 	public static<T> T[] compute(CompEnv<T> env, T[] aliceBF, T[] bobBF) {
 		IntegerLib<T> lib = new IntegerLib<>(env);
 		System.out.println("Bloom Filter Size: "+aliceBF.length);
 		T[] aUb = lib.or(aliceBF, bobBF);
-		return lib.numberOfOnes2(aUb);
+		return lib.numberOfOnes(aUb);
 	}
 	
 	public static class Generator<T> extends GenRunnable<T> {

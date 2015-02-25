@@ -1,4 +1,4 @@
-package task2.task2b.automated;
+package task2.task2b.deter;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -6,7 +6,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 
 import network.Server;
-import task2.task2a.automated.Task2Automated;
+import task2.bloomFilter.BF;
+import task2.obliviousmerge.ObliviousMergeLib;
 import task2.task2b.PrepareData;
 import task2.task2b.SNPEntry;
 import util.EvaRunnable;
@@ -16,19 +17,23 @@ import circuits.arithmetic.IntegerLib;
 import flexsc.CompEnv;
 
 public class Task2 {
-	public static int SP = 10;
+	public static final int LEN = 30;
 	
 	public static<T> T[] compute(CompEnv<T> env, T[][] scData) {
-		Task2Automated<T> a;
-		T[] ret = null;
-		try {
-			a = new Task2Automated<T>(env, scData[0].length, (int) Math.ceil(Math.log(scData.length)/Math.log(2)) );
-			ret = a.funct(scData, scData.length);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		ObliviousMergeLib<T> lib = new ObliviousMergeLib<T>(env);
+		System.out.println(scData.length);
+		System.out.println("merging data");
+		lib.bitonicMerge(scData, lib.SIGNAL_ZERO);
+		System.out.println("linear scaning");
+		T[] resBit = lib.zeros(scData.length);
+		for(int i = 0; i < scData.length-1; ++i) {			
+			T eq = lib.eq(scData[i], scData[i+1]);
+			resBit[i] = lib.not(eq);
 		}
-		return ret;
+		System.out.println("linear scanned");
+		T[] res = lib.numberOfOnes(resBit);
+		res = lib.add(res, lib.toSignals(1, res.length));
+		return res;
 	}
 	
 	public static class Generator<T> extends GenRunnable<T> {
@@ -53,7 +58,6 @@ public class Task2 {
 			}
 			int boblength = ByteBuffer.wrap(boblengthraw).getInt();
 			totalSize = boblength+alicelength;
-			int LEN = (int) (Math.log(totalSize)/Math.log(2)+SP);
 			
 			long[] in = new long[alicelength];
 			long[] in2 = new long[alicelength];
@@ -107,7 +111,7 @@ public class Task2 {
 			res2 = compute(gen, scData2);
 
 			IntegerLib<T> lib = new IntegerLib<T>(gen);
-			res = lib.add(lib.padSignal(res, 32), lib.padSignal(res2, 32));
+			res = lib.add(res, res2);
 		}
 
 		@Override
@@ -122,7 +126,7 @@ public class Task2 {
 		T[][] scData;
 		T[][] scData2;
 		T[] res, res2;
-		int totalSize;
+		BF bf;
 		
 		@Override
 		public void prepareInput(CompEnv<T> gen) {
@@ -138,9 +142,8 @@ public class Task2 {
 				e.printStackTrace();
 			}
 			int alicelength = ByteBuffer.wrap(alicelengthraw).getInt();
-			totalSize  = alicelength+boblength;
-			int LEN = (int) (Math.log(totalSize)/Math.log(2)+SP);
-
+			int totalSize  = alicelength+boblength;
+			
 			long[] in = new long[boblength];
 			long[] in2 = new long[boblength];
 			int cnt = 0;
@@ -192,7 +195,7 @@ public class Task2 {
 			res2 = compute(gen, scData2);
 
 			IntegerLib<T> lib = new IntegerLib<T>(gen);
-			res = lib.add(lib.padSignal(res, 32), lib.padSignal(res2, 32));
+			res = lib.add(res, res2);//lib.multiply(lib.padSignal(m_X, length), lib.padSignal(m_Y, length));
 		}
 
 		@Override

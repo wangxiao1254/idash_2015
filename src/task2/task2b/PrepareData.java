@@ -73,42 +73,21 @@ public class PrepareData {
 				int a  = table.get(s[0]);
 
 				int op = opToInt(s[s.length-1].split(";")[0].split("=")[1]);
-				if(op == 3) {//insert
-					for(int j = 0; j < s[3].length(); ++j) {
-						int index = new Integer(s[1]);
-						SNPEntry entry = new SNPEntry();
-						entry.op = op;
-						entry.location = index;
-						if(! globalPosition ) entry.location = index*26+a;
-						entry.value = toInt(s[3].charAt(j));
-						entry.i_dloc = j;
-						map.add(entry);
-					}
+				SNPEntry entry = new SNPEntry();
+				int index = new Integer(s[1]);
+				entry.op = op;
+				entry.location = index*26+a;
+				
+				if(op == 3) {//insert 
+						entry.value = s[3];
 				}
 				else if(op == 2) {//delete
-					for(int j = 0; j < s[3].length(); ++j) {
-						int index = new Integer(s[1]);
-						SNPEntry entry = new SNPEntry();
-						entry.op = op;
-						entry.location = index;//(index*25)+a;
-						if(! globalPosition ) entry.location = index*26+a;
-						entry.value = 0;//does not matter what value it is
-						entry.i_dloc = j;
-						map.add(entry);
-					}
+						entry.value = s[3];//does not matter what value it is
 				}
 				else {
-					for(int j = 0; j < s[4].length(); ++j) {
-						int index = (new Integer(s[1])+j);
-						SNPEntry entry = new SNPEntry();
-						entry.op = op;
-						entry.location = index;//(index*25)+a;
-						if(! globalPosition ) entry.location = index*26+a;
-
-						entry.value = toInt(s[4].charAt(j));
-						map.add(entry);
-					}
+						entry.value = s[4];
 				}
+				map.add(entry);
 			}
 			scanner.close();			
 		} catch (Exception e) {
@@ -136,13 +115,13 @@ public class PrepareData {
 		aub.addAll(b);
 		aub.addAll(a);
 		
-		HashSet<Long> aa = new HashSet<Long>();
-		for(SNPEntry o : a) {
-			aa.add(o.toNum());
-		}
-		for(SNPEntry o : b) {
-			aa.add(o.toNum());
-		}
-		System.out.println(a.size()+" "+b.size()+" "+aa.size());
+//		HashSet<Long> aa = new HashSet<Long>();
+//		for(SNPEntry o : a) {
+//			aa.add(o.toNum());
+//		}
+//		for(SNPEntry o : b) {
+//			aa.add(o.toNum());
+//		}
+//		System.out.println(a.size()+" "+b.size()+" "+aa.size());
 	}
 }

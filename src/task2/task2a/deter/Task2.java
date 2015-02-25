@@ -1,21 +1,22 @@
-package task2.task2b.std;
+package task2.task2a.deter;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Iterator;
 
 import network.Server;
+import task2.bloomFilter.BF;
 import task2.obliviousmerge.ObliviousMergeLib;
-import task2.task2b.PrepareData;
-import task2.task2b.SNPEntry;
+import task2.task2a.PrepareData;
+import task2.task2a.SNPEntry;
 import util.EvaRunnable;
 import util.GenRunnable;
 import util.Utils;
 import flexsc.CompEnv;
-import task2.Constants;
+
 public class Task2 {
+	public static final int LEN = 25;
 	
 	public static<T> T[] compute(CompEnv<T> env, T[][] scData) {
 		ObliviousMergeLib<T> lib = new ObliviousMergeLib<T>(env);
@@ -33,50 +34,45 @@ public class Task2 {
 		res = lib.add(res, lib.toSignals(1, res.length));
 		return res;
 	}
-		
-	public static SNPEntry[]  sortKeyValue(HashSet<SNPEntry> map, boolean asc) {
-		SNPEntry[] res = new SNPEntry[map.size()];
-		Iterator<SNPEntry> it = map.iterator();
-		int cnt = 0;
-		while (it.hasNext()) {
-			res[cnt++] = it.next();
-		}
-		Arrays.sort(res, asc? new SNPEntry.AscComparator() : new SNPEntry.DscComparator());
-		return res;
-	}
 	
 	public static class Generator<T> extends GenRunnable<T> {
 		T[][] scData;
-		int totalSize;
 		T[] res;
-		int totallength = Constants.LengthOfIdLoc+4+Constants.LengthOfLocation;
+		BF bf;
+		int totalSize = 0;
 		
 		@Override
 		public void prepareInput(CompEnv<T> gen) {
 			HashSet<SNPEntry> data = PrepareData.readFile(args[0]);
-			SNPEntry[] sorted = sortKeyValue(data, true);
-			
-			boolean[][] clear = new boolean[sorted.length][];
-			for(int i = 0; i < clear.length; ++i ) {
-				clear[i] = Utils.fromLong(sorted[i].toNum(), totallength);
-			}
+			int alicelength = data.size();
 			
 			byte[] boblengthraw = null;
 			try {
-				gen.os.write(ByteBuffer.allocate(4).putInt(clear.length).array());
+				gen.os.write(ByteBuffer.allocate(4).putInt(data.size()).array());
 				gen.os.flush();
 				boblengthraw = Server.readBytes(gen.is, 4);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			int boblength = ByteBuffer.wrap(boblengthraw).getInt();
-			totalSize = boblength+data.size();
-
-			T[][] Alice = gen.inputOfAlice(clear);
-			T[][] Bob = gen.inputOfBob(new boolean[boblength][totallength]);
+			totalSize = boblength+alicelength;
 			
-			scData = gen.newTArray(Alice.length+Bob.length, totallength);
+			long[] in = new long[alicelength];
+			int cnt = 0;
+			for(SNPEntry e : data) {
+				in[cnt] = SNPEntry.HashToLong(e.toString(), LEN);
+				cnt++;
+			}
+			Arrays.sort(in);
+			
+			boolean[][] clear = new boolean[alicelength][];
+			for(int i = 0; i < in.length;  ++i)
+				clear[i] = Utils.fromLong(in[i], LEN);
+			
+			T[][] Alice = gen.inputOfAlice(clear);
+			T[][] Bob = gen.inputOfBob(new boolean[boblength][LEN]);
+			
+			scData = gen.newTArray(totalSize, LEN);
 			
 			System.arraycopy(Alice, 0, scData, 0, Alice.length);
 			System.arraycopy(Bob, 0, scData, Alice.length, Bob.length);
@@ -90,40 +86,44 @@ public class Task2 {
 		@Override
 		public void prepareOutput(CompEnv<T> gen) {
 			int r = Utils.toInt(gen.outputToAlice(res));
-			System.out.println(2*r- totalSize);
-
-		}
+//			r = bf.countToSize(r);
+			System.out.println("res"+(2*r-totalSize));
+		}		
 	}
 
 	public static class Evaluator<T> extends EvaRunnable<T> {
 		T[][] scData;
 		T[] res;
-		int totallength = Constants.LengthOfIdLoc+4+Constants.LengthOfLocation;
-
+		
+		@Override
 		public void prepareInput(CompEnv<T> gen) {
 			HashSet<SNPEntry> data = PrepareData.readFile(args[0]);
-			SNPEntry[] sorted = sortKeyValue(data, false);
-			
-			boolean[][] clear = new boolean[sorted.length][];
-			for(int i = 0; i < clear.length; ++i ) {
-				clear[i] = Utils.fromLong(sorted[i].toNum(), totallength);
-			}
-			
+			int boblength = data.size();
 			byte[] alicelengthraw = null;
 			try {
-				gen.os.write(ByteBuffer.allocate(4).putInt(clear.length).array());
+				gen.os.write(ByteBuffer.allocate(4).putInt(data.size()).array());
 				gen.os.flush();
 				alicelengthraw = Server.readBytes(gen.is, 4);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			int boblength = ByteBuffer.wrap(alicelengthraw).getInt();
+			int alicelength = ByteBuffer.wrap(alicelengthraw).getInt();
+			long[] in = new long[boblength];
+			int cnt = 0;
+			for(SNPEntry e : data) {
+				in[cnt] = -1*SNPEntry.HashToLong(e.toString(), LEN);
+				cnt++;
+			}
+			Arrays.sort(in);
 			
-			T[][] Alice = gen.inputOfAlice(new boolean[boblength][totallength]);
+			boolean[][] clear = new boolean[boblength][];
+			for(int i = 0; i < in.length;  ++i)
+				clear[i] = Utils.fromLong(-1*in[i], LEN);
+
+			T[][] Alice = gen.inputOfAlice(new boolean[alicelength][LEN]);
 			T[][] Bob = gen.inputOfBob(clear);
-			
-			scData = gen.newTArray(Alice.length+Bob.length, totallength);
+			scData = gen.newTArray(Alice.length+Bob.length, LEN);
 			
 			System.arraycopy(Alice, 0, scData, 0, Alice.length);
 			System.arraycopy(Bob, 0, scData, Alice.length, Bob.length);

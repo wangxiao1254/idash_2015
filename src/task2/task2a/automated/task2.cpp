@@ -1,44 +1,35 @@
-struct Pair<T1, T2> {
-	T1 left;
-	T2 right;
-};
+// m : bit length of every entry
+// n : bit length of the result
+struct Task2Automated@m@n{};
 
-struct bit {
-	int1 v;
-};
-
-struct Int@n {
-	int@n v;
-};
-struct Task2aAutomated{};
-Pair<bit, Int@n> Task2aAutomated.add@n(int@n x, int@n y) {
-	bit cin;
-	Int@n ret;
-	bit t1, t2;
-	for(public int32 i=0; i<n; i = i+1) {
-		t1.v = x$i$ ^ cin.v;
-		t2.v = y$i$ ^ cin.v;
-		ret.v$i$ = x$i$ ^ cin.v;
-		t1.v = t1.v & t2.v;
-		cin.v = cin.v ^ t1.v;
-	}
-	return Pair{bit, Int@n}(cin, ret);
-}
-		
-int@log(n+1) Task2aAutomated.countOnes@n(int@n x) {
-  if(n==1) return x;
-  int@log(n-n/2+1) first = this.countOnes@(n/2)(x$0~n/2$);
-  int@log(n-n/2+1) second = this.countOnes@(n-n/2)(x$n/2~n$);
-  Pair<bit, Int@log(n-n/2)> ret = this.add@(n-n/2)(first, second);
-  
-  int@log(n+1) r = ret.right.v;
-  r$log(n+1)-1$ = ret.left.v;
-  return r;
+int@n Task2Automated@m@n.funct(int@m[public 1] key, public int32 length) {
+   this.obliviousMerge(key, 0, length);
+   int@n ret = 1;
+   for(public int32 i = 1; i < length; i = i + 1) {
+      if(key[i-1] != key[i])
+         ret = ret + 1;
+   }
+   return ret;
 }
 
-int@log(n) Task2aAutomated.leadingZero@n(int@n x) {
-	int@n y = 1 << n - 1;
-	for(public int32 i=n-2; i>=0; i=i-1)
-		y$i$ = y$i+1$ & (y$i+1$ ^ x$i$);
-	return this.countOnes@n(y);
+void Task2Automated@m@n.obliviousMerge(int@m[public 1] key, public int32 lo, public int32 l) {
+   if (l > 1) {
+      public int32 k = 1;
+      while (k < l) k = k << 1;
+      k = k >> 1;
+      for (public int32 i = lo; i < lo + l - k; i = i + 1)
+         this.compare(key, i, i + k);
+      this.obliviousMerge(key, lo, k);
+      this.obliviousMerge(key, lo + k, l - k);
+   }
+}
+
+void Task2Automated@m@n.compare(int@m[public 1] key, public int32 i, public int32 j) {
+   int@m tmp = key[j];
+   int@m tmp2 = key[i];
+   if( key[i] < key[j] )
+      tmp = key[i];
+   tmp = tmp ^ key[i];
+   key[i] = tmp ^ key[j];
+   key[j] = tmp ^ tmp2;
 }
