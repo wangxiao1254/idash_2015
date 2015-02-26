@@ -68,13 +68,14 @@ public class Task2a {
 				gen.os.write(bf.sks[i]);
 			gen.os.flush();
 
-			double t1 = System.nanoTime();
 			for(SNPEntry e : data)
 				bf.insert(e.toString());
-			double t2 = System.nanoTime();
-			System.out.println(t2-t1);
+			
+			
 			aliceBF = gen.inputOfAlice(bf.bs);
+			
 			bobBF =  gen.inputOfBob(bf.bs);
+			
 		}
 
 		@Override
