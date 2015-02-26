@@ -41,12 +41,13 @@ $$n\times\frac{(ad-bc)^2}{rsgk},$$
 where $r = a + b, s = c + d, g = a + c, k = b + d, n =  r + s$; and $a,b,c,d$ are additively secret shared by two parties.
 
 \paragraph{Our Solution}
-On the high level, we take direct approach: In secure computation, we first add shares from two parties and get $a,b,c,d$
+On the high level, we take a direct approach: In secure computation, we first add shares from two parties and get $a,b,c,d,r,s,g,k$
 and then convert it into floating point numbers securely, and finally compute the function mentioned above using floating
 point numbers securely.
 
 For this task, each test case only requires 7763 AND gates achieving maximum absolute error of $1.11\times0^{-4}$
-and 14443 AND gates achieving maximum absolute error of $5.6\times0^{-8}$.
+and 14443 AND gates achieving maximum absolute error of $5.6\times0^{-8}$. In fact, our implementation support arbitrary 
+trade off between precision and speed, however, we only showed two cases for the convenience of testing.
 
 \paragraph{Code used for Task1b.}
 Here we also include the code used for Task1b written in {\tt ObliVM-lang}.

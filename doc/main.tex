@@ -2,11 +2,12 @@
 \usepackage{algorithm}
 \usepackage{algpseudocode}
 \usepackage{algorithmicx, color, xspace, xcolor, fullpage, url}
+\usepackage{framed}
 
 \input{def}
 
 \title{Implementing iDASH Competition over {\tt ObliVM}}
-\author{Xiao Shaun Wang, Kartik Nayak, Elaine Shi and Yan Huang}
+\author{Xiao Shaun Wang, Kartik Nayak, Justin Wagner, Elaine Shi and Yan Huang}
 \begin{document}
 \maketitle
 \section{Overview}
@@ -15,8 +16,10 @@ For each question, we provide 2 or 3 solutions, including
 \begin{enumerate}
 \item A solution with manually created circuits.
 \item A solution with automatically generated circuits.
-\item A solution with manually created that allows a trade off between speed and accuracy.
+\item A solution with manually created circuits that allow a trade off between speed and accuracy.
 \end{enumerate}
+
+All the implementations will be open sourced at \url{https://github.com/wangxiao1254/idash_competition} after the deadline of the competition.
 \input{task1}
 \input{task2}
 %\input{eval}
