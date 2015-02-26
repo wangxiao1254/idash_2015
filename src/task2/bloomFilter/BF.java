@@ -43,27 +43,15 @@ public class BF {
 		sha1.update(sk);
 		byte[] a = sha1.digest();
 
-		ByteBuffer buffer = ByteBuffer.allocate(a.length);
-		buffer.put(a);
-		buffer.flip();
-		long res = buffer.getLong();		  
-		long ret =  (res % m);
-		ret = Math.abs(ret);
-//		System.out.println(str+" "+ret);
-		return (int) ret;
+		return  (int) Math.abs(ByteBuffer.wrap(a).getLong() % m);
 	}
 
+	ByteBuffer buffer = ByteBuffer.allocate(10+8);
 	public int hash(byte[] sk, long index) {
-		sha1.update(ByteBuffer.allocate(10+8).putLong(index).put(sk));
+		buffer.clear();
+		sha1.update(buffer.putLong(index).put(sk));
 		byte[] a = sha1.digest();
-
-		ByteBuffer buffer = ByteBuffer.allocate(a.length);
-		buffer.put(a);
-		buffer.flip();
-		long res = buffer.getLong();		  
-		long ret =  (res % m);
-		ret = Math.abs(ret);
-		return (int) ret;
+		return  (int) Math.abs(ByteBuffer.wrap(a).getLong() % m);
 	}
 
 	public void insert(long index) {

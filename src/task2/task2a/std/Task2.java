@@ -22,11 +22,10 @@ import util.Utils;
 import flexsc.CompEnv;
 
 public class Task2 {
-	public static int SP = 10;
+	public static int SP = 60;
 
 	public static<T> T[] compute(CompEnv<T> env, T[][] scData) {
 		ObliviousMergeLib<T> lib = new ObliviousMergeLib<T>(env);
-		System.out.println(scData.length);
 		lib.bitonicMerge(scData, lib.SIGNAL_ZERO);
 		T[] resBit = lib.zeros(scData.length);
 		for(int i = 0; i < scData.length-1; ++i) {			
@@ -91,7 +90,7 @@ public class Task2 {
 			int boblength = ByteBuffer.wrap(boblengthraw).getInt();
 			totalSize = boblength+alicelength;
 
-			int LEN = (int) (Math.log(totalSize)/Math.log(2)+SP);
+			int LEN = 60;//(int) (Math.log(totalSize)/Math.log(2)+SP);
 			long[] in = new long[alicelength];
 			int cnt = 0;
 			for(SNPEntry e : data) {
@@ -148,7 +147,7 @@ public class Task2 {
 			byte[] alicelengthraw = Server.readBytes(gen.is, 4);
 			int alicelength = ByteBuffer.wrap(alicelengthraw).getInt();
 			int totalSize = alicelength+boblength;
-			int LEN = (int) (Math.log(totalSize)/Math.log(2)+SP);
+			int LEN = 60;//(int) (Math.log(totalSize)/Math.log(2)+SP);
 
 			long[] in = new long[boblength];
 			int cnt = 0;
