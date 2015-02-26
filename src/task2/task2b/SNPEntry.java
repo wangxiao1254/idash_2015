@@ -1,16 +1,11 @@
 package task2.task2b;
 
-import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Comparator;
 
 
-
-
-
-public class SNPEntry  implements Comparable<SNPEntry>{
+public class SNPEntry{
 	static public MessageDigest sha1;
 	static {
 		try {
@@ -35,7 +30,7 @@ public class SNPEntry  implements Comparable<SNPEntry>{
 	public static long HashToLong(String a, int range){
 		sha1.update(a.getBytes());
 		long res = ByteBuffer.wrap( sha1.digest()).getLong();
-		return Math.abs(res >> (64-range));
+		return Math.abs(res);
 	}
 	
 	@Override
@@ -61,50 +56,11 @@ public class SNPEntry  implements Comparable<SNPEntry>{
 		return location+""+value;
 	}
 	
-	public BigInteger hash() {
-		sha1.update(value.getBytes());
-		sha1.update(ByteBuffer.allocate(8).putLong(location));
-		return new BigInteger(sha1.digest());
-	}
-	
-	public String hashPos(int i) {
-		sha1.update(ByteBuffer.allocate(8).putLong(location).array());
-		sha1.update(ByteBuffer.allocate(4).putInt(i).array());
-		return new String(sha1.digest());
-	}
-	public String hashPosVal(int i) {
-		sha1.update(ByteBuffer.allocate(8).putLong(location).array());
-		sha1.update(ByteBuffer.allocate(4).putInt(i).array());
-		sha1.update(value.getBytes());
-		String a = new String(sha1.digest());
-//		System.out.println(a);
-		return a;
-	}
-	
 	public String Pos(int i) {
 		return location+""+i;
 	}
 	
 	public String PosVal(int i) {
 		return value+""+location+""+i;
-	}
-	
-	@Override
-	public int compareTo(SNPEntry o) { 
-		return hash().compareTo(o.hash());
-	}
-	
-	public static class AscComparator implements Comparator<SNPEntry> {
-		@Override
-		public int compare(SNPEntry o1, SNPEntry o2) {
-			return o1.compareTo(o2);
-		}
-	}
-
-	public static class DscComparator implements Comparator<SNPEntry> {
-		@Override
-		public int compare(SNPEntry o1, SNPEntry o2) {
-			return o2.compareTo(o1);
-		}
 	}
 }

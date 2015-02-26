@@ -1,10 +1,8 @@
 package task2.task2b;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Scanner;
 
 public class PrepareData {
@@ -95,17 +93,6 @@ public class PrepareData {
 			e.printStackTrace();
 		}
 		return map;
-	}
-	
-	public static SNPEntry[]  sortKeyValue(HashSet<SNPEntry> map, boolean asc) {
-		SNPEntry[] res = new SNPEntry[map.size()];
-		Iterator<SNPEntry> it = map.iterator();
-		int cnt = 0;
-		while (it.hasNext()) {
-			res[cnt++] = it.next();
-		}
-		Arrays.sort(res, asc? new SNPEntry.AscComparator() : new SNPEntry.DscComparator());
-		return res;
 	}
 	
 	public static void main(String[] args) {

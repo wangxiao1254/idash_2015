@@ -70,6 +70,14 @@ public class PrepareData {
 	}
 	
 	public static void main(String[] args) {
-		readFile("data/case_chr2_29504091_30044866.txt");
+		Statistics[] a = readFile("data/case_chr2_29504091_30044866_part1.txt").data;
+		Statistics[] b = readFile("data/case_chr2_29504091_30044866_part2.txt").data;
+		Statistics[] c = readFile("data/control_chr2_29504091_30044866_part1.txt").data;
+		Statistics[] d = readFile("data/control_chr2_29504091_30044866_part2.txt").data;
+		for(int i = 0; i < a.length; ++i) {
+			int t1 = a[i].numOfG1 + b[i].numOfG1 + c[i].numOfG1 + d[i].numOfG1;
+			int t2 = a[i].numOfG2 + b[i].numOfG2 + c[i].numOfG2 + d[i].numOfG2;
+			System.out.println((double)(t1 < t2 ? t1: t2) / (t1+t2));
+		}
 	}
 }

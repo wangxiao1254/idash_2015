@@ -22,8 +22,6 @@ import circuits.arithmetic.IntegerLib;
 import flexsc.CompEnv;
 
 public class Task2b {
-	public static int SP = 10;
-
 	public static<T> T[] compute(CompEnv<T> env, T[][] scData) {
 		ObliviousMergeLib<T> lib = new ObliviousMergeLib<T>(env);
 		lib.bitonicMerge(scData, lib.SIGNAL_ZERO);
@@ -54,7 +52,6 @@ public class Task2b {
 		Options options = new Options();
 		options.addOption("a", false, "automated");
 		options.addOption("f", "file", true, "file");
-		options.addOption("p", "precision", true, "precision");
 
 		CommandLineParser parser = new BasicParser();
 		CommandLine cmd = parser.parse(options, args);
@@ -80,8 +77,6 @@ public class Task2b {
 		public void prepareInput(CompEnv<T> gen) throws Exception {
 			CommandLine cmd = processArgs(args);
 			automated = cmd.hasOption("a");
-			if(cmd.hasOption("p"))
-				SP = Math.max(new Integer(cmd.getOptionValue("p")), SP);
 			HashSet<SNPEntry> data = PrepareData.readFile(cmd.getOptionValue("f"));
 
 			int alicelength = 0;			
@@ -91,7 +86,7 @@ public class Task2b {
 			gen.os.flush();
 			int boblength = ByteBuffer.wrap(Server.readBytes(gen.is, 4)).getInt();
 			totalSize = boblength+alicelength;
-			int LEN = (int) (Math.log(totalSize)/Math.log(2)+SP);
+			int LEN = 64;
 
 			long[] in = new long[alicelength];
 			long[] in2 = new long[alicelength];
@@ -166,8 +161,6 @@ public class Task2b {
 		public void prepareInput(CompEnv<T> gen) throws Exception {
 			CommandLine cmd = processArgs(args);
 			automated = cmd.hasOption("a");
-			if(cmd.hasOption("p"))
-				SP = Math.max(new Integer(cmd.getOptionValue("p")), SP);
 			HashSet<SNPEntry> data = PrepareData.readFile(cmd.getOptionValue("f"));
 
 			int boblength = 0;			
@@ -177,7 +170,7 @@ public class Task2b {
 
 			int alicelength = ByteBuffer.wrap(Server.readBytes(gen.is, 4)).getInt();
 			totalSize  = alicelength+boblength;
-			int LEN = (int) (Math.log(totalSize)/Math.log(2)+SP);
+			int LEN = 64;
 
 			long[] in = new long[boblength];
 			long[] in2 = new long[boblength];
