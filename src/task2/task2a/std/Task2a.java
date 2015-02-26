@@ -21,9 +21,7 @@ import util.GenRunnable;
 import util.Utils;
 import flexsc.CompEnv;
 
-public class Task2 {
-	public static int SP = 60;
-
+public class Task2a {
 	public static<T> T[] compute(CompEnv<T> env, T[][] scData) {
 		ObliviousMergeLib<T> lib = new ObliviousMergeLib<T>(env);
 		lib.bitonicMerge(scData, lib.SIGNAL_ZERO);
@@ -55,7 +53,6 @@ public class Task2 {
 		Options options = new Options();
 		options.addOption("a", false, "automated");
 		options.addOption("f", "file", true, "file");
-		options.addOption("p", "precision", true, "precision");
 
 		CommandLineParser parser = new BasicParser();
 		CommandLine cmd = parser.parse(options, args);
@@ -79,8 +76,6 @@ public class Task2 {
 		@Override
 		public void prepareInput(CompEnv<T> gen) throws Exception {
 			CommandLine cmd = processArgs(args);
-			if(cmd.hasOption("p"))
-				SP = Math.max(new Integer(cmd.getOptionValue("p")), SP);
 			automated = cmd.hasOption("a");
 			HashSet<SNPEntry> data = PrepareData.readFile(cmd.getOptionValue("f"));
 			int alicelength = data.size();
@@ -90,7 +85,7 @@ public class Task2 {
 			int boblength = ByteBuffer.wrap(boblengthraw).getInt();
 			totalSize = boblength+alicelength;
 
-			int LEN = 60;//(int) (Math.log(totalSize)/Math.log(2)+SP);
+			int LEN = 64;//(int) (Math.log(totalSize)/Math.log(2)+SP);
 			long[] in = new long[alicelength];
 			int cnt = 0;
 			for(SNPEntry e : data) {
@@ -124,7 +119,7 @@ public class Task2 {
 		public void prepareOutput(CompEnv<T> gen) {
 			int r = Utils.toInt(gen.outputToAlice(res));
 			//			r = bf.countToSize(r);
-			System.out.println("res"+(2*r-totalSize));
+			System.out.println("result: "+(2*r-totalSize));
 		}		
 	}
 
@@ -136,8 +131,6 @@ public class Task2 {
 		@Override
 		public void prepareInput(CompEnv<T> gen) throws Exception {
 			CommandLine cmd = processArgs(args);
-			if(cmd.hasOption("p"))
-				SP = Math.max(new Integer(cmd.getOptionValue("p")), SP);
 			automated = cmd.hasOption("a");
 			HashSet<SNPEntry> data = PrepareData.readFile(cmd.getOptionValue("f"));
 
@@ -146,8 +139,7 @@ public class Task2 {
 			gen.os.flush();
 			byte[] alicelengthraw = Server.readBytes(gen.is, 4);
 			int alicelength = ByteBuffer.wrap(alicelengthraw).getInt();
-			int totalSize = alicelength+boblength;
-			int LEN = 60;//(int) (Math.log(totalSize)/Math.log(2)+SP);
+			int LEN = 64;
 
 			long[] in = new long[boblength];
 			int cnt = 0;

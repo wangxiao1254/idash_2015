@@ -19,7 +19,7 @@ import util.Utils;
 import circuits.arithmetic.IntegerLib;
 import flexsc.CompEnv;
 
-public class Task2 {
+public class Task2b {
 	public static int NoM = 40;
 
 	public static<T> T[] compute(CompEnv<T> env, T[] aliceBF, T[] bobBF) {

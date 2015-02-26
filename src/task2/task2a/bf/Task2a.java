@@ -19,7 +19,7 @@ import util.Utils;
 import circuits.arithmetic.IntegerLib;
 import flexsc.CompEnv;
 
-public class Task2 {
+public class Task2a {
 	public static int NoM = 20;
 
 	public static<T> T[] compute(CompEnv<T> env, T[] aliceBF, T[] bobBF) {
@@ -54,7 +54,7 @@ public class Task2 {
 		public void prepareInput(CompEnv<T> gen) throws Exception {
 			CommandLine cmd = processArgs(args);
 			if(cmd.hasOption("p"))
-				NoM = Math.max(new Integer(cmd.getOptionValue("p")), NoM);
+				NoM = new Integer(cmd.getOptionValue("p"));
 			HashSet<SNPEntry> data = PrepareData.readFile(cmd.getOptionValue("f"));
 
 			int alicelength = data.size();
@@ -96,7 +96,7 @@ public class Task2 {
 		public void prepareInput(CompEnv<T> gen) throws Exception {
 			CommandLine cmd = processArgs(args);
 			if(cmd.hasOption("p"))
-				NoM = Math.max(new Integer(cmd.getOptionValue("p")), NoM);
+				NoM = new Integer(cmd.getOptionValue("p"));
 			HashSet<SNPEntry> data = PrepareData.readFile(cmd.getOptionValue("f"));
 			int boblength = data.size();
 
