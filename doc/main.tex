@@ -1,7 +1,7 @@
 \documentclass{article}
 \usepackage{algorithm}
 \usepackage{algpseudocode}
-\usepackage{algorithmicx, color, xspace, xcolor, fullpage}
+\usepackage{algorithmicx, color, xspace, xcolor, fullpage, url}
 
 \input{def}
 
@@ -10,14 +10,16 @@
 \begin{document}
 \maketitle
 \section{Overview}
-We implemented all the problems using the secure computation framework {\tt ObliVM}.
-For each question, we provide 2 or 3 solutions:
+We implemented all the problems using the secure computation framework {\tt ObliVM}~\footnote{\url{http://www.oblivm.com}}~\cite{oblivm}.
+For each question, we provide 2 or 3 solutions, including
 \begin{enumerate}
 \item A solution with manually created circuits.
 \item A solution with automatically generated circuits.
-\item A solution that allows a trade off between speed and accuracy. (if any)
+\item A solution with manually created that allows a trade off between speed and accuracy.
 \end{enumerate}
 \input{task1}
 \input{task2}
 %\input{eval}
+\bibliographystyle{plain}
+\bibliography{refs,bibdiffpriv,bibliography,crypto,ref}
 \end{document} 

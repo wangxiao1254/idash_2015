@@ -3,11 +3,11 @@
 The problem of computing Minor Allele Frequencies(MAF) can be abstracted as follows:
 
 Suppose Alice and Bob each has a list of alleles $l^a = (e^a_1,...,e^a_n)$ and $l^b = (e^b_1,...,e^b_n)$.
-Let's append $l^b$ to $l^a$ and get $l = l^a || l^b$. It is known that in $l$, there will be at most two types of
+Let's append $l^b$ to $l^a$ and get $l = l^a || l^b$. It is known in public that in $l$, there will be at most two types of
 alleles from $(A,T,C,G)$. We want to compute the frequency of allele in $l$ that appears less frequently.
 
 \paragraph{Our Solution}
-The two parties first aggregate their own input into two numbers $(f^a_1, f^a_2)$ for Alice and $(f^b_1,f^b_2)$ for Bob, ordered by allele type.
+The two parties first aggregate their own input into two numbers: $(f^a_1, f^a_2)$ for Alice and $(f^b_1,f^b_2)$ for Bob, ordered by allele type.
 Then, in the secure computation, the two parties first aggregate the frequency by
 $$(f_1, f_2) = (f^a_1+f^a_1, f^b_2+f^b_2),$$
 and then report the smaller number between $f_1$ and $f_2$
@@ -15,11 +15,11 @@ and then report the smaller number between $f_1$ and $f_2$
 For this task, each test case only requires 40 AND gates for both manually generated circuits and automatically generated circuits.
 
 \paragraph{Code used for Task1a.}
-Here we also include the code used for Task1a in {\tt ObliVM-lang}.
+Here we also include the code used for Task1a written in {\tt ObliVM-lang}.
 \begin{figure}[H]
 \begin{tabular}{rl}
 \small 1&\small \tt	\struct Task1aAutomated\at{m}\{\};\\
-\small 2&\small \tt	void Task1aAutomated\at{m}.funct(int\at{m}[\public 1] alice\_data, int\at{m}[\public 1] bob\_data,\\
+\small 2&\small \tt	void Task1aAutomated\at{m}.\func{funct}(int\at{m}[\public 1] alice\_data, int\at{m}[\public 1] bob\_data,\\
 \small 3&\small \tt	\quad      int\at{m}[\public 1] ret, \public int\at{m} total\_instances, \public int32 test\_cases) \{\\
 \small 4&\small \tt	\quad   int\at{m} total = total\_instances;\\
 \small 5&\small \tt	  \quad int\at{m} half = total\_instances / 2;\\
@@ -41,18 +41,19 @@ $$n\times\frac{(ad-bc)^2}{rsgk},$$
 where $r = a + b, s = c + d, g = a + c, k = b + d, n =  r + s$; and $a,b,c,d$ are additively secret shared by two parties.
 
 \paragraph{Our Solution}
-In the high level, our solution folows the direct approach: in secure computation, we first add shares from two parties and get $a,b,c,d$
-and then convert it into floating point numbers securely, and finally compute the function mentioned above directly.
+On the high level, we take direct approach: In secure computation, we first add shares from two parties and get $a,b,c,d$
+and then convert it into floating point numbers securely, and finally compute the function mentioned above using floating
+point numbers securely.
 
 For this task, each test case only requires 7763 AND gates achieving maximum absolute error of $1.11\times0^{-4}$
 and 14443 AND gates achieving maximum absolute error of $5.6\times0^{-8}$.
 
 \paragraph{Code used for Task1b.}
-Here we also include the code used for Task1b in {\tt ObliVM-lang}.
+Here we also include the code used for Task1b written in {\tt ObliVM-lang}.
 \begin{figure}[H]
 \begin{tabular}{rl}
 \small 1&\small \tt \struct Task1bAutomated\at{n}\{\};\\
-\small 2&\small \tt float32[\public n] Task1bAutomated\at{n}.func(\\
+\small 2&\small \tt float32[\public n] Task1bAutomated\at{n}.\func{func}(\\
 \small 3&\small \tt \quad      float32[\public n][\public 3] alice\_case, float32[\public n][\public 3] alice\_control,\\
 \small 4&\small \tt  \quad     float32[\public n][\public 3] bob\_case, float32[\public n][\public 3] bob\_control) \{\\
 \small 5&\small \tt \quad   float32[\public n] ret;\\

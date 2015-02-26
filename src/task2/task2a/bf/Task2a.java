@@ -71,9 +71,7 @@ public class Task2a {
 			for(SNPEntry e : data)
 				bf.insert(e.toString());
 			
-			
 			aliceBF = gen.inputOfAlice(bf.bs);
-			
 			bobBF =  gen.inputOfBob(bf.bs);
 			
 		}
