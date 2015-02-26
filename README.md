@@ -50,11 +50,11 @@ Usage example
 task1a:
 ---------------------
   - Run manually created circuit:
-      - Generator: ./run.py gen task1a -c path_case1 -t path_control1
-      - Evaluator: ./run.py eva task1a -c path_case2 -t path_control2
+      Generator: `./run.py gen task1a -c path_case1 -t path_control1`
+      Evaluator: ./run.py eva task1a -c path_case2 -t path_control2
   - Run automatically created circuit:
-      - Generator: ./run.py gen task1a -c path_case1 -t path_control1 -a
-      - Evaluator: ./run.py eva task1a -c path_case2 -t path_control2 -a
+      Generator: ./run.py gen task1a -c path_case1 -t path_control1 -a
+      Evaluator: ./run.py eva task1a -c path_case2 -t path_control2 -a
 
 task1b:
 ---------------------
