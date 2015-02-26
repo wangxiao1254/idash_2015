@@ -1,6 +1,5 @@
-Step 1: open FlexSC/Config.conf and replace localhost to the other party's IP
-Step 2: cd into idash_competition folder
-Step 3: run the following command on both machine, one with [party]=gen, one with [party]=eva on same tasks:
+Step 1: Config.conf and replace localhost to the other party's IP
+Step 2: run the following command on both machine, one with [party]=gen, one with [party]=eva on same tasks:
 
 python run.py [party] [tasks] [more options]
 
