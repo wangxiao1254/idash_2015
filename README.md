@@ -13,33 +13,33 @@ where
 
 Detail
 ====================
-**task1a: Computing MAF.**
+task1a: Computing MAF.
 ---------------------
       [more options]: -c casefile -t controlfile [ -a ]
       -c and -t are used to specify case and control file, -a is used to specify if we will run the circuit constructed manually or generated automatically by compiler With -a, it will use automatically generated circuit.
 
-**task1b: Computing Chi Square.**
+task1b: Computing Chi Square.
 ---------------------
       [more options]: -c casefile -t controlfile [ -a | -h ]
       meaning is similar to the above
       when -a is not used, -h can be used to have higher precision.
 
-**task2astd: Computing Hamming Distance Standard**
+task2astd: Computing Hamming Distance Standard
 ---------------------
       [more options]: -f data [-a]
       -f is used to specify the input file, -a is used similarly as before
 
-**task2abf: Computing Hamming Distance BloomFilter**
+task2abf: Computing Hamming Distance BloomFilter
 ---------------------
       [more options]: -f file -p NUMBER
       -f is used to specify the input file, -p is used to specify approximation quality followed with an integer from 10 to 120. Default value is 20 is no value is provide. the larger the NUMBER used, the better.
 
-**task2bstd: Computing Edit Distance Standard**
+task2bstd: Computing Edit Distance Standard
 ---------------------
       [more options]: -f data [-a]
       -f is used to specify the input file, -a is used similarly as before
 
-**task2bbf: Computing Edit Distance BloomFilter**
+task2bbf: Computing Edit Distance BloomFilter
 ---------------------
       [more options]: -f file -p NUMBER
       -f is used to specify the input file, -p is used to specify approximation quality followed with an integer from 10 to 120. Default value is 20 is no value is provide. the larger the NUMBER used, the better.
