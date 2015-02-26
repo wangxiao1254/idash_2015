@@ -50,34 +50,55 @@ Usage example
 task1a:
 ---------------------
   - Run manually created circuit:
+
       Generator: `./run.py gen task1a -c path_case1 -t path_control1`
+
       Evaluator: `./run.py eva task1a -c path_case2 -t path_control2`
+
   - Run automatically created circuit:
+
       Generator: `./run.py gen task1a -c path_case1 -t path_control1 -a`
+
       Evaluator: `./run.py eva task1a -c path_case2 -t path_control2 -a`
 
 task1b:
 ---------------------
   - Run manually created circuit:
+
       Generator: `./run.py gen task1b -c path_case1 -t path_control1`
+
       Evaluator: `./run.py eva task1b -c path_case2 -t path_control2`
+
  -  Run automatically created circuit:
+
       Generator: `./run.py gen task1b -c path_case1 -t path_control1 -a`
+
       Evaluator: `./run.py eva task1b -c path_case2 -t path_control2 -a`
+
 - Run manually created circuit with higher precision:
+
       Generator: `./run.py gen task1b -c path_case1 -t path_control1 -h`
+
       Evaluator: `./run.py eva task1b -c path_case2 -t path_control2 -h`
 
 task2a:
 ---------------------
  -  Run manually created circuit:
+
       Generator: `./run.py gen task2astd -f path_file`
+
       Evaluator: `./run.py eva task2astd -f path_file`
+
  -  Run automatically created circuit:
+
       Generator: `./run.py gen task2astd -f path_file -a`
+
       Evaluator: `./run.py eva task2astd -f path_file -a`
+
   - Run manually created circuit with bloomfilter: (add -p NUMBER for a trade off between precision and speed)
+
       Generator: `./run.py gen task2abf -f path_file`
+
       Evaluator: `./run.py eva task2abf -f path_file`
 
 
