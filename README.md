@@ -84,11 +84,19 @@ task2a:
 task2b:
 ---------------------
   - Run manually created circuit:
+
       Generator: `./run.py gen task2bstd -f path_file`
+
       Evaluator: `./run.py eva task2bstd -f path_file`
+
   - Run automatically created circuit:
+
       Generator: `./run.py gen task2bstd -f path_file -a`
+
       Evaluator: `./run.py eva task2bstd -f path_file -a`
+
   - Run manually created circuit with bloomfilter: (add -p NUMBER for a trade off between precision and speed)
+
       Generator: `./run.py gen task2bbf -f path_file` 
+
       Evaluator: `./run.py eva task2bbf -f path_file`
