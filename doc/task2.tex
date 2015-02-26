@@ -5,7 +5,7 @@ and $s^b = (e^b_1,...,e^b_n)$. The problem we want to solve is
 to compute $|s^a\cup s^b|$. Here, we introduce two algorithms:
 
 \paragraph{Using oblivious sort and oblivious merge}
-A straightforward way of calculating the union is two use oblivious sorting, as detailed in the following:
+A straightforward way of calculating the union is two use oblivious sorting, as detailed in Algorithm~\ref{alg1}
 
 \begin{algorithm}[t]
 \begin{algorithmic}[1]
@@ -19,10 +19,50 @@ A straightforward way of calculating the union is two use oblivious sorting, as 
 \State\Return $cnt$
 \end{algorithmic}
 \caption{\textbf{Compute size of union}} %\\
-\label{alg:osssp}
+\label{alg1}
 \end{algorithm}
 For $n$ elements each of bitlength $D$, this approach requires a circuit of size $O(Dn\log^2n)$ using bitonic sorting network,
-and can be further reduced to $Dn\log n$ if each part sort their data locally and only perform an bitonic merge using secure computation.
+and can be further reduced to $O(Dn\log n)$ if each part sort their data locally and only perform an bitonic merge using secure computation.
+\paragraph{Code used for oblivious merge.}
+Here we also include the code used for oblivious merger in {\tt ObliVM-lang}.
+\begin{figure}[H]
+\begin{tabular}{rl}
+\small 1&\small \tt \struct Task2Automated\at{m}\at{n}\{\};\\
+
+\small 2&\small \tt int\at{n} Task2Automated\at{m}\at{n}.funct(int\at{m}[\public 1] key, \public int32 length) \{\\
+\small 3&\small \tt \quad this.obliviousMerge(key, 0, length);\\
+\small 4&\small \tt  \quad int\at{n} ret = 1;\\
+\small 5&\small \tt  \quad \for(\public int32 i = 1; i < length; i = i + 1) \{\\
+\small 6&\small \tt  \quad\quad     \ifs(key[i-1] != key[i])\\
+\small 7&\small \tt        \quad\quad\quad  ret = ret + 1;\\
+\small 8&\small \tt    \quad\}\\
+\small 9&\small \tt    \quad \return ret;\\
+\small 10&\small \tt \}\\
+\small 11&\small \tt void Task2Automated\at{m}\at{n}.obliviousMerge(int\at{m}[\public 1] key, \public int32 lo, \public int32 l) \{\\
+\small 12&\small \tt   \quad \ifs (l > 1) \{\\
+\small 13&\small \tt     \quad\quad  \public int32 k = 1;\\
+\small 14&\small \tt    \quad\quad   while (k < l) k = k << 1;\\
+\small 15&\small \tt     \quad\quad\quad  k = k >> 1;\\
+\small 16&\small \tt    \quad\quad\quad   \for (\public int32 i = lo; i < lo + l - k; i = i + 1)\\
+\small 17&\small \tt     \quad\quad\quad\quad     this.compare(key, i, i + k);\\
+\small 18&\small \tt     \quad\quad\quad  this.obliviousMerge(key, lo, k);\\
+\small 19&\small \tt     \quad\quad\quad  this.obliviousMerge(key, lo + k, l - k);\\
+\small 20&\small \tt   \quad\}\\
+\small 21&\small \tt \}\\
+
+
+\small 22&\small \tt void Task2Automated\at{m}\at{n}.compare(int\at{m}[\public 1] key, \public int32 i, \public int32 j) \{\\
+\small 23&\small \tt  \quad  int\at{m} tmp = key[j];\\
+\small 24&\small \tt  \quad  int\at{m} tmp2 = key[i];\\
+\small 25&\small \tt \quad   \ifs( key[i] < key[j] )\\
+\small 26&\small \tt   \quad\quad    tmp = key[i];\\
+\small 27&\small \tt  \quad  tmp = tmp  key[i];\\
+\small 28&\small \tt \quad   key[i] = tmp key[j];\\
+\small 29&\small \tt \quad   key[j] = tmp  tmp2;\\
+\small 30&\small \tt \}\\
+\end{tabular}
+\end{figure}
+
 
 \paragraph{Using bloom filter}
 It is known that bloom filters can be used to check the existence of an element in a set. However, bloom filters can also be used

@@ -1,16 +1,21 @@
 \documentclass{article}
 \usepackage{algorithm}
 \usepackage{algpseudocode}
-\usepackage{algorithmicx}
+\usepackage{algorithmicx, color, xspace, xcolor, fullpage}
 
-\title{Implementing iDASH Competition}
+\input{def}
+
+\title{Implementing iDASH Competition over {\tt ObliVM}}
+\author{Xiao Shaun Wang, Kartik Nayak, Elaine Shi and Yan Huang}
 \begin{document}
+\maketitle
 \section{Overview}
-All the implementation are implemented using the framework {\tt ObliVM}. For each test, we provide 2 or 3 solutions:
+We implemented all the problems using the secure computation framework {\tt ObliVM}.
+For each question, we provide 2 or 3 solutions:
 \begin{enumerate}
 \item A solution with manually created circuits.
 \item A solution with automatically generated circuits.
-\item A solution that allows a trade off between speed and accuracy.
+\item A solution that allows a trade off between speed and accuracy. (if any)
 \end{enumerate}
 \input{task1}
 \input{task2}

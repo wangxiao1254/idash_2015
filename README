@@ -15,8 +15,9 @@ task1a: Computing MAF.
       -c and -t are used to specify case and control file, -a is used to specify if we will run the circuit constructed manually or generated automatically by compiler With -a, it will use automatically generated circuit.
 
 task1b: Computing Chi Square.
-      [more options]: -c casefile -t controlfile [ -a ]
+      [more options]: -c casefile -t controlfile [ -a | -h ]
       meaning is similar to the above
+      when -a is not used, -h can be used to have higher precision.
 
 task2astd: Computing Hamming Distance Standard
       [more options]: -f data [-a]
