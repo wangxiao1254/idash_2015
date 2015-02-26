@@ -13,7 +13,7 @@ where
 
 Detail
 ====================
-**task1a: Computing MAF. **
+**task1a: Computing MAF.**
 ---------------------
       [more options]: -c casefile -t controlfile [ -a ]
       -c and -t are used to specify case and control file, -a is used to specify if we will run the circuit constructed manually or generated automatically by compiler With -a, it will use automatically generated circuit.
