@@ -26,22 +26,26 @@ task1b: Computing Chi Square.
 
 task2astd: Computing Hamming Distance Standard
 ---------------------
-      [more options]: -f data [-a]
+      `[more options]: -f data [-a]`
+
       -f is used to specify the input file, -a is used similarly as before
 
 task2abf: Computing Hamming Distance BloomFilter
 ---------------------
-      [more options]: -f file -p NUMBER
+      `[more options]: -f file -p NUMBER`
+
       -f is used to specify the input file, -p is used to specify approximation quality followed with an integer from 10 to 120. Default value is 20 is no value is provide. the larger the NUMBER used, the better.
 
 task2bstd: Computing Edit Distance Standard
 ---------------------
-      [more options]: -f data [-a]
+      `[more options]: -f data [-a]`
+
       -f is used to specify the input file, -a is used similarly as before
 
 task2bbf: Computing Edit Distance BloomFilter
 ---------------------
-      [more options]: -f file -p NUMBER
+      `[more options]: -f file -p NUMBER`
+
       -f is used to specify the input file, -p is used to specify approximation quality followed with an integer from 10 to 120. Default value is 20 is no value is provide. the larger the NUMBER used, the better.
 
 
@@ -95,7 +99,7 @@ task2a:
 
       Evaluator: `./run.py eva task2astd -f path_file -a`
 
-  - Run manually created circuit with bloomfilter: (add -p NUMBER for a trade off between precision and speed)
+  - Run manually created circuit with bloomfilter: (add `-p NUMBER` for a trade off between precision and speed)
 
       Generator: `./run.py gen task2abf -f path_file`
 
@@ -116,7 +120,7 @@ task2b:
 
       Evaluator: `./run.py eva task2bstd -f path_file -a`
 
-  - Run manually created circuit with bloomfilter: (add -p NUMBER for a trade off between precision and speed)
+  - Run manually created circuit with bloomfilter: (add `-p NUMBER` for a trade off between precision and speed)
 
       Generator: `./run.py gen task2bbf -f path_file` 
 
