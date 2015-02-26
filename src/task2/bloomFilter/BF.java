@@ -31,7 +31,7 @@ public class BF {
 			rnd.nextBytes(sks[i]);
 		
 		try {
-			sha1 = MessageDigest.getInstance("SHA-1");
+			sha1 = MessageDigest.getInstance("MD5");
 		} catch (NoSuchAlgorithmException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
