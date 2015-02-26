@@ -1,14 +1,14 @@
 Summary
 ================
-Step 1: Config.conf and replace localhost to the other party's IP
+Step 1: open Config.conf and replace localhost to the other party's IP or Domain name
 Step 2: run the following command on both machine, one with [party]=gen, one with [party]=eva on same tasks:
 
-./run.py [party] [tasks] [more options]
+`./run.py [party] [tasks] [more options]`
 
 where 
-[party] can be gen or eva
-[tasks] can be task1a, task1b, task2astd, task2abf, task2bstd, task2bbf
-[more options] is used to specify datafiles and more.
+`[party]` can be gen or eva
+`[tasks]` can be task1a, task1b, task2astd, task2abf, task2bstd, task2bbf
+`[more options]` is used to specify datafiles and more.
 
 
 Detail
