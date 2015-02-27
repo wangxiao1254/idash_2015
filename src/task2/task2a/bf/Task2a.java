@@ -1,6 +1,7 @@
 package task2.task2a.bf;
 
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 import java.util.HashSet;
 
 import network.Server;
@@ -18,13 +19,13 @@ import util.GenRunnable;
 import util.Utils;
 import circuits.arithmetic.IntegerLib;
 import flexsc.CompEnv;
+import flexsc.Flag;
 
 public class Task2a {
-	public static int NoM = 30;
+	public static int NoM = 20;
 
 	public static<T> T[] compute(CompEnv<T> env, T[] aliceBF, T[] bobBF) {
 		IntegerLib<T> lib = new IntegerLib<>(env);
-		System.out.println("Bloom Filter Size: "+aliceBF.length);
 		T[] aUb = lib.or(aliceBF, bobBF);
 		return lib.numberOfOnes(aUb);
 	}
@@ -47,10 +48,8 @@ public class Task2a {
 		T[] aliceBF;
 		T[] bobBF;
 		T[] res;
-		int bf_m;
-		int bf_k;
 		int totalSize;
-
+		BF bf;
 		@Override
 		public void prepareInput(CompEnv<T> gen) throws Exception {
 			CommandLine cmd = processArgs(args);
@@ -64,30 +63,32 @@ public class Task2a {
 			int boblength = ByteBuffer.wrap(Server.readBytes(gen.is, 4)).getInt();
 			totalSize = boblength+alicelength;
 			
-			BF bf = new BF(boblength+alicelength, NoM*(boblength+alicelength));
+			bf = new BF(boblength+alicelength, NoM*(boblength+alicelength));
 			for(int i = 0; i < bf.k; ++i)
 				gen.os.write(bf.sks[i]);
 			gen.os.flush();
 
 			for(SNPEntry e : data)
 				bf.insert(e.toString());
-			
-			aliceBF = gen.inputOfAlice(bf.bs);
-			bobBF =  gen.inputOfBob(bf.bs);
-			bf_k = bf.k;
-			bf_m = bf.m;
-			
 		}
 
 		@Override
 		public void secureCompute(CompEnv<T> gen) {
-			res = compute(gen, aliceBF, bobBF);
+			IntegerLib<T> lib = new IntegerLib<>(gen);
+			res = lib.zeros(32);
+			for(int i = 0; i < bf.bs.length; i+=Flag.OTBlockSize) {
+				int len = Math.min(bf.bs.length, i+Flag.OTBlockSize);
+				aliceBF = gen.inputOfAlice(Arrays.copyOfRange(bf.bs, i, len));
+				bobBF =  gen.inputOfBob(Arrays.copyOfRange(bf.bs, i, len));
+				T[] tmp = compute(gen, aliceBF, bobBF);
+				res = lib.add(res, lib.padSignal(tmp, 32));
+			}
 		}
 
 		@Override
 		public void prepareOutput(CompEnv<T> gen) {
 			int r = Utils.toInt(gen.outputToAlice(res));
-			r = BF.countToSize(r, bf_k, bf_m);
+			r = BF.countToSize(r, bf.k, bf.m);
 			System.out.println(2*r-totalSize);
 		}		
 	}
@@ -96,6 +97,7 @@ public class Task2a {
 		T[] aliceBF;
 		T[] bobBF;
 		T[] res;
+		BF bf;
 		@Override
 		public void prepareInput(CompEnv<T> gen) throws Exception {
 			CommandLine cmd = processArgs(args);
@@ -108,20 +110,25 @@ public class Task2a {
 			gen.os.flush();
 			int alicelength = ByteBuffer.wrap(Server.readBytes(gen.is, 4)).getInt();
 
-			BF bf = new BF(boblength+alicelength, NoM*(boblength+alicelength));
+			bf = new BF(boblength+alicelength, NoM*(boblength+alicelength));
 			for(int i = 0; i < bf.k; ++i)
 				bf.sks[i] = Server.readBytes(gen.is, bf.sks[i].length);
 
 			for(SNPEntry e : data)
 				bf.insert(e.toString());
-
-			aliceBF = gen.inputOfAlice(bf.bs);
-			bobBF =  gen.inputOfBob(bf.bs);
 		}
 
 		@Override
 		public void secureCompute(CompEnv<T> gen) {
-			res = compute(gen, aliceBF, bobBF);
+			IntegerLib<T> lib = new IntegerLib<>(gen);
+			res = lib.zeros(32);
+			for(int i = 0; i < bf.bs.length; i+=Flag.OTBlockSize) {
+				int len = Math.min(bf.bs.length, i+Flag.OTBlockSize);
+				aliceBF = gen.inputOfAlice(Arrays.copyOfRange(bf.bs, i, len));
+				bobBF =  gen.inputOfBob(Arrays.copyOfRange(bf.bs, i, len));
+				T[] tmp = compute(gen, aliceBF, bobBF);
+				res = lib.add(res, lib.padSignal(tmp, 32));
+			}
 		}
 
 		@Override
