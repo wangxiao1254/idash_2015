@@ -2,8 +2,8 @@
 import sys, subprocess
 
 
-party = {'gen': "java -Xmx3800m -cp bin/:../FlexSC/lib/*:../FlexSC/bin util.GenRunnable",
-'eva':"java -Xmx3800m  -cp bin/:../FlexSC/lib/*:../FlexSC/bin util.EvaRunnable"}
+party = {'gen': "java -Xmx4000m -cp bin/:../FlexSC/lib/*:../FlexSC/bin util.GenRunnable",
+'eva':"java -Xmx4000m  -cp bin/:../FlexSC/lib/*:../FlexSC/bin util.EvaRunnable"}
 
 name = {'task1a':'task1.task1a.Task1a',
         'task1b':'task1.task1b.Task1b',

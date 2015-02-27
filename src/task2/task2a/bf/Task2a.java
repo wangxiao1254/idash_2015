@@ -20,7 +20,7 @@ import circuits.arithmetic.IntegerLib;
 import flexsc.CompEnv;
 
 public class Task2a {
-	public static int NoM = 20;
+	public static int NoM = 30;
 
 	public static<T> T[] compute(CompEnv<T> env, T[] aliceBF, T[] bobBF) {
 		IntegerLib<T> lib = new IntegerLib<>(env);
@@ -47,7 +47,8 @@ public class Task2a {
 		T[] aliceBF;
 		T[] bobBF;
 		T[] res;
-		BF bf;
+		int bf_m;
+		int bf_k;
 		int totalSize;
 
 		@Override
@@ -63,7 +64,7 @@ public class Task2a {
 			int boblength = ByteBuffer.wrap(Server.readBytes(gen.is, 4)).getInt();
 			totalSize = boblength+alicelength;
 			
-			bf = new BF(boblength+alicelength, NoM*(boblength+alicelength));
+			BF bf = new BF(boblength+alicelength, NoM*(boblength+alicelength));
 			for(int i = 0; i < bf.k; ++i)
 				gen.os.write(bf.sks[i]);
 			gen.os.flush();
@@ -73,6 +74,8 @@ public class Task2a {
 			
 			aliceBF = gen.inputOfAlice(bf.bs);
 			bobBF =  gen.inputOfBob(bf.bs);
+			bf_k = bf.k;
+			bf_m = bf.m;
 			
 		}
 
@@ -84,7 +87,7 @@ public class Task2a {
 		@Override
 		public void prepareOutput(CompEnv<T> gen) {
 			int r = Utils.toInt(gen.outputToAlice(res));
-			r = bf.countToSize(r);
+			r = BF.countToSize(r, bf_k, bf_m);
 			System.out.println(2*r-totalSize);
 		}		
 	}
@@ -93,7 +96,6 @@ public class Task2a {
 		T[] aliceBF;
 		T[] bobBF;
 		T[] res;
-
 		@Override
 		public void prepareInput(CompEnv<T> gen) throws Exception {
 			CommandLine cmd = processArgs(args);

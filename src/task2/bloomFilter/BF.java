@@ -91,4 +91,14 @@ public class BF {
 		f = -1*(f / k);
 		return (int)f;
 	}
+	
+	public static int countToSize(int count, int kk, int mm) {
+		double f = count;
+		f = f/mm;
+		f = 1-f;
+		f = Math.log(f);
+		f = f*mm;
+		f = -1*(f / kk);
+		return (int)f;
+	}
 }

@@ -20,7 +20,7 @@ import circuits.arithmetic.IntegerLib;
 import flexsc.CompEnv;
 
 public class Task2b {
-	public static int NoM = 40;
+	public static int NoM = 15;
 
 	public static<T> T[] compute(CompEnv<T> env, T[] aliceBF, T[] bobBF) {
 		IntegerLib<T> lib = new IntegerLib<>(env);
@@ -46,8 +46,8 @@ public class Task2b {
 		T[] aliceBF, aliceBF2;
 		T[] bobBF, bobBF2;
 		T[] res, res2;
-		BF bf;
-		BF bf2;
+		int bf_k;
+		int bf_m;
 		int totalSize = 0;
 
 		@Override
@@ -64,8 +64,8 @@ public class Task2b {
 
 			int boblength = ByteBuffer.wrap(Server.readBytes(gen.is, 4)).getInt();
 			totalSize = boblength+alicelength;
-			bf = new BF(boblength+alicelength, NoM*(boblength+alicelength));
-			bf2 = new BF(boblength+alicelength, NoM*(boblength+alicelength));
+			BF bf = new BF(boblength+alicelength, NoM*(boblength+alicelength));
+			BF bf2 = new BF(boblength+alicelength, NoM*(boblength+alicelength));
 			bf2.sks = bf.sks;
 			for(int i = 0; i < bf.k; ++i)
 				gen.os.write(bf.sks[i]);
@@ -88,7 +88,8 @@ public class Task2b {
 			aliceBF2 = gen.inputOfAlice(bf2.bs);
 			bobBF =  gen.inputOfBob(bf.bs);
 			bobBF2 =  gen.inputOfBob(bf2.bs);
-
+			bf_k = bf.k;
+			bf_m = bf.m;
 		}
 
 		@Override
@@ -97,8 +98,8 @@ public class Task2b {
 			res2 = compute(gen, aliceBF2, bobBF2);
 
 			IntegerLib<T> lib = new IntegerLib<T>(gen);
-			T[] m_X = lib.sub(lib.toSignals(bf.m, res.length), res);
-			T[] m_Y = lib.sub(lib.toSignals(bf.m, res2.length), res2);
+			T[] m_X = lib.sub(lib.toSignals(bf_m, res.length), res);
+			T[] m_Y = lib.sub(lib.toSignals(bf_m, res2.length), res2);
 			int length = 2*Math.max(m_X.length, m_Y.length)+2;
 			res = lib.multiply(lib.padSignal(m_X, length), lib.padSignal(m_Y, length));
 		}
@@ -106,7 +107,7 @@ public class Task2b {
 		@Override
 		public void prepareOutput(CompEnv<T> gen) {
 			double tmp = Utils.toLong(gen.outputToAlice(res));
-			int result = (int) (-1*bf.m/bf.k*Math.log(tmp/bf.m/bf.m) - totalSize);
+			int result = (int) (-1*bf_m/bf_k*Math.log(tmp/bf_m/bf_m) - totalSize);
 			System.out.println( result );
 		}		
 	}
@@ -117,7 +118,7 @@ public class Task2b {
 		T[] aliceBF2;
 		T[] bobBF2;
 		T[] res, res2;
-		BF bf;
+		int bf_m;
 
 		@Override
 		public void prepareInput(CompEnv<T> gen) throws Exception {
@@ -133,7 +134,7 @@ public class Task2b {
 			int alicelength = ByteBuffer.wrap(Server.readBytes(gen.is, 4)).getInt();
 
 
-			bf = new BF(boblength+alicelength, NoM*(boblength+alicelength));
+			BF bf = new BF(boblength+alicelength, NoM*(boblength+alicelength));
 			BF bf2 = new BF(boblength+alicelength, NoM*(boblength+alicelength));
 			for(int i = 0; i < bf.k; ++i)
 				try {
@@ -159,15 +160,17 @@ public class Task2b {
 			aliceBF2 = gen.inputOfAlice(bf2.bs);
 			bobBF =  gen.inputOfBob(bf.bs);
 			bobBF2 =  gen.inputOfBob(bf2.bs);
+			bf_m = bf.m;
 		}
+		
 		@Override
 		public void secureCompute(CompEnv<T> gen) {
 			res = compute(gen, aliceBF, bobBF);
 			res2 = compute(gen, aliceBF2, bobBF2);
 
 			IntegerLib<T> lib = new IntegerLib<T>(gen);
-			T[] m_X = lib.sub(lib.toSignals(bf.m, res.length), res);
-			T[] m_Y = lib.sub(lib.toSignals(bf.m, res2.length), res2);
+			T[] m_X = lib.sub(lib.toSignals(bf_m, res.length), res);
+			T[] m_Y = lib.sub(lib.toSignals(bf_m, res2.length), res2);
 			int length = 2*Math.max(m_X.length, m_Y.length)+2;
 			res = lib.multiply(lib.padSignal(m_X, length), lib.padSignal(m_Y, length));
 		}
