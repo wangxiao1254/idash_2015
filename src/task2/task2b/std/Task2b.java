@@ -68,28 +68,28 @@ public class Task2b {
 
 
 	public static class Generator<T> extends GenRunnable<T> {
-		T[][] scData;
-		T[][] scData2;
+		long[] in, in2;
 		T[] res, res2;
 		int totalSize;
+		int LEN = 64;
 		boolean automated;
+		int alicelength; int boblength;
 		@Override
 		public void prepareInput(CompEnv<T> gen) throws Exception {
 			CommandLine cmd = processArgs(args);
 			automated = cmd.hasOption("a");
 			HashSet<SNPEntry> data = PrepareData.readFile(cmd.getOptionValue("f"));
 
-			int alicelength = 0;			
 			for(SNPEntry e : data) alicelength +=e.value.length();
 
 			gen.os.write(ByteBuffer.allocate(4).putInt(alicelength).array());
 			gen.os.flush();
-			int boblength = ByteBuffer.wrap(Server.readBytes(gen.is, 4)).getInt();
+			boblength = ByteBuffer.wrap(Server.readBytes(gen.is, 4)).getInt();
 			totalSize = boblength+alicelength;
-			int LEN = 64;
+			
 
-			long[] in = new long[alicelength];
-			long[] in2 = new long[alicelength];
+			in = new long[alicelength];
+			in2 = new long[alicelength];
 			int cnt = 0;
 			for(SNPEntry e : data) {
 				for(int i = 0; i < e.value.length(); ++i){
@@ -107,8 +107,10 @@ public class Task2b {
 
 			Arrays.sort(in);
 			Arrays.sort(in2);
+		}
 
-
+		@Override
+		public void secureCompute(CompEnv<T> gen) {
 			boolean[][] clear = new boolean[alicelength][];
 			for(int i = 0; i < in.length;  ++i)
 				clear[i] = Utils.fromLong(in[i], LEN);
@@ -116,11 +118,14 @@ public class Task2b {
 			T[][] Alice = gen.inputOfAlice(clear);
 			T[][] Bob = gen.inputOfBob(new boolean[boblength][LEN]);
 
-			scData = gen.newTArray(totalSize, LEN);
+			T[][] scData = gen.newTArray(totalSize, LEN);
 
 			System.arraycopy(Alice, 0, scData, 0, Alice.length);
 			System.arraycopy(Bob, 0, scData, Alice.length, Bob.length);
-
+			res = compute(gen, scData);
+			
+			
+			
 			clear = new boolean[alicelength][];
 			for(int i = 0; i < in.length;  ++i)
 				clear[i] = Utils.fromLong(in2[i], LEN);
@@ -128,16 +133,11 @@ public class Task2b {
 			Alice = gen.inputOfAlice(clear);
 			Bob = gen.inputOfBob(new boolean[boblength][LEN]);
 
-			scData2 = gen.newTArray(totalSize, LEN);
+			scData = gen.newTArray(totalSize, LEN);
 
-			System.arraycopy(Alice, 0, scData2, 0, Alice.length);
-			System.arraycopy(Bob, 0, scData2, Alice.length, Bob.length);
-		}
-
-		@Override
-		public void secureCompute(CompEnv<T> gen) {
-			res = compute(gen, scData);
-			res2 = compute(gen, scData2);
+			System.arraycopy(Alice, 0, scData, 0, Alice.length);
+			System.arraycopy(Bob, 0, scData, Alice.length, Bob.length);
+			res2 = compute(gen, scData);
 
 			IntegerLib<T> lib = new IntegerLib<T>(gen);
 			res = lib.add(lib.padSignal(res, 32), lib.padSignal(res2, 32));
@@ -152,28 +152,28 @@ public class Task2b {
 	}
 
 	public static class Evaluator<T> extends EvaRunnable<T> {
-		T[][] scData;
-		T[][] scData2;
 		T[] res, res2;
 		int totalSize;
 		boolean automated;
+		long[] in, in2;
+		int LEN = 64;
+		int alicelength;
+		int boblength = 0;			
 		@Override
 		public void prepareInput(CompEnv<T> gen) throws Exception {
 			CommandLine cmd = processArgs(args);
 			automated = cmd.hasOption("a");
 			HashSet<SNPEntry> data = PrepareData.readFile(cmd.getOptionValue("f"));
 
-			int boblength = 0;			
 			for(SNPEntry e : data) boblength +=e.value.length();
 			gen.os.write(ByteBuffer.allocate(4).putInt(boblength).array());
 			gen.os.flush();
 
-			int alicelength = ByteBuffer.wrap(Server.readBytes(gen.is, 4)).getInt();
+			alicelength = ByteBuffer.wrap(Server.readBytes(gen.is, 4)).getInt();
 			totalSize  = alicelength+boblength;
-			int LEN = 64;
 
-			long[] in = new long[boblength];
-			long[] in2 = new long[boblength];
+			in = new long[boblength];
+			in2 = new long[boblength];
 			int cnt = 0;
 			for(SNPEntry e : data) {
 				for(int i = 0; i < e.value.length(); ++i){
@@ -193,6 +193,9 @@ public class Task2b {
 			Arrays.sort(in2);
 
 
+		}
+		@Override
+		public void secureCompute(CompEnv<T> gen) {
 			boolean[][] clear = new boolean[boblength][];
 			for(int i = 0; i < in.length;  ++i)
 				clear[i] = Utils.fromLong(-1*in[i], LEN);
@@ -200,10 +203,10 @@ public class Task2b {
 			T[][] Alice = gen.inputOfAlice(new boolean[alicelength][LEN]);
 			T[][] Bob = gen.inputOfBob(clear);
 
-			scData = gen.newTArray(totalSize, LEN);
-
+			T[][] scData = gen.newTArray(totalSize, LEN);
 			System.arraycopy(Alice, 0, scData, 0, Alice.length);
 			System.arraycopy(Bob, 0, scData, Alice.length, Bob.length);
+			res = compute(gen, scData);
 
 			clear = new boolean[boblength][];
 			for(int i = 0; i < in.length;  ++i)
@@ -211,16 +214,10 @@ public class Task2b {
 
 			Alice = gen.inputOfAlice(new boolean[alicelength][LEN]);
 			Bob = gen.inputOfBob(clear);
-
-			scData2 = gen.newTArray(totalSize, LEN);
-
-			System.arraycopy(Alice, 0, scData2, 0, Alice.length);
-			System.arraycopy(Bob, 0, scData2, Alice.length, Bob.length);
-		}
-		@Override
-		public void secureCompute(CompEnv<T> gen) {
-			res = compute(gen, scData);
-			res2 = compute(gen, scData2);
+			scData = gen.newTArray(totalSize, LEN);
+			System.arraycopy(Alice, 0, scData, 0, Alice.length);
+			System.arraycopy(Bob, 0, scData, Alice.length, Bob.length);
+			res2 = compute(gen, scData);
 
 			IntegerLib<T> lib = new IntegerLib<T>(gen);
 			res = lib.add(lib.padSignal(res, 32), lib.padSignal(res2, 32));

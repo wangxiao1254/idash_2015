@@ -34,7 +34,7 @@ task2abf: Computing Hamming Distance BloomFilter
 ---------------------
       `[more options]: -f file -p NUMBER`
 
-      -f is used to specify the input file, -p is used to specify approximation quality followed with an integer from 1 . Default value is 5 is no value is provide. the larger the NUMBER used, the better.
+      -f is used to specify the input file, -p is used to specify approximation quality followed with an integer larger than 1. Default value is 2 is no value is provide. the larger the NUMBER used, the better.
 
 task2bstd: Computing Edit Distance Standard
 ---------------------
@@ -46,7 +46,7 @@ task2bbf: Computing Edit Distance BloomFilter
 ---------------------
       `[more options]: -f file -p NUMBER`
 
-      -f is used to specify the input file, -p is used to specify approximation quality followed with an integer from 1. Default value is 5 is no value is provide. the larger the NUMBER used, the better.
+      -f is used to specify the input file, -p is used to specify approximation quality followed with an integer larger than 1. Default value is 2 is no value is provide. the larger the NUMBER used, the better.
 
 
 Usage example
