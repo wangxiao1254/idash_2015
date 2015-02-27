@@ -22,7 +22,7 @@ import flexsc.CompEnv;
 import flexsc.Flag;
 
 public class Task2b {
-	public static int NoM = 20;
+	public static int NoM = 5;
 
 	public static<T> T[] compute(CompEnv<T> env, T[] aliceBF, T[] bobBF) {
 		IntegerLib<T> lib = new IntegerLib<>(env);
@@ -54,7 +54,7 @@ public class Task2b {
 		public void prepareInput(CompEnv<T> gen) throws Exception {
 			CommandLine cmd = processArgs(args);
 			if(cmd.hasOption("p"))
-				NoM = Math.max(new Integer(cmd.getOptionValue("p")), NoM);
+				NoM = new Integer(cmd.getOptionValue("p"));
 			HashSet<SNPEntry> data = PrepareData.readFile(cmd.getOptionValue("f"));
 
 			int alicelength = 0;			for(SNPEntry e : data) alicelength +=e.value.length();
@@ -132,7 +132,7 @@ public class Task2b {
 		public void prepareInput(CompEnv<T> gen) throws Exception {
 			CommandLine cmd = processArgs(args);
 			if(cmd.hasOption("p"))
-				NoM = Math.max(new Integer(cmd.getOptionValue("p")), NoM);
+				NoM = new Integer(cmd.getOptionValue("p"));
 			HashSet<SNPEntry> data = PrepareData.readFile(cmd.getOptionValue("f"));
 
 			int boblength = 0;			for(SNPEntry e : data) boblength +=e.value.length();
