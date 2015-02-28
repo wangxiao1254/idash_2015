@@ -58,7 +58,7 @@ public class Task2a {
 		CommandLine cmd = parser.parse(options, args);
 
 		if(!cmd.hasOption("f")) {
-			throw new Exception("wrong input");
+			throw new Exception("argument format is wrong!");
 		}
 		if(cmd.hasOption("a"))
 			System.out.println("Running the program with automatically generated circuits");
@@ -119,7 +119,7 @@ public class Task2a {
 		public void prepareOutput(CompEnv<T> gen) {
 			int r = Utils.toInt(gen.outputToAlice(res));
 			//			r = bf.countToSize(r);
-			System.out.println("result: "+(2*r-totalSize));
+			System.out.println("Hamming Distance: "+(2*r-totalSize));
 		}		
 	}
 

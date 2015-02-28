@@ -54,7 +54,7 @@ public class Task2b {
 		CommandLine cmd = parser.parse(options, args);
 
 		if(!cmd.hasOption("f")) {
-			throw new Exception("wrong input");
+			throw new Exception("argument format is wrong!");
 		}
 		return cmd;
 	}
@@ -139,7 +139,7 @@ public class Task2b {
 		public void prepareOutput(CompEnv<T> gen) {
 			double tmp = Utils.toLong(gen.outputToAlice(res));
 			int result = (int) (-1*bf.m/bf.k*Math.log(tmp/bf.m/bf.m) - totalSize);
-			System.out.println( result );
+			System.out.println("Edit Distance: "+result );
 		}		
 	}
 
