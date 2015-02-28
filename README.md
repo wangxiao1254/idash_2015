@@ -1,3 +1,5 @@
+please contact wangxiao@cs.umd.edu for any difficulties when running the program.
+
 Summary
 ================
 Step 1: open Config.conf and replace localhost to the other party's IP or Domain name
