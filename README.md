@@ -8,7 +8,9 @@ Step 2: run the following command on both machine, one with [party]=gen, one wit
 where 
 `[party]` can be gen or eva
 `[tasks]` can be task1a, task1b, task2astd, task2abf, task2bstd, task2bbf
-`[more options]` is used to specify datafiles and more.
+`[more options]` is used to specify datafiles and more.  -c is used for specify case data, -t is used to specify control
+data, -f is used to specify data when there is only one input(task2), -h is used to switch to high precision(task1b),
+-a is used for automatically generated circuits, -p NUMBER is used for a trade off between precision and speed (task2a/b controled by NUMBER);
 
 
 Recommanded solution:
@@ -38,59 +40,16 @@ task2b:
       Evaluator: `./run.py eva task2bbf -f path_file`
 
 
-Detailed solutions for all tasks
-====================
-task1a: Computing MAF.
----------------------
-      [more options]: -c casefile -t controlfile [ -a ]
-      -c and -t are used to specify case and control file, -a is used to specify if we will run the circuit constructed manually or generated automatically by compiler With -a, it will use automatically generated circuit.
-
-task1b: Computing Chi Square.
----------------------
-      [more options]: -c casefile -t controlfile [ -a | -h ]
-      meaning is similar to the above
-      when -a is not used, -h can be used to have higher precision.
-
-task2astd: Computing Hamming Distance Standard
----------------------
-      `[more options]: -f data [-a]`
-
-      -f is used to specify the input file, -a is used similarly as before
-
-task2abf: Computing Hamming Distance BloomFilter
----------------------
-      `[more options]: -f file -p NUMBER`
-
-      -f is used to specify the input file, -p is used to specify approximation quality followed with an integer larger than 1. Default value is 2 is no value is provide. the larger the NUMBER used, the better.
-
-task2bstd: Computing Edit Distance Standard
----------------------
-      `[more options]: -f data [-a]`
-
-      -f is used to specify the input file, -a is used similarly as before
-
-task2bbf: Computing Edit Distance BloomFilter
----------------------
-      `[more options]: -f file -p NUMBER`
-
-      -f is used to specify the input file, -p is used to specify approximation quality followed with an integer larger than 1. Default value is 2 is no value is provide. the larger the NUMBER used, the better.
-
 
 Complete Usage example
 =======================
 task1a:
 ---------------------
-  - Run manually created circuit:
+  -  Exact solution (add -a for automatically generated circuits):
 
       Generator: `./run.py gen task1a -c path_case1 -t path_control1`
 
       Evaluator: `./run.py eva task1a -c path_case2 -t path_control2`
-
-  - Run automatically created circuit:
-
-      Generator: `./run.py gen task1a -c path_case1 -t path_control1 -a`
-
-      Evaluator: `./run.py eva task1a -c path_case2 -t path_control2 -a`
 
 task1b:
 ---------------------
@@ -114,19 +73,14 @@ task1b:
 
 task2a:
 ---------------------
- -  Run manually created circuit:
+ -  Solution using oblivious merge (add -a for automatically generated circuits):
 
       Generator: `./run.py gen task2astd -f path_file`
 
       Evaluator: `./run.py eva task2astd -f path_file`
 
- -  Run automatically created circuit:
 
-      Generator: `./run.py gen task2astd -f path_file -a`
-
-      Evaluator: `./run.py eva task2astd -f path_file -a`
-
-  - Run manually created circuit with bloomfilter: (add `-p NUMBER` for a trade off between precision and speed)
+ -  Solution using bloom filter (add -a for automatically generated circuits, -p NUMBER for higher precision):
 
       Generator: `./run.py gen task2abf -f path_file`
 
@@ -135,20 +89,16 @@ task2a:
 
 task2b:
 ---------------------
-  - Run manually created circuit:
+ -  Solution using oblivious merge (add -a for automatically generated circuits):
 
       Generator: `./run.py gen task2bstd -f path_file`
 
       Evaluator: `./run.py eva task2bstd -f path_file`
 
-  - Run automatically created circuit:
 
-      Generator: `./run.py gen task2bstd -f path_file -a`
+ -  Solution using bloom filter (add -a for automatically generated circuits, -p NUMBER for higher precision):
 
-      Evaluator: `./run.py eva task2bstd -f path_file -a`
-
-  - Run manually created circuit with bloomfilter: (add `-p NUMBER` for a trade off between precision and speed)
-
-      Generator: `./run.py gen task2bbf -f path_file` 
+      Generator: `./run.py gen task2bbf -f path_file`
 
       Evaluator: `./run.py eva task2bbf -f path_file`
+

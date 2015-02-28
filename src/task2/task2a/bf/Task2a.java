@@ -31,15 +31,18 @@ public class Task2a {
 		return lib.numberOfOnes(aUb);
 	}
 	
-	public static<T> T[] computeAuto(CompEnv<T> env, T[] aliceBF, T[] bobBF) throws Exception {
-		IntegerLib<T> lib = new IntegerLib<>(env);
-		T[] aUb = lib.or(aliceBF, bobBF);
-		BF_circuit<T> lib2 = new BF_circuit<T>(env);
-//		NoClass<T> lib2 = new NoClass<T>(env);
-		return lib2.countOnes(aUb.length, aUb);
-//		return lib.numberOfOnes(aUb);
+	public static int nextPower(int a) {
+		int i = 1;
+		while(i < a) {
+			i*=2;
+		}
+		return i;
 	}
 	
+	public static<T> T[] computeAuto(CompEnv<T> env, T[] aliceBF, T[] bobBF) throws Exception {
+		BF_circuit<T> lib2 = new BF_circuit<T>(env);
+		return lib2.merge(aliceBF.length, aliceBF, bobBF);
+	}
 	
 
 	static CommandLine processArgs(String[] args) throws Exception {
@@ -97,9 +100,8 @@ public class Task2a {
 				bobBF =  gen.inputOfBob(Arrays.copyOfRange(bf.bs, i, len));
 				T[] tmp = null;
 				if(automated)
-					tmp = computeAuto(gen, aliceBF, bobBF);
+					tmp = computeAuto(gen, lib.padSignal(aliceBF, nextPower(aliceBF.length)), lib.padSignal(bobBF, nextPower(bobBF.length)));
 				else tmp = compute(gen, aliceBF, bobBF);
-				
 				res = lib.add(res, lib.padSignal(tmp, 32));
 			}
 		}
@@ -107,7 +109,7 @@ public class Task2a {
 		public void prepareOutput(CompEnv<T> gen) {
 			int r = Utils.toInt(gen.outputToAlice(res));
 			r = BF.countToSize(r, bf.k, bf.m);
-			System.out.println(2*r-totalSize);
+			System.out.println("Hamming Distance is: "+(2*r-totalSize));
 		}		
 	}
 
@@ -148,7 +150,7 @@ public class Task2a {
 				bobBF =  gen.inputOfBob(Arrays.copyOfRange(bf.bs, i, len));
 				T[] tmp = null;
 				if(automated)
-					tmp = computeAuto(gen, aliceBF, bobBF);
+					tmp = computeAuto(gen, lib.padSignal(aliceBF, nextPower(aliceBF.length)), lib.padSignal(bobBF, nextPower(bobBF.length)));
 				else tmp = compute(gen, aliceBF, bobBF);
 				res = lib.add(res, lib.padSignal(tmp, 32));
 			}
