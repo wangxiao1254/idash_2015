@@ -177,9 +177,8 @@ if x.svtype == del, D(x) = len(x)\\
 }\end{framed}
 
 The input to this problem is the same as Task2a.
-\paragraph{Our Solution.}
-Let's define
-Edit distance can also be reduced to calculating size of certain sets. First, we compute {\tt d1} that is defined similarly to the definition on website as follows:\\
+\paragraph{Our solution.}
+We first compute {\tt d1} defined as follows:
 \begin{framed}
 {\tt~\\
 d1 = 0;\\
@@ -192,10 +191,11 @@ else if there is only one record at pos,
 d1+=D(x)\\}
 \end{framed}
 
-In order to compute {\tt d1}, we construct two new sets: for every record $(pos, val)$, each party insert $(pos, i), i\in[1, len(val)]$ to a new set and get set $S_1^a, S_1^b$ for Alice and Bob. Then it 
-can be seen that ${\tt d1} = |S_1^a\cup S_1^b|$.
+In order to compute {\tt d1}, each party construct a new set as follows:  for every record $(pos, val)$,
+each party insert $(pos, i), i\in[1, len(val)]$ to a new set and get set $S_1^a, S_1^b$ for Alice and Bob. Then we compute
+${\tt d1} = |S_1^a\cup S_1^b|$.
 
-Now, let's define ${\tt d2}$ as follows:
+Then we compute ${\tt d2}$ defined as follows:
 \begin{framed}
 {\tt~\\
 d2 = 0;\\
@@ -204,7 +204,9 @@ if there are two records x, y at pos and they are same,
 
 d2 += D(x)\\}
 \end{framed}
-In order to compute {\tt d2}, the two parties construct another two new sets: For every record $(pos, val)$, each party insert $(pos,val, i), i\in[1, len(val)]$ to the set and get set $S_2^a, S_2^b$. Then it 
-can be seen that ${\tt d2} = |S_2^a\cap S_2^b|$.
+In order to compute {\tt d1}, each party construct a new set as follows:  for every record $(pos, val, i)$,
+each party insert $(pos, val, i), i\in[1, len(val)]$ to a new set and get set $S_2^a, S_2^b$ for Alice and Bob. Then we compute
+${\tt d2} = |S_2^a\cup S_2^b|$.
 
-After we define {\tt d2} and {\tt d1}, it is clear and {\tt d = d1-d2}.
+
+Finally we compute {\tt d = d2 - d1}.
