@@ -12,17 +12,17 @@
 \maketitle
 \section{Overview}
 We implemented all the problems using the secure computation framework {\tt ObliVM}~\footnote{\url{http://www.oblivm.com}}~\cite{oblivm}.
-For each question, we provide 2 or 3 solutions:
+For each question, we provide multiple solutions, with manually built circuits and automatically built circuits:
 \begin{enumerate}
 \item Task1a: we provide two solutions, one built manually, one built using compiler. Both of them achieve exact result with no error.
 \item Task1b: we provide three solutions, two built manually, one built using compiler. The second manually built circuit can achieve a trade off between efficiency and accuracy.
-\item Task2a/b: we provide three solutions, one built manually using oblivious merge, one built with compiler using oblivious merge, and one built manually using bloom filter. The one with bloom filter can be tuned for a trade off between efficiency and accuracy.
+\item Task2a/b: we provide four solutions, one built manually using oblivious merge, one built with compiler using oblivious merge, one built manually using bloom filter, and one built using compiler. The one with bloom filter can be tuned for a trade off between efficiency and accuracy.
 \end{enumerate}
 
 All the implementations will be open sourced at \url{https://github.com/wangxiao1254/idash_competition} after the deadline of the competition.
 \input{task1}
 \input{task2}
-%\input{eval}
+%\section{Conclusion}
 \bibliographystyle{plain}
 \bibliography{refs,bibdiffpriv,bibliography,crypto,ref}
 \end{document} 
