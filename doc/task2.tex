@@ -1,11 +1,11 @@
 \section{Task 2}
-\subsection{Estimating Size of Union of Two Sets}
+\subsection{Building Block: Estimating Set Union Cardinality}
 Before describing our solution for Task 2, we first present the solution to estimate the size of union of two sets.
 Suppose Alice and Bob have sets of elements $s^a = (e^a_1,...,e^a_n)$
 and $s^b = (e^b_1,...,e^b_n)$ respectively. We want to find $|s^a\cup s^b|$. Here, we introduce two algorithms:
 
-\paragraph{Using oblivious sort and oblivious merge}
-A straightforward way of computing cardinality of the union is to use oblivious sorting, as detailed in Algorithm~\ref{alg1}.
+\paragraph{Using oblivious merge.}
+A strawman approach of computing cardinality of the union is to use oblivious sorting, as detailed in Algorithm~\ref{alg1}.
 
 \begin{algorithm}
 \begin{algorithmic}[1]
@@ -70,7 +70,7 @@ The code for this approach is presented in Figure~\ref{fig:obl_merge}.
 \end{figure}
 
 
-\paragraph{Using Bloom Filter}
+\paragraph{Using Bloom Filter.}
 It is known that bloom filters can be used to check the existence of an element in a set. However, bloom filters can also be used
 to estimate the capacity of a set. Let $X$ be the number of bits set, $m$ be the total number of bits used in the bloom filter and
 $k$ be the number of hash functions used. Number of elements in
