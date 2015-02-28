@@ -25,28 +25,27 @@ All the implementations will be open sourced at \url{https://github.com/wangxiao
 \input{task1}
 \input{task2}
 %\section{Conclusion}
-\bibliographystyle{plain}
-\bibliography{refs,bibdiffpriv,bibliography,crypto,ref}
 
 \appendix
 
+\section*{Supplemental Information}
 \section{{\sf ObliVM} Overview}
 
 {\sf ObliVM} is a programming framework for secure computation, offering the 
 following features:
 \begin{itemize}
 \item
-{\sf Ease-of-use.} Non-specialist programmers can easily 
+{\bf Ease-of-use.} Non-specialist programmers can easily 
 write programs in our source language {\sf ObliVM-lang}, a 
 familiar imperative-style language.
 \item
-{\sf Efficiency.} {\sf ObliVM} compiles these programs into 
+{\bf Efficiency.} {\sf ObliVM} compiles these programs into 
 concise circuit representations suitable for secure computation. 
 Much as MapReduce is a programming paradigm for 
 parallel computation, {\sf ObliVM} offers user- and compiler- friendly
 programming abstractions for secure computation.
 \item
-{\sf Formal security.}
+{\bf Formal security.}
 {\sf ObliVM} offers a security type system to ensure 
 that programs supplied by nonspecialist developers
 will be executed securely without leaking information.
@@ -91,10 +90,17 @@ and for detailed discussions and feedback
 throughout.
 
 We really hope that more competitions like this will be held in the future.
-If a competition like this is to be repeated, we really 
+If a competition like this is to be repeated, we strongly 
 suggest that the organizers increase the difficulty 
 of the challenges --- e.g., consider much more sophisticated tasks
 and bigger data sizes. 
+We feel that the simple and small-scale nature of the problems  
+in this competition is insufficient to fully demonstrate the true power
+of state-of-the-art secure computation frameworks such as {\sf ObliVM}.
+
+\bibliographystyle{plain}
+\bibliography{refs,bibdiffpriv,bibliography,crypto,ref}
+
 
 \end{document} 
 
