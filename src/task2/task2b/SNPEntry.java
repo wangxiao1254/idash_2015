@@ -27,7 +27,7 @@ public class SNPEntry{
 	public SNPEntry() {
 	}
 	
-	public static long HashToLong(String a, int range){
+	public static long HashToLong(String a, int range) {
 		sha1.update(a.getBytes());
 		long res = ByteBuffer.wrap( sha1.digest()).getLong();
 		return Math.abs(res);
