@@ -11,7 +11,34 @@ where
 `[more options]` is used to specify datafiles and more.
 
 
-Detail
+Recommanded solution:
+=======================
+task1a:
+---------------------
+      Generator: `./run.py gen task1a -c path_case1 -t path_control1`
+
+      Evaluator: `./run.py eva task1a -c path_case2 -t path_control2`
+
+task1b:
+---------------------
+      Generator: `./run.py gen task1b -c path_case1 -t path_control1 -h`
+
+      Evaluator: `./run.py eva task1b -c path_case2 -t path_control2 -h`
+
+task2a:
+---------------------
+      Generator: `./run.py gen task2abf -f path_file`
+
+      Evaluator: `./run.py eva task2abf -f path_file`
+
+task2b:
+---------------------
+      Generator: `./run.py gen task2bbf -f path_file` 
+
+      Evaluator: `./run.py eva task2bbf -f path_file`
+
+
+Detailed solutions for all tasks
 ====================
 task1a: Computing MAF.
 ---------------------
@@ -49,7 +76,7 @@ task2bbf: Computing Edit Distance BloomFilter
       -f is used to specify the input file, -p is used to specify approximation quality followed with an integer larger than 1. Default value is 2 is no value is provide. the larger the NUMBER used, the better.
 
 
-Usage example
+Complete Usage example
 =======================
 task1a:
 ---------------------
