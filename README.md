@@ -104,3 +104,9 @@ task2b:
 
       Evaluator: `./run.py eva task2bbf -f path_file`
 
+Others
+============================================
+Compile the circuits:
+All the circuits are precompiled and ready to run. If you would like to recompile
+the circuits, please run:
+java -cp ~/SCVM2/bin/ backend.flexsc.CommandTool [pathToSourceCode] compiledlib
