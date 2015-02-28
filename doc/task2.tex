@@ -1,8 +1,8 @@
 \section{Task 2}
 \subsection{Building Block: Estimating Set Union Cardinality}
 Before describing our solution for Task 2, we first present the solution to estimate the size of union of two sets.
-Suppose Alice and Bob have sets of elements $s^a = (e^a_1,...,e^a_n)$
-and $s^b = (e^b_1,...,e^b_n)$ respectively. We want to find $|s^a\cup s^b|$. Here, we introduce two algorithms:
+Suppose Alice and Bob have sets of elements $S^a = (e^a_1,...,e^a_n)$
+and $S^b = (e^b_1,...,e^b_n)$ respectively. We want to find $|S^a\cup S^b|$. Here, we introduce two algorithms:
 
 \paragraph{Using oblivious merge.}
 A strawman approach of computing cardinality of the union is to use oblivious sorting, as detailed in Algorithm~\ref{alg1}.
@@ -149,12 +149,12 @@ if (x == null) || (y == null) || (x.ref == y.ref \&\& x.alt != y.alt)
 end for\\
 }
 \end{framed}
-Alice and Bob each hold a list of record, where each record is of the format $(pos, val)$.
+Alice and Bob each holds a list of records, where each record is of the format $(pos, val)$.
 
 \paragraph{Our solution.}
-Each party constructs a set containing all the elements in the list: $S^a$ for Alice and $S^b$ for Bob.
-Hamming distance defined above is equivalent to $|S^a\cup S^b| - |S^a\cap S^b|$, that is the sum of number of elements not shared by two parties.
-Note that $|S^a\cup S^b| - |S^a\cap S^b| = 2\times|S^a\cup S^b|-|S^a| - |S^b|$. So we can use the aforementioned algorithms to compute hamming distance.
+Each party constructs a set containing all the records from the input: $S^A$ for Alice and $S^B$ for Bob.
+Hamming distance defined above is equivalent to $|S^A\cup S^B| - |S^A\cap S^B|$, that is the sum of number of elements not shared by two parties.
+Note that $|S^A\cup S^B| - |S^A\cap S^B| = 2\times|S^A\cup S^B|-|S^A| - |S^B|$. So we can use the aforementioned algorithms to compute hamming distance.
 
 Note that in order to do oblivious merge, each record has to be of the same bitlength. Instead of padding every record to the maximum possible length, we hash each
 record to a fixed length bit string. In the code, we hash it to 64-bit numbers, which gives a failure probability of $ $.
