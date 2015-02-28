@@ -1,4 +1,4 @@
-\documentclass{article}
+\documentclass[11pt]{article}
 \usepackage{algorithm}
 \usepackage{algpseudocode}
 \usepackage{algorithmicx, color, xspace, xcolor, fullpage, url}
@@ -6,12 +6,14 @@
 
 \input{def}
 
-\title{iDASH: Secure Genome Analysis over {\tt ObliVM}}
+\title{iDASH: Secure Genome Analysis over {\sf ObliVM}}
 \author{Xiao Shaun Wang, Chang Liu, Kartik Nayak, Justin Wagner, Yan Huang and Elaine Shi}
+\date{University of Maryland, College Park\\
+{\tt \{a,b,c\}@cs.umd.edu}}
 \begin{document}
 \maketitle
 \section{Overview}
-We implemented all the problems using the secure computation framework {\tt ObliVM}~\footnote{\url{http://www.oblivm.com}}~\cite{oblivm}.
+We implemented all the problems using the secure computation framework {\sf ObliVM}~\footnote{\url{http://www.oblivm.com}}~\cite{oblivm}.
 For each question, we provide multiple solutions, with manually built circuits and automatically built circuits:
 \begin{enumerate}
 \item Task1a: we provide two solutions, one built manually, one built using compiler. Both of them achieve exact result with no error.
@@ -25,4 +27,62 @@ All the implementations will be open sourced at \url{https://github.com/wangxiao
 %\section{Conclusion}
 \bibliographystyle{plain}
 \bibliography{refs,bibdiffpriv,bibliography,crypto,ref}
+
+\appendix
+
+\section{{\sf ObliVM} Overview}
+
+{\sf ObliVM} is a programming framework for secure computation, offering the 
+following features:
+\begin{itemize}
+\item
+{\sf Ease-of-use.} Non-specialist programmers can easily 
+write programs in our source language {\sf ObliVM-lang}, a 
+familiar imperative-style language.
+\item
+{\sf Efficiency.} {\sf ObliVM} compiles these programs into 
+concise circuit representations suitable for secure computation. 
+Much as MapReduce is a programming paradigm for 
+parallel computation, {\sf ObliVM} offers user- and compiler- friendly
+programming abstractions for secure computation.
+\item
+{\sf Formal security.}
+{\sf ObliVM} offers a security type system to ensure 
+that programs supplied by nonspecialist developers
+will be executed securely without leaking information.
+At a high level, the security type system guarantees
+that a program's execution traces 
+is oblivious to secret inputs.
+\end{itemize}
+
+\paragraph{Capabilities of {\sf ObliVM}.} 
+{\sf ObliVM} supports richer and much more sophisticated applications
+than the challenges given in this competition.
+We have developed a variety of demo applications in machine learning,
+streaming algorithms, graph algorithms, 
+common data structures, and common utilities.
+Using {\sf ObliVM}, we have demonstrated queries on {\sf GB} 
+databases where we can compute the answers in a reasonable amount of time. 
+
+
+%\paragraph{Whitepaper and more resources.}
+\vspace{10pt}
+For more information about {\sf ObliVM} and additional resources,
+please refer to our whitepaper  
+
+\begin{center}
+\url{http://oblivm.com/papers/oblivm.pdf}
+\end{center}
+
+and our website 
+
+\begin{center}
+\url{http://oblivm.com}
+\end{center}
+
 \end{document} 
+
+
+
+
+
