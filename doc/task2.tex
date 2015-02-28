@@ -137,15 +137,48 @@ The code for this approach is presented in Figure~\ref{fig:bf_merge}.
 \end{figure}
 
 \subsection{Task 2a: Hamming Distance}
-Hamming distance, as defined in the question, %For the definition of As per the The website simplify the definition of hamming distance, which 
-can be computed easily given the functionality mentioned above.
-Let's define a record as containing the associated position and the value in a form of $(pos, val)$. Each party holds a set of records like this, namely 
-$S^a$ and $S^b$. The hamming distance is equivalent to $|S^a\cup S^b| - |S^a\cap S^b|$, that is the sum of number of elements not shared by two parties.
+\paragraph{Problem statement.}
+In this problem, we want to compute the hamming distance defined on the website:
+\begin{framed}
+{\tt~\\
+d = 0;\\
+for all records in the VCF files, which have SVTYPE = SNP or SUB: if given a chrom and pos, there is only one record in one of the VCF file (e.g., x != null), then we set the other record as NULL (e.g., y == null)\\
+if (x == null) || (y == null) || (x.ref == y.ref \&\& x.alt != y.alt)
+
+   d += 1;\\
+end for\\
+}
+\end{framed}
+Alice and Bob each hold a list of record, where each record is of the format $(pos, val)$.
+
+\paragraph{Our solution.}
+Each party constructs a set containing all the elements in the list: $S^a$ for Alice and $S^b$ for Bob.
+Hamming distance defined above is equivalent to $|S^a\cup S^b| - |S^a\cap S^b|$, that is the sum of number of elements not shared by two parties.
 Note that $|S^a\cup S^b| - |S^a\cap S^b| = 2\times|S^a\cup S^b|-|S^a| - |S^b|$. So we can use the aforementioned algorithms to compute hamming distance.
 
 Note that in order to do oblivious merge, each record has to be of the same bitlength. Instead of padding every record to the maximum possible length, we hash each
-record to a fixed length bit string.
+record to a fixed length bit string. In the code, we hash it to 64-bit numbers, which gives a failure probability of $ $.
+
 \subsection{Task2b, Edit Distance}
+\paragraph{Problem statement.}
+In this problem, we want to compute the edit distance defined on the website:
+\begin{framed}
+{\tt~\\
+d = 0;\\
+for all records in the VCF files:\\
+1. if x == y, continue;\\
+2. if x != y, d += max(D(x), D(y))\\
+end for\\
+where D(x):\\
+if x.svtype == snp, D(x) = 1\\
+if x.svtype == sub, D(x) = len(x)\\
+if x.svtype == ins, D(x) = len(x)\\
+if x.svtype == del, D(x) = len(x)\\
+}\end{framed}
+
+The input to this problem is the same as Task2a.
+\paragraph{Our Solution.}
+Let's define
 Edit distance can also be reduced to calculating size of certain sets. First, we compute {\tt d1} that is defined similarly to the definition on website as follows:\\
 \begin{framed}
 {\tt~\\
@@ -174,8 +207,4 @@ d2 += D(x)\\}
 In order to compute {\tt d2}, the two parties construct another two new sets: For every record $(pos, val)$, each party insert $(pos,val, i), i\in[1, len(val)]$ to the set and get set $S_2^a, S_2^b$. Then it 
 can be seen that ${\tt d2} = |S_2^a\cap S_2^b|$.
 
-After we define {\tt d2} and {\tt d1}, it is clear and {\tt d = d1-d2}
-%%% Local Variables: 
-%%% mode: latex
-%%% TeX-master: "main"
-%%% End:
+After we define {\tt d2} and {\tt d1}, it is clear and {\tt d = d1-d2}.

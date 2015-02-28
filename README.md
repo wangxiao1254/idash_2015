@@ -29,14 +29,18 @@ task1b(Chi^2):
 
       Evaluator: `./run.py eva task1b -c path_case2 -t path_control2 -h`
 
-task2a(Hamming Distance):
+task2a(Hamming Distance) 
 ---------------------
+add -p NUMBER to trade off speed for better approximation. e.g. -p 15
+
       Generator: `./run.py gen task2abf -f path_file`
 
       Evaluator: `./run.py eva task2abf -f path_file`
 
 task2b(Edit Distance):
 ---------------------
+add -p NUMBER to trade off speed for better approximation. e.g. -p 15
+
       Generator: `./run.py gen task2bbf -f path_file` 
 
       Evaluator: `./run.py eva task2bbf -f path_file`
