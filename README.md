@@ -1,7 +1,7 @@
 Summary
 ================
 Step 1: open Config.conf and replace localhost to the other party's IP or Domain name
-Step 2: run the following command on both machine, one with [party]=gen, one with [party]=eva on same tasks:
+Step 2: run the following command on both machine, one with [party]=gen, one with [party]=eva on the same task as follows:
 
 `./run.py [party] [tasks] [more options]`
 
@@ -13,27 +13,27 @@ data, -f is used to specify data when there is only one input(task2), -h is used
 -a is used for automatically generated circuits, -p NUMBER is used for a trade off between precision and speed (task2a/b controled by NUMBER);
 
 
-Recommanded solution:
+Recommaend solution:
 =======================
-task1a:
+task1a(MAF):
 ---------------------
       Generator: `./run.py gen task1a -c path_case1 -t path_control1`
 
       Evaluator: `./run.py eva task1a -c path_case2 -t path_control2`
 
-task1b:
+task1b(Chi^2):
 ---------------------
       Generator: `./run.py gen task1b -c path_case1 -t path_control1 -h`
 
       Evaluator: `./run.py eva task1b -c path_case2 -t path_control2 -h`
 
-task2a:
+task2a(Hamming Distance):
 ---------------------
       Generator: `./run.py gen task2abf -f path_file`
 
       Evaluator: `./run.py eva task2abf -f path_file`
 
-task2b:
+task2b(Edit Distance):
 ---------------------
       Generator: `./run.py gen task2bbf -f path_file` 
 
