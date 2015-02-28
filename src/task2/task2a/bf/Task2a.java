@@ -12,6 +12,7 @@ import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.Options;
 
 import task2.bloomFilter.BF;
+import task2.circuit_from_compiler.BF_circuit;
 import task2.task2a.PrepareData;
 import task2.task2a.SNPEntry;
 import util.EvaRunnable;
@@ -29,11 +30,26 @@ public class Task2a {
 		T[] aUb = lib.or(aliceBF, bobBF);
 		return lib.numberOfOnes(aUb);
 	}
+	
+	public static int nextPower(int a) {
+		int i = 1;
+		while(i < a) {
+			i*=2;
+		}
+		return i;
+	}
+	
+	public static<T> T[] computeAuto(CompEnv<T> env, T[] aliceBF, T[] bobBF) throws Exception {
+		BF_circuit<T> lib2 = new BF_circuit<T>(env);
+		return lib2.merge(aliceBF.length, aliceBF, bobBF);
+	}
+	
 
 	static CommandLine processArgs(String[] args) throws Exception {
 		Options options = new Options();
 		options.addOption("f", "file", true, "file");
 		options.addOption("p", "filprecisione", true, "precision");
+		options.addOption("a", "automated", false, "automated");
 
 		CommandLineParser parser = new BasicParser();
 		CommandLine cmd = parser.parse(options, args);
@@ -49,10 +65,12 @@ public class Task2a {
 		T[] bobBF;
 		T[] res;
 		int totalSize;
+		boolean automated;
 		BF bf;
 		@Override
 		public void prepareInput(CompEnv<T> gen) throws Exception {
 			CommandLine cmd = processArgs(args);
+			automated = cmd.hasOption("a");
 			if(cmd.hasOption("p"))
 				NoM = new Integer(cmd.getOptionValue("p"));
 			HashSet<SNPEntry> data = PrepareData.readFile(cmd.getOptionValue("f"));
@@ -73,23 +91,25 @@ public class Task2a {
 		}
 
 		@Override
-		public void secureCompute(CompEnv<T> gen) {
+		public void secureCompute(CompEnv<T> gen) throws Exception {
 			IntegerLib<T> lib = new IntegerLib<>(gen);
 			res = lib.zeros(32);
 			for(int i = 0; i < bf.bs.length; i+=Flag.OTBlockSize) {
 				int len = Math.min(bf.bs.length, i+Flag.OTBlockSize);
 				aliceBF = gen.inputOfAlice(Arrays.copyOfRange(bf.bs, i, len));
 				bobBF =  gen.inputOfBob(Arrays.copyOfRange(bf.bs, i, len));
-				T[] tmp = compute(gen, aliceBF, bobBF);
+				T[] tmp = null;
+				if(automated)
+					tmp = computeAuto(gen, lib.padSignal(aliceBF, nextPower(aliceBF.length)), lib.padSignal(bobBF, nextPower(bobBF.length)));
+				else tmp = compute(gen, aliceBF, bobBF);
 				res = lib.add(res, lib.padSignal(tmp, 32));
 			}
 		}
-
 		@Override
 		public void prepareOutput(CompEnv<T> gen) {
 			int r = Utils.toInt(gen.outputToAlice(res));
 			r = BF.countToSize(r, bf.k, bf.m);
-			System.out.println(2*r-totalSize);
+			System.out.println("Hamming Distance is: "+(2*r-totalSize));
 		}		
 	}
 
@@ -98,9 +118,11 @@ public class Task2a {
 		T[] bobBF;
 		T[] res;
 		BF bf;
+		boolean automated;
 		@Override
 		public void prepareInput(CompEnv<T> gen) throws Exception {
 			CommandLine cmd = processArgs(args);
+			automated = cmd.hasOption("a");
 			if(cmd.hasOption("p"))
 				NoM = new Integer(cmd.getOptionValue("p"));
 			HashSet<SNPEntry> data = PrepareData.readFile(cmd.getOptionValue("f"));
@@ -119,14 +141,17 @@ public class Task2a {
 		}
 
 		@Override
-		public void secureCompute(CompEnv<T> gen) {
+		public void secureCompute(CompEnv<T> gen) throws Exception {
 			IntegerLib<T> lib = new IntegerLib<>(gen);
 			res = lib.zeros(32);
 			for(int i = 0; i < bf.bs.length; i+=Flag.OTBlockSize) {
 				int len = Math.min(bf.bs.length, i+Flag.OTBlockSize);
 				aliceBF = gen.inputOfAlice(Arrays.copyOfRange(bf.bs, i, len));
 				bobBF =  gen.inputOfBob(Arrays.copyOfRange(bf.bs, i, len));
-				T[] tmp = compute(gen, aliceBF, bobBF);
+				T[] tmp = null;
+				if(automated)
+					tmp = computeAuto(gen, lib.padSignal(aliceBF, nextPower(aliceBF.length)), lib.padSignal(bobBF, nextPower(bobBF.length)));
+				else tmp = compute(gen, aliceBF, bobBF);
 				res = lib.add(res, lib.padSignal(tmp, 32));
 			}
 		}

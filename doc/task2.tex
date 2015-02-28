@@ -24,9 +24,11 @@ A straightforward way of computing cardinality of the union is to use oblivious 
 For $n$ elements, each with size $D$ bits, this approach requires a circuit of size $O(Dn\log^2n)$ using bitonic sorting network~\cite{bitonicsort},
 and can be further reduced to $O(Dn\log n)$ if two parties sort their data locally and perform a bitonic merge using secure computation.
 In the submission, we take the second approach to achieve a better performance.
+
 The code for this approach is presented in Figure~\ref{fig:obl_merge}.
 %\paragraph{Code used for oblivious merge.}
 %Here we also include the code used of this algorithm in {\tt ObliVM-lang}.
+
 \begin{figure}[H]
 \begin{tabular}{rl}
 \small 1&\small \tt \struct Task2Automated\at{m}\at{n}\{\};\\
@@ -84,6 +86,7 @@ number of gates, regardless of the bitlength.
 Hamming distance, as defined in the question, %For the definition of As per the The website simplify the definition of hamming distance, which 
 can be computed easily given the functionality mentioned above.
 Let's define a record as containing the associated position and the value in a form of $(pos, val)$. Each party holds a set of records like this, namely 
+
 $S^a$ and $S^b$. The hamming distance is equivalent to $|S^a\cup S^b| - |S^a\cap S^b|$, that is the sum of number of elements not shared by two parties.
 Note that $|S^a\cup S^b| - |S^a\cap S^b| = 2\times|S^a\cup S^b|-|S^a| - |S^b|$. So we can use the aforementioned algorithms to compute hamming distance.
 
@@ -103,7 +106,7 @@ else if there is only one record at pos,
 d1+=D(x)\\}
 \end{framed}
 
-In order to compute {\tt d1}, we construct a new set: for every record $(pos, val)$, each party insert $(pos, i), i\in[1, len(val)]$ to the set and get set $S_1^a, S_1^b$. Then it 
+In order to compute {\tt d1}, we construct two new sets: for every record $(pos, val)$, each party insert $(pos, i), i\in[1, len(val)]$ to a new set and get set $S_1^a, S_1^b$ for Alice and Bob. Then it 
 can be seen that ${\tt d1} = |S_1^a\cup S_1^b|$.
 
 Now, let's define ${\tt d2}$ as follows:
@@ -115,11 +118,11 @@ if there are two records x, y at pos and they are same,
 
 d2 += D(x)\\}
 \end{framed}
-In order to compute {\tt d2}, the two parties construct two new set: For every record $(pos, val)$, each party insert $(pos,val, i), i\in[1, len(val)]$ to the set and get set $S_2^a, S_2^b$. Then is 
+In order to compute {\tt d2}, the two parties construct another two new sets: For every record $(pos, val)$, each party insert $(pos,val, i), i\in[1, len(val)]$ to the set and get set $S_2^a, S_2^b$. Then it 
 can be seen that ${\tt d2} = |S_2^a\cap S_2^b|$.
 
 After we define {\tt d2} and {\tt d1}, it is clear and {\tt d = d1-d2}
 %%% Local Variables: 
 %%% mode: latex
 %%% TeX-master: "main"
-%%% End: 
+%%% End:
