@@ -82,11 +82,64 @@ Then, in secure computation, the two parties union the bloom filter using a bitw
 ($X$ mentioned above).
 Note that after getting X, the remaining part of the computation can  be done in cleartext. Using bloom filter, we can compute the size of union using $O(n\lambda)$
 number of gates, regardless of the bitlength.
+
+The code for this approach is presented in Figure~\ref{fig:bf_merge}.
+
+\begin{figure}[H]
+\begin{tabular}{rl}
+\small 1&\small \tt \struct Pair<T1, T2> \{\\
+\small 1&\small \tt  \quad  T1 left;\\
+\small 1&\small \tt  \quad  T2 right;\\
+\small 1&\small \tt \};\\
+\small 1&\small \tt \struct bit \{\\
+\small 1&\small \tt  \quad  int1 v;\\
+\small 1&\small \tt \};\\
+
+\small 1&\small \tt \struct Int\at{n} \{\\
+\small 1&\small \tt  \quad  int\at{n} v;\\
+\small 1&\small \tt \};\\
+\small 1&\small \tt \struct BF\_circuit\{\};\\
+
+\small 1&\small \tt Pair<bit, Int\at{n}> BF\_circuit.\func{add}\at{n}(int\at{n} x, int\at{n} y) \{\\
+\small 1&\small \tt \quad   bit cin;\\
+\small 1&\small \tt  \quad  Int\at{n} ret;\\
+\small 1&\small \tt  \quad  bit t1, t2;\\
+\small 1&\small \tt  \quad  \for(\public int32 i=0; i<n; i = i+1) \{\\
+\small 1&\small \tt   \quad\quad    t1.v = x\$i\$  $\wedge$ cin.v;\\
+\small 1&\small \tt    \quad\quad   t2.v = y\$i\$  $\wedge$ cin.v;\\
+\small 1&\small \tt   \quad\quad    ret.v\$i\$ = x\$i\$  $\wedge$ t2.v;\\
+\small 1&\small \tt    \quad\quad   t1.v = t1.v \& t2.v;\\
+\small 1&\small \tt     \quad\quad  cin.v = cin.v  $\wedge$ t1.v;\\
+\small 1&\small \tt   \quad \}\\
+\small 1&\small \tt   \quad \return Pair\{bit, Int\at{n}\}(cin, ret);\\
+\small 1&\small \tt \}\\
+
+\small 1&\small \tt int\at{log(n+1)} BF\_circuit.\func{countOnes}\at{n}(int\at{n} x) \{\\
+\small 1&\small \tt   \quad \ifs(n==1) \return x;\\
+\small 1&\small \tt   \quad int\at{log(n-n/2+1)} first = this.\func{countOnes}\at{(n/2)}(x\$0\~{}n/2\$);\\
+\small 1&\small \tt    \quad int\at{log(n-n/2+1)} second = this.\func{countOnes}\at{(n-n/2)}(x\$n/2\~{}n\$);\\
+\small 1&\small \tt \quad   Pair<bit, Int\at{log(n-n/2)}> ret = this.\func{add}\at{log(n-n/2+1)}(first, second);\\
+
+\small 1&\small \tt \quad   int\at{log(n+1)} r = ret.right.v;\\
+\small 1&\small \tt \quad   r\$log(n+1)-1\$ = ret.left.v;\\
+\small 1&\small \tt \quad   \return r;\\
+\small 1&\small \tt \}\\
+\small 1&\small \tt int\at{log(n+1)} BF\_circuit.merge\at{n}(int\at{n} x, int\at{n} y) \{\\
+\small 1&\small \tt  \quad  int\at{n} tmp;\\
+\small 1&\small \tt  \quad  \for(\public int32 i = 0; i < n; i = i +1 ) \{\\
+\small 1&\small \tt    \quad\quad   tmp\$i\$ = x\$i\$ | y\$i\$;\\
+\small 1&\small \tt   \quad \}\\
+\small 1&\small \tt    \quad\return this.\func{countOnes}\at{n}(tmp);\\
+\small 1&\small \tt \}\\
+\end{tabular}
+\caption{Code for Merging two bloom filters and then count ones written in {\tt ObliVM}}
+\label{fig:bf_merge}
+\end{figure}
+
 \subsection{Task 2a: Hamming Distance}
 Hamming distance, as defined in the question, %For the definition of As per the The website simplify the definition of hamming distance, which 
 can be computed easily given the functionality mentioned above.
 Let's define a record as containing the associated position and the value in a form of $(pos, val)$. Each party holds a set of records like this, namely 
-
 $S^a$ and $S^b$. The hamming distance is equivalent to $|S^a\cup S^b| - |S^a\cap S^b|$, that is the sum of number of elements not shared by two parties.
 Note that $|S^a\cup S^b| - |S^a\cap S^b| = 2\times|S^a\cup S^b|-|S^a| - |S^b|$. So we can use the aforementioned algorithms to compute hamming distance.
 
