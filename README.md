@@ -12,7 +12,7 @@ where
 `[tasks]` can be task1a, task1b, task2astd, task2abf, task2bstd, task2bbf
 `[more options]` is used to specify datafiles and more.  -c is used for specify case data, -t is used to specify control
 data, -f is used to specify data when there is only one input(task2), -h is used to switch to high precision(task1b),
--a is used for automatically generated circuits, -p NUMBER is used for a trade off between precision and speed (task2a/b controled by NUMBER);
+-a is used for automatically generated circuits, -p NUMBER is used for a trade off between precision and speed (task2a/b controlled by NUMBER);
 
 
 Recommended solution:

@@ -94,7 +94,7 @@ public class Task2a {
 			int LEN = (int) Math.ceil((Math.log(totalSize)/Math.log(2)*2+10));
 					
 			if(cmd.hasOption("p"))
-				LEN = new Integer(cmd.getOptionValue("p"));
+				LEN = (int) Math.ceil((Math.log(totalSize)/Math.log(2)*2+new Integer(cmd.getOptionValue("p"))));
 
 			BigInteger[] in = new BigInteger[alicelength];
 			int cnt = 0;
@@ -154,7 +154,7 @@ public class Task2a {
 			
 			int LEN = (int) Math.ceil((Math.log(totalSize)/Math.log(2)*2+10));
 			if(cmd.hasOption("p"))
-				LEN = new Integer(cmd.getOptionValue("p"));
+				LEN = (int) Math.ceil((Math.log(totalSize)/Math.log(2)*2+new Integer(cmd.getOptionValue("p"))));
 
 			BigInteger[] in = new BigInteger[boblength];
 			int cnt = 0;
