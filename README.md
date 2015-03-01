@@ -78,14 +78,15 @@ task1b:
 
 task2a:
 ---------------------
- -  Solution using oblivious merge. add -p NUMBER for a trade off between speed and accuracy. NUMBER is M/N in bloom filter. Detailed choice of NUMBER can be found in the report.
+ -  Solution using oblivious merge. (add -p NUMBER, where NUMBER is the security parameter for hash collision).
 
       Generator: `./run.py gen task2astd -f path_file`
 
       Evaluator: `./run.py eva task2astd -f path_file`
 
 
- -  Solution using bloom filter (add -a for automatically generated circuits, -p NUMBER for a trade off between speed and accuracy. NUMBER is number of bits used for hash. Detailed choice of NUMBER can be found in the report):
+ -  Solution using bloom filter (add -a for automatically generated circuits, -p NUMBER for a trade off between precision and speed.
+ NUMBER is M/N in bloom filter. Detailed choice of NUMBER can be found in the report).
 
       Generator: `./run.py gen task2abf -f path_file`
 
@@ -94,14 +95,14 @@ task2a:
 
 task2b:
 ---------------------
- -  Solution using oblivious merge (add -a for automatically generated circuits, use -p for a trade off between precision and speed):
+ -  Solution using oblivious merge (add -a for automatically generated circuits, use -p NUMBER, where NUMBER is the security parameter for hash collision):
 
       Generator: `./run.py gen task2bstd -f path_file`
 
       Evaluator: `./run.py eva task2bstd -f path_file`
 
 
- -  Solution using bloom filter (add -a for automatically generated circuits, -p NUMBER for higher precision):
+ -  Solution using bloom filter (add -a for automatically generated circuits, -p NUMBER for a trade off between precision and speed.  NUMBER is M/N in bloom filter. Detailed choice of NUMBER can be found in the report):
 
       Generator: `./run.py gen task2bbf -f path_file`
 
