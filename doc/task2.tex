@@ -87,6 +87,8 @@ Note that after getting X, the remaining part of the computation can  be done in
 The following table gives typical parameter choices, and 
 their accuracy guarantees:
 
+
+\begin{table}[H]
 \begin{center}
 \begin{tabular}{cccc}
 \toprule
@@ -99,6 +101,15 @@ N & M & relative error (95\% confidence) & relative error (99\% confidence)\\
 \bottomrule
 \end{tabular}
 \end{center}
+\caption{Parameters and accuracy for bloom filter cardinality estimation.
+$N$ is the (maximum) number of elements, $M$ is the array size.
+A relative error of $\epsilon$ 
+with $y\%$ confidence means
+that on a random run giving an estimate $\hat{N}$ of $N$, 
+with probability $y\%$,  
+it holds that $(\hat{N}-N)/N < \epsilon$.
+}
+\end{table}
 
 
 The code for this approach is presented in Figure~\ref{fig:bf_merge}.
