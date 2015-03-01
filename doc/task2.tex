@@ -25,6 +25,8 @@ For $n$ elements, each with size $D$ bits, this approach requires a circuit of s
 and can be further reduced to $O(Dn\log n)$ if two parties sort their data locally and perform a bitonic merge using secure computation.
 In the submission, we take the second approach to achieve a better performance.
 
+
+
 The code for this approach is presented in Figure~\ref{fig:obl_merge}.
 %\paragraph{Code used for oblivious merge.}
 %Here we also include the code used of this algorithm in {\tt ObliVM-lang}.
@@ -81,6 +83,37 @@ So, in order to compute the union of two sets, each party first builds their own
 Then, in secure computation, the two parties union the bloom filter using a bitwise OR, and count number of ones in the new bit array
 ($X$ mentioned above).
 Note that after getting X, the remaining part of the computation can  be done in cleartext.
+
+The following table gives typical parameter choices (for values of 
+$N$ given in the example dataset)
+and their accuracy guarantees:
+
+
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{cccc}
+\toprule
+N & M & relative error (95\% confidence) & relative error (99\% confidence)\\
+\midrule
+ 8754 & 3N & 0.9\% & 1.2\% \\   
+ 8754 & 5N & 0.69\% & 0.91\% \\   
+ 8754 & 10N & 0.49\% & 0.66\% \\   
+ 173851 & 1.5N & 0.31\% & 0.40\% \\   
+ 173851 & 2N & 0.26\% & 0.34\% \\   
+ 173851 & 3N & 0.21\% & 0.27\% \\   
+\bottomrule
+\end{tabular}
+\end{center}
+\caption{Parameters and accuracy for bloom filter cardinality estimation.
+$N$ is the (maximum) number of elements, $M$ is the array size.
+A relative error of $\epsilon$ 
+with $y\%$ confidence means
+that on a random run giving an estimate $\hat{N}$ of $N$, 
+with probability $y\%$,  
+it holds that $(\hat{N}-N)/N < \epsilon$.
+}
+\end{table}
+
 
 The code for this approach is presented in Figure~\ref{fig:bf_merge}.
 
@@ -150,6 +183,28 @@ end for\\
 \end{framed}
 Alice and Bob each holds a list of records, where each record is of the format $(pos, val)$.
 
+
+\begin{table}[t]
+  \centering
+  \begin{tabular}{c|c}
+    Failure probability & Number of bits for hashing \\ \hline
+    $2^{-10}$ & 43 \\
+    $2^{-20}$ & 53 \\
+    $2^{-30}$ & 63 \\
+    $2^{-40}$ & 73 \\
+    $2^{-50}$ & 83 \\
+    $2^{-60}$ & 93 \\
+    $2^{-70}$ & 103 \\
+    $2^{-80}$ & 113 \\
+  \end{tabular}
+  \caption{Correctness failure probabilities (i.e., hash collision probabilities) 
+for oblivious merge. Even when hash collision happens, we obtain an 
+approximate answer.}
+  \label{fig:failure-hashing}
+\end{table}
+
+
+
 \paragraph{Our solution.}
 Each party constructs a set containing all the records from the input: $S^A$ for Alice and $S^B$ for Bob.
 Hamming distance defined above is equivalent to $|S^A\cup S^B| - |S^A\cap S^B|$, that is the sum of number of elements not shared by two parties.
@@ -157,21 +212,6 @@ Note that $|S^A\cup S^B| - |S^A\cap S^B| = 2\times|S^A\cup S^B|-|S^A| - |S^B|$. 
 
 Note that in order to do oblivious merge, each record has to be of the same bitlength. Instead of padding every record to the maximum possible length, we hash each
 record to a fixed length bit string. In the code, we hash it to 64-bit numbers, which gives a failure probability of $2^{-31}$. The collision failure probabilities and the corresponding number of bits in the hash function is shown in Table~\ref{fig:failure-hashing}.
-
-\begin{table}
-  \centering
-  \begin{tabular}{c|c}
-    Security Parameter & Number of bits for hashing \\ \hline
-    30 & 63 \\
-    40 & 73 \\
-    50 & 83 \\
-    60 & 93 \\
-    70 & 103 \\
-    80 & 113 \\
-  \end{tabular}
-  \caption{Collision Failure Probabilities}
-  \label{fig:failure-hashing}
-\end{table}
 
 \subsection{Task2b, Edit Distance}
 \paragraph{Problem statement.}
