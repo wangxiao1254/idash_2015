@@ -10,11 +10,11 @@ Minor Allele Frequencies(MAF) over $l = l^A || l^B$. The definition of MAF is as
 Let $f_1$ and $f_2$ be the frequency of two types of alleles in $l$. MAF is defined to be as $min\{f_1, f_2\}$
 
 \paragraph{Our Solution.}
-The two parties first compute the frequency of two types of alleles their own lists and get
+The two parties first compute the frequency of two types of alleles of their own lists and get
 $(f^A_1, f^A_2)$ for Alice and $(f^B_1,f^B_2)$ for Bob, ordered by allele type.
 Then, in the secure computation, the two parties first sum up the frequency by
 $$(f_1, f_2) = (f^A_1+f^A_1, f^B_2+f^B_2),$$
-and then report the smaller number between $f_1$ and $f_2$
+and then report the smaller number between $f_1$ and $f_2$.
 \paragraph{Result.}
 For this task, each test case requires only 40 AND gates for both manually generated circuits and automatically generated circuits.
 
@@ -46,7 +46,7 @@ The code used for this task is shown in Figure~\ref{fig:lang-circuit-oram}.
 Input for Alice: two lists of alleles $l^A_{case} = (e^A_1,...,e^A_n)$, $l^A_{control} = (e^A_1,...,e^A_n)$\\
 Input for Bob: two lists of alleles $l^B_{case} = (e^B_1,...,e^B_n)$, $l^B_{control} = (e^B_1,...,e^B_n)$\\
 
-The problem is to compute the Chi Square statistics over $l = l^A||l^B$. Which is defined as 
+The problem is to compute the Chi square statistics over $l = l^A||l^B$. Which is defined as 
 $$n\times\frac{(ad-bc)^2}{rsgk},$$
 where $r = a + b, s = c + d, g = a + c, k = b + d, n =  r + s$; where $a, b$ are the frequency of two types of alleles in
 $l_{case} = l^A_{case} || l^B_{case}$ and $c, d$ are the frequency of two types of alleles in
@@ -57,7 +57,7 @@ Each party first locally computes the frequency of alleles on their own list: $a
 and $a^B,b^B,c^B,d^B$ for Bob. $a^A,b^A$ are the frequency of two types of alleles in $l^A_{case}$ and 
 $c^A,d^A$ are the frequency of two types of alleles in $l^A_{control}$. $a^B,b^B,c^B,d^B$  is defined similarly.
 In the secure computation we first compute $a = a^A + a^B, b = b^A + b^B,
-c = c^A + c^B,d = d^A + D^B$, then we evaluate the equation mentioned above directly using floating point
+c = c^A + c^B,d = d^A + d^B$, then we evaluate the equation mentioned above directly using floating point
 numbers.
 
 \paragraph{Result.}

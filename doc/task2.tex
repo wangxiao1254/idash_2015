@@ -1,8 +1,8 @@
 \section{Task 2}
 \subsection{Building Block: Estimating Set Union Cardinality}
 Before describing our solution for Task 2, we first present the solution to estimate the size of union of two sets.
-Suppose Alice and Bob have sets of elements $S^a = (e^a_1,...,e^a_n)$
-and $S^b = (e^b_1,...,e^b_n)$ respectively. We want to find $|S^a\cup S^b|$. Here, we introduce two algorithms:
+Suppose Alice and Bob have sets of elements $S^A = (e^A_1,...,e^A_n)$
+and $S^B = (e^B_1,...,e^B_n)$ respectively. We want to find $|S^A\cup S^B|$. Here, we introduce two algorithms:
 
 \paragraph{Using oblivious merge.}
 A strawman approach of computing cardinality of the union is to use oblivious sorting, as detailed in Algorithm~\ref{alg1}.
@@ -80,8 +80,7 @@ $$-\frac{m\ln(1-\frac{X}{m})}{k}.$$
 So, in order to compute the union of two sets, each party first builds their own bloom filter locally using the same set of hash functions.
 Then, in secure computation, the two parties union the bloom filter using a bitwise OR, and count number of ones in the new bit array
 ($X$ mentioned above).
-Note that after getting X, the remaining part of the computation can  be done in cleartext. Using bloom filter, we can compute the size of union using $O(n\lambda)$
-number of gates, regardless of the bitlength.
+Note that after getting X, the remaining part of the computation can  be done in cleartext.
 
 The code for this approach is presented in Figure~\ref{fig:bf_merge}.
 
@@ -192,8 +191,8 @@ d1+=D(x)\\}
 \end{framed}
 
 In order to compute {\tt d1}, each party construct a new set as follows:  for every record $(pos, val)$,
-each party insert $(pos, i), i\in[1, len(val)]$ to a new set and get set $S_1^a, S_1^b$ for Alice and Bob. Then we compute
-${\tt d1} = |S_1^a\cup S_1^b|$.
+each party insert $(pos, i), i\in[1, len(val)]$ to a new set and get set $S_1^A, S_1^B$ for Alice and Bob. Then we compute
+${\tt d1} = |S_1^A\cup S_1^B|$.
 
 Then we compute ${\tt d2}$ defined as follows:
 \begin{framed}
@@ -205,8 +204,8 @@ if there are two records x, y at pos and they are same,
 d2 += D(x)\\}
 \end{framed}
 In order to compute {\tt d1}, each party construct a new set as follows:  for every record $(pos, val, i)$,
-each party insert $(pos, val, i), i\in[1, len(val)]$ to a new set and get set $S_2^a, S_2^b$ for Alice and Bob. Then we compute
-${\tt d2} = |S_2^a\cup S_2^b|$.
+each party insert $(pos, val, i), i\in[1, len(val)]$ to a new set and get set $S_2^A, S_2^B$ for Alice and Bob. Then we compute
+${\tt d2} = |S_2^A\cup S_2^B|$.
 
 
 Finally we compute {\tt d = d2 - d1}.
