@@ -39,6 +39,16 @@ public class Task2a {
 		return i;
 	}
 	
+	public static int parameterChoose(int totalSize) {
+		int l;
+		if(totalSize <= 500)
+			l = 15000;
+		if (totalSize <= 30000)
+			l = 30000;
+		else l =  totalSize;
+		return l;
+	}
+	
 	public static<T> T[] computeAuto(CompEnv<T> env, T[] aliceBF, T[] bobBF) throws Exception {
 		BF_circuit<T> lib2 = new BF_circuit<T>(env);
 		return lib2.merge(aliceBF.length, aliceBF, bobBF);
@@ -70,8 +80,7 @@ public class Task2a {
 		public void prepareInput(CompEnv<T> gen) throws Exception {
 			CommandLine cmd = processArgs(args);
 			automated = cmd.hasOption("a");
-			if(cmd.hasOption("p"))
-				NoM = new Integer(cmd.getOptionValue("p"));
+
 			HashSet<SNPEntry> data = PrepareData.readFile(cmd.getOptionValue("f"));
 
 			int alicelength = data.size();
@@ -80,7 +89,12 @@ public class Task2a {
 			int boblength = ByteBuffer.wrap(Server.readBytes(gen.is, 4)).getInt();
 			totalSize = boblength+alicelength;
 
-			bf = new BF(boblength+alicelength, (int) (NoM*(boblength+alicelength)));
+			if(cmd.hasOption("p")) {
+				NoM = new Integer(cmd.getOptionValue("p"));
+				bf = new BF(boblength+alicelength, (int) (NoM*totalSize));
+			} else 
+				bf = new BF(boblength+alicelength, parameterChoose(totalSize));
+			
 			for(int i = 0; i < bf.k; ++i)
 				gen.os.write(bf.sks[i]);
 			gen.os.flush();
@@ -132,7 +146,14 @@ public class Task2a {
 			gen.os.flush();
 			int alicelength = ByteBuffer.wrap(Server.readBytes(gen.is, 4)).getInt();
 
-			bf = new BF(boblength+alicelength, (int) (NoM*(boblength+alicelength)));
+			int totalSize = alicelength + boblength;
+			if(cmd.hasOption("p")) {
+				NoM = new Integer(cmd.getOptionValue("p"));
+				bf = new BF(boblength+alicelength, (int) (NoM*totalSize));
+			}
+			else 
+				bf = new BF(boblength+alicelength, parameterChoose(totalSize));
+			
 			for(int i = 0; i < bf.k; ++i)
 				bf.sks[i] = Server.readBytes(gen.is, bf.sks[i].length);
 
