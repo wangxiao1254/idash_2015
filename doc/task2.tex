@@ -150,6 +150,26 @@ end for\\
 \end{framed}
 Alice and Bob each holds a list of records, where each record is of the format $(pos, val)$.
 
+
+\begin{table}[t]
+  \centering
+  \begin{tabular}{c|c}
+    Failure probability & Number of bits for hashing \\ \hline
+    $2^{-10}$ & 43 \\
+    $2^{-20}$ & 53 \\
+    $2^{-30}$ & 63 \\
+    $2^{-40}$ & 73 \\
+    $2^{-50}$ & 83 \\
+    $2^{-60}$ & 93 \\
+    $2^{-70}$ & 103 \\
+    $2^{-80}$ & 113 \\
+  \end{tabular}
+  \caption{Correctness failure probabilities for oblivious merge.}
+  \label{fig:failure-hashing}
+\end{table}
+
+
+
 \paragraph{Our solution.}
 Each party constructs a set containing all the records from the input: $S^A$ for Alice and $S^B$ for Bob.
 Hamming distance defined above is equivalent to $|S^A\cup S^B| - |S^A\cap S^B|$, that is the sum of number of elements not shared by two parties.
@@ -157,21 +177,6 @@ Note that $|S^A\cup S^B| - |S^A\cap S^B| = 2\times|S^A\cup S^B|-|S^A| - |S^B|$. 
 
 Note that in order to do oblivious merge, each record has to be of the same bitlength. Instead of padding every record to the maximum possible length, we hash each
 record to a fixed length bit string. In the code, we hash it to 64-bit numbers, which gives a failure probability of $2^{-31}$. The collision failure probabilities and the corresponding number of bits in the hash function is shown in Table~\ref{fig:failure-hashing}.
-
-\begin{table}
-  \centering
-  \begin{tabular}{c|c}
-    Security Parameter & Number of bits for hashing \\ \hline
-    30 & 63 \\
-    40 & 73 \\
-    50 & 83 \\
-    60 & 93 \\
-    70 & 103 \\
-    80 & 113 \\
-  \end{tabular}
-  \caption{Collision Failure Probabilities}
-  \label{fig:failure-hashing}
-\end{table}
 
 \subsection{Task2b, Edit Distance}
 \paragraph{Problem statement.}
