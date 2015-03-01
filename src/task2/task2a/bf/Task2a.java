@@ -23,7 +23,7 @@ import flexsc.CompEnv;
 import flexsc.Flag;
 
 public class Task2a {
-	public static int NoM = 7;
+	public static double NoM = 1.5;
 
 	public static<T> T[] compute(CompEnv<T> env, T[] aliceBF, T[] bobBF) {
 		IntegerLib<T> lib = new IntegerLib<>(env);
@@ -43,7 +43,6 @@ public class Task2a {
 		BF_circuit<T> lib2 = new BF_circuit<T>(env);
 		return lib2.merge(aliceBF.length, aliceBF, bobBF);
 	}
-	
 
 	static CommandLine processArgs(String[] args) throws Exception {
 		Options options = new Options();
@@ -80,8 +79,8 @@ public class Task2a {
 			gen.os.flush();
 			int boblength = ByteBuffer.wrap(Server.readBytes(gen.is, 4)).getInt();
 			totalSize = boblength+alicelength;
-			
-			bf = new BF(boblength+alicelength, NoM*(boblength+alicelength));
+
+			bf = new BF(boblength+alicelength, (int) (NoM*(boblength+alicelength)));
 			for(int i = 0; i < bf.k; ++i)
 				gen.os.write(bf.sks[i]);
 			gen.os.flush();
@@ -105,12 +104,13 @@ public class Task2a {
 				res = lib.add(res, lib.padSignal(tmp, 32));
 			}
 		}
+		
 		@Override
 		public void prepareOutput(CompEnv<T> gen) {
 			int r = Utils.toInt(gen.outputToAlice(res));
 			r = BF.countToSize(r, bf.k, bf.m);
 			System.out.println("Hamming Distance: "+(2*r-totalSize));
-		}		
+		}
 	}
 
 	public static class Evaluator<T> extends EvaRunnable<T> {
@@ -132,7 +132,7 @@ public class Task2a {
 			gen.os.flush();
 			int alicelength = ByteBuffer.wrap(Server.readBytes(gen.is, 4)).getInt();
 
-			bf = new BF(boblength+alicelength, NoM*(boblength+alicelength));
+			bf = new BF(boblength+alicelength, (int) (NoM*(boblength+alicelength)));
 			for(int i = 0; i < bf.k; ++i)
 				bf.sks[i] = Server.readBytes(gen.is, bf.sks[i].length);
 

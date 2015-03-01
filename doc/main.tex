@@ -102,6 +102,66 @@ We feel that the simple and small-scale nature of the problems
 in this competition is insufficient to fully demonstrate the true power
 of state-of-the-art secure computation frameworks such as {\sf ObliVM}.
 
+\section{List of Programs and Usage}
+Here we show the list of programs for each tasks we submitted:
+
+\textbf{task1a:}\\
+  -  Exact solution (add -a for automatically generated circuits):
+
+      Generator: ./run.py gen task1a -c path\_case1 -t path\_control1
+
+      Evaluator: ./run.py eva task1a -c path\_case2 -t path\_control2
+
+task1b:
+---------------------
+  - Run manually created circuit:
+
+      Generator: `./run.py gen task1b -c path_case1 -t path_control1`
+
+      Evaluator: `./run.py eva task1b -c path_case2 -t path_control2`
+
+ -  Run automatically created circuit:
+
+      Generator: `./run.py gen task1b -c path_case1 -t path_control1 -a`
+
+      Evaluator: `./run.py eva task1b -c path_case2 -t path_control2 -a`
+
+- Run manually created circuit with higher precision:
+
+      Generator: `./run.py gen task1b -c path_case1 -t path_control1 -h`
+
+      Evaluator: `./run.py eva task1b -c path_case2 -t path_control2 -h`
+
+task2a:
+---------------------
+ -  Solution using oblivious merge (add -a for automatically generated circuits, use -p NUMBER for a trade off between precision and speed):
+
+      Generator: `./run.py gen task2astd -f path_file`
+
+      Evaluator: `./run.py eva task2astd -f path_file`
+
+
+ -  Solution using bloom filter (add -a for automatically generated circuits, -p NUMBER for higher precision):
+
+      Generator: `./run.py gen task2abf -f path_file`
+
+      Evaluator: `./run.py eva task2abf -f path_file`
+
+
+task2b:
+---------------------
+ -  Solution using oblivious merge (add -a for automatically generated circuits, use -p for a trade off between precision and speed):
+
+      Generator: `./run.py gen task2bstd -f path_file`
+
+      Evaluator: `./run.py eva task2bstd -f path_file`
+
+
+ -  Solution using bloom filter (add -a for automatically generated circuits, -p NUMBER for higher precision):
+
+      Generator: `./run.py gen task2bbf -f path_file`
+
+      Evaluator: `./run.py eva task2bbf -f path_file`
 
 \bibliographystyle{plain}
 \bibliography{refs,bibdiffpriv,bibliography,crypto,ref}

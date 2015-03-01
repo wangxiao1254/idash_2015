@@ -12,7 +12,7 @@ public class TestBF {
 		}
 		int res = bf.size();
 
-		return Math.abs((res-n)/(double)n);
+		return (res-n)/(double)n;
 	}
 
 	public static void main(String[] args) throws NoSuchAlgorithmException, FileNotFoundException {
