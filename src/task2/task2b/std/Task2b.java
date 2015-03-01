@@ -1,5 +1,6 @@
 package task2.task2b.std;
 
+import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -70,7 +71,7 @@ public class Task2b {
 
 
 	public static class Generator<T> extends GenRunnable<T> {
-		long[] in, in2;
+		BigInteger[] in, in2;
 		T[] res, res2;
 		int totalSize;
 		int LEN = 64;
@@ -92,19 +93,19 @@ public class Task2b {
 			totalSize = boblength+alicelength;
 			
 
-			in = new long[alicelength];
-			in2 = new long[alicelength];
+			in = new BigInteger[alicelength];
+			in2 = new BigInteger[alicelength];
 			int cnt = 0;
 			for(SNPEntry e : data) {
 				for(int i = 0; i < e.value.length(); ++i){
-					in[cnt] = SNPEntry.HashToLong(e.Pos(i), LEN);
+					in[cnt] = SNPEntry.HashToBI(e.Pos(i), LEN);
 					cnt++;
 				}
 			}
 			cnt = 0;
 			for(SNPEntry e : data) {
 				for(int i = 0; i < e.value.length(); ++i){
-					in2[cnt] = SNPEntry.HashToLong(e.PosVal(i), LEN);
+					in2[cnt] = SNPEntry.HashToBI(e.PosVal(i), LEN);
 					cnt++;
 				}
 			}
@@ -117,7 +118,7 @@ public class Task2b {
 		public void secureCompute(CompEnv<T> gen) {
 			boolean[][] clear = new boolean[alicelength][];
 			for(int i = 0; i < in.length;  ++i)
-				clear[i] = Utils.fromLong(in[i], LEN);
+				clear[i] = Utils.fromBigInteger(in[i], LEN);
 
 			T[][] Alice = gen.inputOfAlice(clear);
 			T[][] Bob = gen.inputOfBob(new boolean[boblength][LEN]);
@@ -132,7 +133,7 @@ public class Task2b {
 			
 			clear = new boolean[alicelength][];
 			for(int i = 0; i < in.length;  ++i)
-				clear[i] = Utils.fromLong(in2[i], LEN);
+				clear[i] = Utils.fromBigInteger(in2[i], LEN);
 
 			Alice = gen.inputOfAlice(clear);
 			Bob = gen.inputOfBob(new boolean[boblength][LEN]);
@@ -159,7 +160,7 @@ public class Task2b {
 		T[] res, res2;
 		int totalSize;
 		boolean automated;
-		long[] in, in2;
+		BigInteger[] in, in2;
 		int LEN = 64;
 		int alicelength;
 		int boblength = 0;			
@@ -178,19 +179,19 @@ public class Task2b {
 			alicelength = ByteBuffer.wrap(Server.readBytes(gen.is, 4)).getInt();
 			totalSize  = alicelength+boblength;
 
-			in = new long[boblength];
-			in2 = new long[boblength];
+			in = new BigInteger[boblength];
+			in2 = new BigInteger[boblength];
 			int cnt = 0;
 			for(SNPEntry e : data) {
 				for(int i = 0; i < e.value.length(); ++i){
-					in[cnt] = -1*SNPEntry.HashToLong(e.Pos(i), LEN);
+					in[cnt] = SNPEntry.HashToBI(e.Pos(i), LEN).negate();
 					cnt++;
 				}
 			}
 			cnt = 0;
 			for(SNPEntry e : data) {
 				for(int i = 0; i < e.value.length(); ++i){
-					in2[cnt] = -1*SNPEntry.HashToLong(e.PosVal(i), LEN);
+					in2[cnt] = SNPEntry.HashToBI(e.PosVal(i), LEN).negate();
 					cnt++;
 				}
 			}
@@ -204,7 +205,7 @@ public class Task2b {
 		public void secureCompute(CompEnv<T> gen) {
 			boolean[][] clear = new boolean[boblength][];
 			for(int i = 0; i < in.length;  ++i)
-				clear[i] = Utils.fromLong(-1*in[i], LEN);
+				clear[i] = Utils.fromBigInteger(in[i].negate(), LEN);
 
 			T[][] Alice = gen.inputOfAlice(new boolean[alicelength][LEN]);
 			T[][] Bob = gen.inputOfBob(clear);
@@ -216,7 +217,7 @@ public class Task2b {
 
 			clear = new boolean[boblength][];
 			for(int i = 0; i < in.length;  ++i)
-				clear[i] = Utils.fromLong(-1*in2[i], LEN);
+				clear[i] = Utils.fromBigInteger(in2[i].negate(), LEN);
 
 			Alice = gen.inputOfAlice(new boolean[alicelength][LEN]);
 			Bob = gen.inputOfBob(clear);

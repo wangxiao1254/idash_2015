@@ -33,10 +33,10 @@ public class SNPEntry  implements Comparable<SNPEntry>{
 	}
 	
 	public static BigInteger HashToBI(String a, int range){
-		BigInteger m = BigInteger.ONE;
+		BigInteger m = BigInteger.valueOf(2);
 		sha1.update(a.getBytes());
 		BigInteger res = new BigInteger(sha1.digest());
-		return res.mod(m.pow(range-1));
+		return res.mod(m.pow(range-2));
 	}
 
 	public SNPEntry() {

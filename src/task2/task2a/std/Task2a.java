@@ -1,5 +1,6 @@
 package task2.task2a.std;
 
+import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -20,6 +21,7 @@ import util.EvaRunnable;
 import util.GenRunnable;
 import util.Utils;
 import flexsc.CompEnv;
+import flexsc.Comparator;
 
 public class Task2a {
 	public static<T> T[] compute(CompEnv<T> env, T[][] scData) {
@@ -90,17 +92,17 @@ public class Task2a {
 			if(cmd.hasOption("p"))
 				LEN = new Integer(cmd.getOptionValue("p"));
 
-			long[] in = new long[alicelength];
+			BigInteger[] in = new BigInteger[alicelength];
 			int cnt = 0;
 			for(SNPEntry e : data) {
-				in[cnt] = SNPEntry.HashToLong(e.toString(), LEN);
+				in[cnt] = SNPEntry.HashToBI(e.toString(), LEN);
 				cnt++;
 			}
 			Arrays.sort(in);
 
 			boolean[][] clear = new boolean[alicelength][];
 			for(int i = 0; i < in.length;  ++i)
-				clear[i] = Utils.fromLong(in[i], LEN);
+				clear[i] = Utils.fromBigInteger(in[i], LEN);
 
 			T[][] Alice = gen.inputOfAlice(clear);
 			T[][] Bob = gen.inputOfBob(new boolean[boblength][LEN]);
@@ -147,17 +149,18 @@ public class Task2a {
 			if(cmd.hasOption("p"))
 				LEN = new Integer(cmd.getOptionValue("p"));
 
-			long[] in = new long[boblength];
+			BigInteger[] in = new BigInteger[boblength];
 			int cnt = 0;
 			for(SNPEntry e : data) {
-				in[cnt] = -1*SNPEntry.HashToLong(e.toString(), LEN);
+				in[cnt] = SNPEntry.HashToBI(e.toString(), LEN).negate();
 				cnt++;
 			}
+
 			Arrays.sort(in);
 
 			boolean[][] clear = new boolean[boblength][];
 			for(int i = 0; i < in.length;  ++i)
-				clear[i] = Utils.fromLong(-1*in[i], LEN);
+				clear[i] = Utils.fromBigInteger(in[i].negate(), LEN);
 
 			T[][] Alice = gen.inputOfAlice(new boolean[alicelength][LEN]);
 			T[][] Bob = gen.inputOfBob(clear);
