@@ -29,7 +29,7 @@ public class SNPEntry  implements Comparable<SNPEntry>{
 	public static long HashToLong(String a, int range){
 		sha1.update(a.getBytes());
 		long res = ByteBuffer.wrap( sha1.digest()).getLong();
-		return Math.abs(res);
+		return Math.abs(res%(1L<<(range-1)));
 	}
 	
 	public static BigInteger HashToBI(String a, int range){
