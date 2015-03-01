@@ -46,11 +46,12 @@ The code used for this task is shown in Figure~\ref{fig:lang-circuit-oram}.
 Input for Alice: two lists of alleles $l^A_{case} = (e^A_1,...,e^A_n)$, $l^A_{control} = (e^A_1,...,e^A_n)$\\
 Input for Bob: two lists of alleles $l^B_{case} = (e^B_1,...,e^B_n)$, $l^B_{control} = (e^B_1,...,e^B_n)$\\
 
-The problem is to compute the Chi square statistics over $l = l^A||l^B$. Which is defined as 
+First define $a, b$ to be the frequency of two types of alleles in
+$l_{case} = l^A_{case} || l^B_{case}$ and $c, d$ to be the frequency of two types of alleles in
+$l_{control} = l^A_{control} || l^B_{control}$. The problem is to compute the Chi square statistics over $l = l^A||l^B$. This is defined as 
 $$n\times\frac{(ad-bc)^2}{rsgk},$$
-where $r = a + b, s = c + d, g = a + c, k = b + d, n =  r + s$; where $a, b$ are the frequency of two types of alleles in
-$l_{case} = l^A_{case} || l^B_{case}$ and $c, d$ are the frequency of two types of alleles in
-$l_{control} = l^A_{control} || l^B_{control}$.
+where $r = a + b, s = c + d, g = a + c, k = b + d, n =  r + s$; 
+
 
 \paragraph{Our solution.}
 Each party first locally computes the frequency of alleles on their own list: $a^A,b^A,c^A,d^A$ for Alice
