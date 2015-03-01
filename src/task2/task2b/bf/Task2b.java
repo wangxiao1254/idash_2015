@@ -23,7 +23,7 @@ import flexsc.CompEnv;
 import flexsc.Flag;
 
 public class Task2b {
-	public static int NoM = 2;
+	public static int NoM = 3;
 
 	public static<T> T[] compute(CompEnv<T> env, T[] aliceBF, T[] bobBF) {
 		IntegerLib<T> lib = new IntegerLib<>(env);
