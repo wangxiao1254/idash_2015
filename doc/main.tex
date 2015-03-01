@@ -22,6 +22,25 @@ For each question, we provide multiple solutions, with manually built circuits a
 \end{enumerate}
 
 All the implementations will be open sourced at \url{https://github.com/wangxiao1254/idash_competition} after the deadline of the competition.
+
+\paragraph{Manual vs. compiler-generated code.}
+For optimal speed, please run our manually optimized code. 
+Our compiler-generated code  
+results in $1\%$ to $2\%$ 
+larger circuit sizes than the manually optimized code.
+The difference in actual running time is slightly larger
+because the compiler generates longer 
+instruction sequences (in Java)
+to execute the circuits
+than our manually optimized code. 
+Further compiler backend optimizations can be performed 
+to compress our target instruction sequence -- this will 
+be part of our future work.
+
+Nevertheless, we include our compiler-generated implementations
+to demonstrate the ease-of-use of {\sf ObliVM}'s source language.
+
+
 \input{task1}
 \input{task2}
 %\section{Conclusion}
