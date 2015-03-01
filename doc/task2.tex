@@ -78,7 +78,7 @@ to estimate the capacity of a set. Let $X$ be the number of bits set, $m$ be the
 $k$ be the number of hash functions used. Number of elements in
 %size of a 
 the bloom filter can be estimated as 
-$$-\frac{m\ln(1-\frac{X}{m})}{k}.$$
+$$\frac{\ln(1-\frac{X}{m})}{k\ln(1-1/m)}.$$
 So, in order to compute the union of two sets, each party first builds their own bloom filter locally using the same set of hash functions.
 Then, in secure computation, the two parties union the bloom filter using a bitwise OR, and count number of ones in the new bit array
 ($X$ mentioned above).
