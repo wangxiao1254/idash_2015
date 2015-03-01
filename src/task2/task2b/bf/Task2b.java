@@ -137,8 +137,8 @@ public class Task2b {
 
 		@Override
 		public void prepareOutput(CompEnv<T> gen) {
-			double tmp = Utils.toLong(gen.outputToAlice(res));
-			int result = (int) (-1*bf.m/bf.k*Math.log(tmp/bf.m/bf.m) - totalSize);
+			long tmp = Utils.toLong(gen.outputToAlice(res));
+			int result = (int) (Math.log(tmp/bf.m/bf.m)/bf.k/Math.log(1.0-1.0/bf.m) - totalSize);
 			System.out.println("Edit Distance: "+result );
 		}		
 	}

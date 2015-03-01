@@ -9,6 +9,7 @@ import java.security.SecureRandom;
 public class BF {
 	public MessageDigest sha1;
 	public int n, m, k;
+	public double dk;
 	public boolean[] bs;
 	public byte[][]sks;
 	SecureRandom rnd = new SecureRandom();
@@ -24,7 +25,9 @@ public class BF {
 	public void init(int n, int m, double constant) {
 		this.n  = n;
 		this.m = m;
-		this.k = (int) (m*constant/n);
+		this.k = (int) (m / n * constant);
+		if(this.k == 0)this.k = 1;
+//		this.dk = ((double)m*constant/n);
 		bs  = new boolean[m];
 		sks = new byte[k][10];
 		for(int i = 0; i < k ; ++i)
@@ -82,23 +85,33 @@ public class BF {
 		return countToSize(res);
 	}
 
-	public int countToSize(int count){
-		double f = count;
-		f = f/m;
-		f = 1-f;
-		f = Math.log(f);
-		f = f*m;
-		f = -1*(f / k);
-		return (int)f;
+	public int countToSize(double tmp) {
+		double f = tmp;
+		f = 1 - f / m;
+		double log1 = Math.log(f);
+		double log2 = Math.log(1-1.0/m);
+		return (int) (log1/log2/k);
+//		double f = count;
+//		f = f/m;
+//		f = 1-f;
+//		f = Math.log(f);
+//		f = f*m;
+//		f = -1*(f / dk);
+//		return (int)f;
 	}
 	
-	public static int countToSize(int count, int kk, int mm) {
+	public static int countToSize(double count, double kk, int mm) {
 		double f = count;
-		f = f/mm;
-		f = 1-f;
-		f = Math.log(f);
-		f = f*mm;
-		f = -1*(f / kk);
-		return (int)f;
+		f = 1 - f / mm;
+		double log1 = Math.log(f);
+		double log2 = Math.log(1-1.0/mm);
+		return (int) (log1/log2/kk);
+//		double f = count;
+//		f = f/mm;
+//		f = 1-f;
+//		f = Math.log(f);
+//		f = f*mm;
+//		f = -1*(f / kk);
+//		return (int)f;
 	}
 }
