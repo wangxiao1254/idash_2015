@@ -31,12 +31,12 @@ The code used for this task is shown in Figure~\ref{fig:lang-circuit-oram}.
 %Here we also include the code used for Task 1a written in {\tt ObliVM-lang}.
 \begin{figure}[H]
 \begin{tabular}{rl}
-\small 1&\small \tt	\struct Task1aAutomated\at{m}\{\};\\
-\small 2&\small \tt	void Task1aAutomated\at{m}.\func{funct}(int\at{m}[\public 1] alice\_data, int\at{m}[\public 1] bob\_data,\\
-\small 3&\small \tt	\quad      int\at{m}[\public 1] ret, \public int\at{m} total\_instances, \public int32 test\_cases) \{\\
+\small 1&\small \tt	\struct Task1aAutomated\at{m}\at{n}\{\};\\
+\small 2&\small \tt	void Task1aAutomated\at{m}\at{n}.\func{funct}(int\at{m}[\public 1] alice\_data, int\at{m}[\public 1] bob\_data,\\
+\small 3&\small \tt	\quad      int\at{m}[\public 1] ret, \public int\at{m} total\_instances) \{\\
 \small 4&\small \tt	\quad   int\at{m} total = total\_instances;\\
 \small 5&\small \tt	  \quad int\at{m} half = total\_instances / 2;\\
-\small 6&\small \tt	 \quad  \for(\public int32 i = 0; i < test\_cases; i = i + 1) \{\\
+\small 6&\small \tt	 \quad  \for(\public int32 i = 0; i < n; i = i + 1) \{\\
 \small 7&\small \tt	     \quad\quad ret[i] = alice\_data[i] + bob\_data[i];\\
 \small 8&\small \tt	     \quad\quad \ifs(ret[i] > half)\\
 \small 9&\small \tt	         \quad\quad\quad ret[i] = total - ret[i];\\
