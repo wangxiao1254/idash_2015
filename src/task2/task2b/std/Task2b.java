@@ -74,7 +74,7 @@ public class Task2b {
 		BigInteger[] in, in2;
 		T[] res, res2;
 		int totalSize;
-		int LEN = 64;
+		int LEN;
 		boolean automated;
 		int alicelength; int boblength;
 		@Override
@@ -91,6 +91,7 @@ public class Task2b {
 			gen.os.flush();
 			boblength = ByteBuffer.wrap(Server.readBytes(gen.is, 4)).getInt();
 			totalSize = boblength+alicelength;
+			LEN = (int) (Math.log(totalSize)*2+10);
 			if(cmd.hasOption("p"))
 				LEN = new Integer(cmd.getOptionValue("p"));
 			
@@ -162,7 +163,7 @@ public class Task2b {
 		int totalSize;
 		boolean automated;
 		BigInteger[] in, in2;
-		int LEN = 64;
+		int LEN;
 		int alicelength;
 		int boblength = 0;			
 		@Override
@@ -170,6 +171,7 @@ public class Task2b {
 			CommandLine cmd = processArgs(args);
 			automated = cmd.hasOption("a");
 			HashSet<SNPEntry> data = PrepareData.readFile(cmd.getOptionValue("f"));
+			LEN = (int) (Math.log(totalSize)*2+10);
 			if(cmd.hasOption("p"))
 				LEN = new Integer(cmd.getOptionValue("p"));
 

@@ -43,7 +43,7 @@ public class Task2a {
 		int l;
 		if(totalSize <= 500)
 			l = 15000;
-		if (totalSize <= 30000)
+		else if (totalSize <= 30000)
 			l = 30000;
 		else l =  totalSize;
 		return l;

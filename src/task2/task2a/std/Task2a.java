@@ -90,7 +90,10 @@ public class Task2a {
 			int boblength = ByteBuffer.wrap(boblengthraw).getInt();
 			totalSize = boblength+alicelength;
 
-			int LEN = 64;
+			
+			int LEN = (int) (Math.log(totalSize)*2+10);
+					
+					
 			if(cmd.hasOption("p"))
 				LEN = new Integer(cmd.getOptionValue("p"));
 
@@ -148,7 +151,8 @@ public class Task2a {
 			byte[] alicelengthraw = Server.readBytes(gen.is, 4);
 			int alicelength = ByteBuffer.wrap(alicelengthraw).getInt();
 			byte[] seed = Server.readBytes(gen.is, 10);
-			int LEN = 64;
+			int totalSize = alicelength + boblength;
+			int LEN = (int) (Math.log(totalSize)*2+10);
 			if(cmd.hasOption("p"))
 				LEN = new Integer(cmd.getOptionValue("p"));
 
