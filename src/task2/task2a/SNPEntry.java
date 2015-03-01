@@ -7,9 +7,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Comparator;
 
 
-
-
-
 public class SNPEntry  implements Comparable<SNPEntry>{
 	static public MessageDigest sha1;
 	static {
@@ -20,6 +17,7 @@ public class SNPEntry  implements Comparable<SNPEntry>{
 			e.printStackTrace();
 		}
 	}
+	
 	public long location;
 	public String value;// ATCG: 0123
 
@@ -28,11 +26,17 @@ public class SNPEntry  implements Comparable<SNPEntry>{
 		value = val;
 	}
 	
-	
 	public static long HashToLong(String a, int range){
 		sha1.update(a.getBytes());
 		long res = ByteBuffer.wrap( sha1.digest()).getLong();
 		return Math.abs(res);
+	}
+	
+	public static BigInteger HashToBI(String a, int range){
+		BigInteger m = BigInteger.ONE;
+		sha1.update(a.getBytes());
+		BigInteger res = new BigInteger(sha1.digest());
+		return res.mod(m.pow(range-1));
 	}
 
 	public SNPEntry() {
