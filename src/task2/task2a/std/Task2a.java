@@ -91,8 +91,7 @@ public class Task2a {
 			totalSize = boblength+alicelength;
 
 			
-			int LEN = (int) (Math.log(totalSize)*2+10);
-					
+			int LEN = (int) Math.ceil((Math.log(totalSize)/Math.log(2)*2+10));
 					
 			if(cmd.hasOption("p"))
 				LEN = new Integer(cmd.getOptionValue("p"));
@@ -152,7 +151,8 @@ public class Task2a {
 			int alicelength = ByteBuffer.wrap(alicelengthraw).getInt();
 			byte[] seed = Server.readBytes(gen.is, 10);
 			int totalSize = alicelength + boblength;
-			int LEN = (int) (Math.log(totalSize)*2+10);
+			
+			int LEN = (int) Math.ceil((Math.log(totalSize)/Math.log(2)*2+10));
 			if(cmd.hasOption("p"))
 				LEN = new Integer(cmd.getOptionValue("p"));
 

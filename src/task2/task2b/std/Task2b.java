@@ -91,7 +91,7 @@ public class Task2b {
 			gen.os.flush();
 			boblength = ByteBuffer.wrap(Server.readBytes(gen.is, 4)).getInt();
 			totalSize = boblength+alicelength;
-			LEN = (int) (Math.log(totalSize)*2+10);
+			LEN = (int) Math.ceil((Math.log(totalSize)/Math.log(2)*2+10));
 			if(cmd.hasOption("p"))
 				LEN = new Integer(cmd.getOptionValue("p"));
 			
@@ -132,7 +132,6 @@ public class Task2b {
 			res = compute(gen, scData);
 			
 			
-			
 			clear = new boolean[alicelength][];
 			for(int i = 0; i < in.length;  ++i)
 				clear[i] = Utils.fromBigInteger(in2[i], LEN);
@@ -171,7 +170,7 @@ public class Task2b {
 			CommandLine cmd = processArgs(args);
 			automated = cmd.hasOption("a");
 			HashSet<SNPEntry> data = PrepareData.readFile(cmd.getOptionValue("f"));
-			LEN = (int) (Math.log(totalSize)*2+10);
+			LEN = (int) Math.ceil((Math.log(totalSize)/Math.log(2)*2+10));
 			if(cmd.hasOption("p"))
 				LEN = new Integer(cmd.getOptionValue("p"));
 

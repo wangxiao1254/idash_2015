@@ -31,7 +31,7 @@ task1b(Chi^2):
 
 task2a(Hamming Distance) 
 ---------------------
-add -p NUMBER to trade off speed for better approximation. e.g. -p 15
+add -p NUMBER to trade off speed for better approximation. e.g. -p 2 for large VCF
 
       Generator: `./run.py gen task2abf -f path_file`
 
@@ -39,7 +39,7 @@ add -p NUMBER to trade off speed for better approximation. e.g. -p 15
 
 task2b(Edit Distance):
 ---------------------
-add -p NUMBER to trade off speed for better approximation. e.g. -p 15
+add -p NUMBER to trade off speed for better approximation. e.g. -p 2 for large VCF
 
       Generator: `./run.py gen task2bbf -f path_file` 
 
