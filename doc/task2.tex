@@ -156,7 +156,22 @@ Hamming distance defined above is equivalent to $|S^A\cup S^B| - |S^A\cap S^B|$,
 Note that $|S^A\cup S^B| - |S^A\cap S^B| = 2\times|S^A\cup S^B|-|S^A| - |S^B|$. So we can use the aforementioned algorithms to compute hamming distance.
 
 Note that in order to do oblivious merge, each record has to be of the same bitlength. Instead of padding every record to the maximum possible length, we hash each
-record to a fixed length bit string. In the code, we hash it to 64-bit numbers, which gives a failure probability of $ $.
+record to a fixed length bit string. In the code, we hash it to 64-bit numbers, which gives a failure probability of $2^{-31}$. The collision failure probabilities and the corresponding number of bits in the hash function is shown in Table~\ref{fig:failure-hashing}.
+
+\begin{table}
+  \centering
+  \begin{tabular}{c|c}
+    Security Parameter & Number of bits for hashing \\ \hline
+    30 & 63 \\
+    40 & 73 \\
+    50 & 83 \\
+    60 & 93 \\
+    70 & 103 \\
+    80 & 113 \\
+  \end{tabular}
+  \caption{Collision Failure Probabilities}
+  \label{fig:failure-hashing}
+\end{table}
 
 \subsection{Task2b, Edit Distance}
 \paragraph{Problem statement.}
@@ -209,3 +224,7 @@ ${\tt d2} = |S_2^A\cup S_2^B|$.
 
 
 Finally we compute {\tt d = d2 - d1}.
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End: 
