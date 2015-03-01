@@ -84,8 +84,8 @@ Then, in secure computation, the two parties union the bloom filter using a bitw
 ($X$ mentioned above).
 Note that after getting X, the remaining part of the computation can  be done in cleartext.
 
-The following table gives typical parameter choices (for values of 
-$N$ given in the example dataset)
+The following table gives typical parameter choices 
+(and for values of $N$ given in the example dataset)
 and their accuracy guarantees:
 
 
@@ -95,6 +95,7 @@ and their accuracy guarantees:
 \toprule
 N & M & relative error (95\% confidence) & relative error (99\% confidence)\\
 \midrule
+ 100 to 10000 & 20000 & $\sim$ 1.0\% & $\sim$ 1.4\% \\   
  8754 & 3N & 0.9\% & 1.2\% \\   
  8754 & 5N & 0.69\% & 0.91\% \\   
  8754 & 10N & 0.49\% & 0.66\% \\   
@@ -104,7 +105,7 @@ N & M & relative error (95\% confidence) & relative error (99\% confidence)\\
 \bottomrule
 \end{tabular}
 \end{center}
-\caption{Parameters and accuracy for bloom filter cardinality estimation.
+\caption{{\bf Parameters and accuracy for bloom filter cardinality estimation.}
 $N$ is the (maximum) number of elements, $M$ is the array size.
 A relative error of $\epsilon$ 
 with $y\%$ confidence means
