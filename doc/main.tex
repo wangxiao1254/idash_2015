@@ -134,7 +134,7 @@ Evaluator: {\tt ./run.py eva task1b -c path\_case2 -t path\_control2 -h}
 Generator: {\tt ./run.py gen task2astd -f path\_file}\\
 Evaluator: {\tt ./run.py eva task2astd -f path\_file}
 
-\item Solution using bloom filter (add {\tt -a} for automatically generated circuits, {\tt -p NUMBER} for a trade off between precision and speed):\\
+\item Solution using bloom filter (add {\tt -a} for automatically generated circuits, {\tt -p NUMBER} for a trade off between precision and speed. {\tt NUMBER} is M/N in bloom filter.):\\
 Generator: {\tt ./run.py gen task2abf -f path\_file}\\
 Evaluator: {\tt ./run.py eva task2abf -f path\_file}
 
@@ -143,11 +143,11 @@ Evaluator: {\tt ./run.py eva task2abf -f path\_file}
 
 \noindent\textbf{Task 2b:}\\
 \begin{enumerate}
-\item Solution using oblivious merge (add {\tt -a} for automatically generated circuits, {\tt -p NUMBER} where {\tt NUMBER} is the security parameter for hash collision):\\
+\item Solution using oblivious merge (add {\tt -a} for automatically generated circuits, {\tt -p NUMBER} where {\tt NUMBER} is the security parameter for hash collision.):\\
 Generator: {\tt ./run.py gen task2bstd -f path\_file}\\
 Evaluator: {\tt ./run.py eva task2bstd -f path\_file}
 
-\item Solution using bloom filter (add {\tt -a} for automatically generated circuits, {\tt -p NUMBER} for a trade off between precision and speed):\\
+\item Solution using bloom filter (add {\tt -a} for automatically generated circuits, {\tt -p NUMBER} for a trade off between precision and speed. {\tt NUMBER} is M/N in bloom filter.):\\
 Generator: {\tt ./run.py gen task2bbf -f path\_file}\\
 Evaluator: {\tt ./run.py eva task2bbf -f path\_file}
 \end{enumerate}
