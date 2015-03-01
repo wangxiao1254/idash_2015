@@ -3,18 +3,24 @@
 \paragraph{Problem statement.}
 ~\\
 Input for Alice: List of alleles $l^A = (e^A_1,...,e^A_n)$ 
-where each $e^A_i$ is from $[A, T, C, G]$.\\
+where each $e^A_i$ is from $\{A, T, C, G\}$.\\
 Input for Bob: List of alleles $l^B = (e^B_1,...,e^B_n)$
-where each $e^B_i$ is from $[A, T, C, G]$.\\
+where each $e^B_i$ is from $\{A, T, C, G\}$.\\
 
 The problem is to compute the 
-Minor Allele Frequencies(MAF) over $l = l^A || l^B$. The definition of MAF is as follows:
-Let $f_1$ and $f_2$ be the frequency of two types of alleles in $l$. MAF is defined to be as $min\{f_1, f_2\}$.
+Minor Allele Frequencies(MAF) over 
+the combined input $l = l^A || l^B$. 
+The definition of MAF is as follows:
+Let $f_1$ and $f_2$ be the frequency of two types of alleles in the
+combined input $l$ (it is guaranteed
+that only two types of alleles will appear). 
+MAF is defined to be as $min\{f_1, f_2\}$.
 
 \paragraph{Our solution.}
 The two parties first compute the frequency of two types of alleles of their own lists and get
 $(f^A_1, f^A_2)$ for Alice and $(f^B_1,f^B_2)$ for Bob, ordered by allele type.
-Then, in the secure computation, the two parties first sum up the frequency by
+Then, over a secure computation protocol, 
+the two parties first sum up the frequency by
 $$(f_1, f_2) = (f^A_1+f^A_1, f^B_2+f^B_2),$$
 and then report the smaller number between $f_1$ and $f_2$.
 \paragraph{Result.}
