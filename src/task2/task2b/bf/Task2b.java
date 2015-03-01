@@ -39,6 +39,16 @@ public class Task2b {
 		return i;
 	}
 	
+	public static int parameterChoose(int totalSize) {
+		int l;
+		if(totalSize <= 500)
+			l = 15000;
+		if (totalSize <= 30000)
+			l = 30000;
+		else l =  totalSize;
+		return l;
+	}
+	
 	public static<T> T[] computeAuto(CompEnv<T> env, T[] aliceBF, T[] bobBF) throws Exception {
 		BF_circuit<T> lib2 = new BF_circuit<T>(env);
 		return lib2.merge(aliceBF.length, aliceBF, bobBF);
@@ -82,8 +92,17 @@ public class Task2b {
 
 			int boblength = ByteBuffer.wrap(Server.readBytes(gen.is, 4)).getInt();
 			totalSize = boblength+alicelength;
-			bf = new BF(boblength+alicelength, NoM*(boblength+alicelength));
-			bf2 = new BF(boblength+alicelength, NoM*(boblength+alicelength));
+			
+			if(cmd.hasOption("p")) {
+				NoM = new Integer(cmd.getOptionValue("p"));
+				bf = new BF(boblength+alicelength, (int) (NoM*totalSize));
+				bf2 = new BF(boblength+alicelength, (int) (NoM*totalSize));
+			}
+			else  {
+				bf = new BF(boblength+alicelength, parameterChoose(totalSize));
+				bf2 = new BF(boblength+alicelength, parameterChoose(totalSize));
+			}
+			
 			bf2.sks = bf.sks;
 			for(int i = 0; i < bf.k; ++i)
 				gen.os.write(bf.sks[i]);
@@ -137,7 +156,7 @@ public class Task2b {
 
 		@Override
 		public void prepareOutput(CompEnv<T> gen) {
-			long tmp = Utils.toLong(gen.outputToAlice(res));
+			double tmp = Utils.toLong(gen.outputToAlice(res));
 			int result = (int) (Math.log(tmp/bf.m/bf.m)/bf.k/Math.log(1.0-1.0/bf.m) - totalSize);
 			System.out.println("Edit Distance: "+result );
 		}		
@@ -165,10 +184,18 @@ public class Task2b {
 			gen.os.flush();
 
 			int alicelength = ByteBuffer.wrap(Server.readBytes(gen.is, 4)).getInt();
+			int totalSize = alicelength + boblength;
 
-
-			bf = new BF(boblength+alicelength, NoM*(boblength+alicelength));
-			bf2 = new BF(boblength+alicelength, NoM*(boblength+alicelength));
+			if(cmd.hasOption("p")) {
+				NoM = new Integer(cmd.getOptionValue("p"));
+				bf = new BF(boblength+alicelength, (int) (NoM*totalSize));
+				bf2 = new BF(boblength+alicelength, (int) (NoM*totalSize));
+			}
+			else  {
+				bf = new BF(boblength+alicelength, parameterChoose(totalSize));
+				bf2 = new BF(boblength+alicelength, parameterChoose(totalSize));
+			}
+			
 			for(int i = 0; i < bf.k; ++i)
 				try {
 					bf.sks[i] = Server.readBytes(gen.is, bf.sks[i].length);

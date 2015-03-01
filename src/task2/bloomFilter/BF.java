@@ -25,9 +25,7 @@ public class BF {
 	public void init(int n, int m, double constant) {
 		this.n  = n;
 		this.m = m;
-		this.k = (int) (m / n * constant);
-		if(this.k == 0)this.k = 1;
-//		this.dk = ((double)m*constant/n);
+		this.k = 1;
 		bs  = new boolean[m];
 		sks = new byte[k][10];
 		for(int i = 0; i < k ; ++i)
