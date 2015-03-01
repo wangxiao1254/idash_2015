@@ -190,16 +190,16 @@ Alice and Bob each holds a list of records, where each record is of the format $
 
 \begin{table}[t]
   \centering
-  \begin{tabular}{c|c}
-    Failure probability & Number of bits for hashing \\ \hline
-    $2^{-10}$ & 43 \\
-    $2^{-20}$ & 53 \\
-    $2^{-30}$ & 63 \\
-    $2^{-40}$ & 73 \\
-    $2^{-50}$ & 83 \\
-    $2^{-60}$ & 93 \\
-    $2^{-70}$ & 103 \\
-    $2^{-80}$ & 113 \\
+  \begin{tabular}{c|c|c}
+    Failure probability&  \#bits for hashing (N = 8754)   & \#bits for hashing (N = 173851) \\ \hline
+    $2^{-10}$ & 35 & 44 \\
+    $2^{-20}$ &45 & 54 \\
+    $2^{-30}$ & 55 & 64 \\
+    $2^{-40}$ & 65& 74 \\
+    $2^{-50}$ & 75& 84 \\
+    $2^{-60}$ & 85 & 94 \\
+    $2^{-70}$ & 95 & 104 \\
+    $2^{-80}$ & 105 & 114 \\
   \end{tabular}
   \caption{Correctness failure probabilities for $N = 100K$ (i.e., hash collision probabilities) 
 for oblivious merge. Even when hash collision happens, we obtain an 
