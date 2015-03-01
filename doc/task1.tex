@@ -2,12 +2,12 @@
 \subsection*{Task 1a: Computing Minor Allele Frequencies}
 \paragraph{Problem statement.}
 ~\\
-Input for Alice: List of alleles $l^A = (e^A_1,...,e^A_n)$ where each $e^A_i$ is .\\
+Input for Alice: List of alleles $l^A = (e^A_1,...,e^A_n)$ where each $e^A_i$ is from $[A, T, C, G]$.\\
 Input for Bob: List of alleles $l^B = (e^B_1,...,e^B_n)$.\\
 
 The problem is to compute the 
 Minor Allele Frequencies(MAF) over $l = l^A || l^B$. The definition of MAF is as follows:
-Let $f_1$ and $f_2$ be the frequency of two types of alleles in $l$. MAF is defined to be as $min\{f_1, f_2\}$
+Let $f_1$ and $f_2$ be the frequency of two types of alleles in $l$. MAF is defined to be as $min\{f_1, f_2\}$.
 
 \paragraph{Our solution.}
 The two parties first compute the frequency of two types of alleles of their own lists and get
