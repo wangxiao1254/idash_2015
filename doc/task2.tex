@@ -218,7 +218,7 @@ Note that $|S^A\cup S^B| - |S^A\cap S^B| = 2\times|S^A\cup S^B|-|S^A| - |S^B|$. 
 Note that in order to do oblivious merge, each record has to be of the same bitlength. Instead of padding every record to the maximum possible length, we hash each
 record to a fixed length bit string. In the code, we hash it to 64-bit numbers, which gives a failure probability of $2^{-31}$. The collision failure probabilities and the corresponding number of bits in the hash function is shown in Table~\ref{fig:failure-hashing}.
 
-\subsection{Task2b, Edit Distance}
+\subsection{Task 2b, Edit Distance}
 \paragraph{Problem statement.}
 In this problem, we want to compute the edit distance defined on the website:
 \begin{framed}
