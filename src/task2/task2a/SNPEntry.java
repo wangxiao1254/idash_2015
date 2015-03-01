@@ -32,8 +32,9 @@ public class SNPEntry  implements Comparable<SNPEntry>{
 		return Math.abs(res%(1L<<(range-1)));
 	}
 	
-	public static BigInteger HashToBI(String a, int range){
+	public static BigInteger HashToBI(String a, int range, byte[] seed){
 		BigInteger m = BigInteger.valueOf(2);
+		sha1.update(seed);
 		sha1.update(a.getBytes());
 		BigInteger res = new BigInteger(sha1.digest());
 		return res.mod(m.pow(range-2));

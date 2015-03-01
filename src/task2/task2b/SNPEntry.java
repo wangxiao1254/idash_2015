@@ -25,8 +25,9 @@ public class SNPEntry{
 		this.op = op;
 	}
 
-	public static BigInteger HashToBI(String a, int range){
+	public static BigInteger HashToBI(String a, int range, byte[] seed){
 		BigInteger m = BigInteger.valueOf(2);
+		sha1.update(seed);
 		sha1.update(a.getBytes());
 		BigInteger res = new BigInteger(sha1.digest());
 		return res.mod(m.pow(range-2));

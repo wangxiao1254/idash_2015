@@ -82,30 +82,31 @@ public class Task2b {
 			CommandLine cmd = processArgs(args);
 			automated = cmd.hasOption("a");
 			HashSet<SNPEntry> data = PrepareData.readFile(cmd.getOptionValue("f"));
-			if(cmd.hasOption("p"))
-				LEN = new Integer(cmd.getOptionValue("p"));
 
 			for(SNPEntry e : data) alicelength +=e.value.length();
 
+			byte[] seed = new byte[10];CompEnv.rnd.nextBytes(seed);
 			gen.os.write(ByteBuffer.allocate(4).putInt(alicelength).array());
+			gen.os.write(seed);
 			gen.os.flush();
 			boblength = ByteBuffer.wrap(Server.readBytes(gen.is, 4)).getInt();
 			totalSize = boblength+alicelength;
+			if(cmd.hasOption("p"))
+				LEN = new Integer(cmd.getOptionValue("p"));
 			
-
 			in = new BigInteger[alicelength];
 			in2 = new BigInteger[alicelength];
 			int cnt = 0;
 			for(SNPEntry e : data) {
 				for(int i = 0; i < e.value.length(); ++i){
-					in[cnt] = SNPEntry.HashToBI(e.Pos(i), LEN);
+					in[cnt] = SNPEntry.HashToBI(e.Pos(i), LEN, seed);
 					cnt++;
 				}
 			}
 			cnt = 0;
 			for(SNPEntry e : data) {
 				for(int i = 0; i < e.value.length(); ++i){
-					in2[cnt] = SNPEntry.HashToBI(e.PosVal(i), LEN);
+					in2[cnt] = SNPEntry.HashToBI(e.PosVal(i), LEN, seed);
 					cnt++;
 				}
 			}
@@ -177,6 +178,7 @@ public class Task2b {
 			gen.os.flush();
 
 			alicelength = ByteBuffer.wrap(Server.readBytes(gen.is, 4)).getInt();
+			byte[] seed = Server.readBytes(gen.is, 10);
 			totalSize  = alicelength+boblength;
 
 			in = new BigInteger[boblength];
@@ -184,14 +186,14 @@ public class Task2b {
 			int cnt = 0;
 			for(SNPEntry e : data) {
 				for(int i = 0; i < e.value.length(); ++i){
-					in[cnt] = SNPEntry.HashToBI(e.Pos(i), LEN).negate();
+					in[cnt] = SNPEntry.HashToBI(e.Pos(i), LEN, seed).negate();
 					cnt++;
 				}
 			}
 			cnt = 0;
 			for(SNPEntry e : data) {
 				for(int i = 0; i < e.value.length(); ++i){
-					in2[cnt] = SNPEntry.HashToBI(e.PosVal(i), LEN).negate();
+					in2[cnt] = SNPEntry.HashToBI(e.PosVal(i), LEN, seed).negate();
 					cnt++;
 				}
 			}

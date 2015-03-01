@@ -21,7 +21,6 @@ import util.EvaRunnable;
 import util.GenRunnable;
 import util.Utils;
 import flexsc.CompEnv;
-import flexsc.Comparator;
 
 public class Task2a {
 	public static<T> T[] compute(CompEnv<T> env, T[][] scData) {
@@ -82,20 +81,23 @@ public class Task2a {
 			automated = cmd.hasOption("a");
 			HashSet<SNPEntry> data = PrepareData.readFile(cmd.getOptionValue("f"));
 			int alicelength = data.size();
+			byte[] seed = new byte[10];
+			CompEnv.rnd.nextBytes(seed);
 			gen.os.write(ByteBuffer.allocate(4).putInt(data.size()).array());
+			gen.os.write(seed);
 			gen.os.flush();
 			byte[] boblengthraw = Server.readBytes(gen.is, 4);
 			int boblength = ByteBuffer.wrap(boblengthraw).getInt();
 			totalSize = boblength+alicelength;
 
-			int LEN = 64;//(int) (Math.log(totalSize)/Math.log(2)+SP);
+			int LEN = 64;
 			if(cmd.hasOption("p"))
 				LEN = new Integer(cmd.getOptionValue("p"));
 
 			BigInteger[] in = new BigInteger[alicelength];
 			int cnt = 0;
 			for(SNPEntry e : data) {
-				in[cnt] = SNPEntry.HashToBI(e.toString(), LEN);
+				in[cnt] = SNPEntry.HashToBI(e.toString(), LEN, seed);
 				cnt++;
 			}
 			Arrays.sort(in);
@@ -145,6 +147,7 @@ public class Task2a {
 			gen.os.flush();
 			byte[] alicelengthraw = Server.readBytes(gen.is, 4);
 			int alicelength = ByteBuffer.wrap(alicelengthraw).getInt();
+			byte[] seed = Server.readBytes(gen.is, 10);
 			int LEN = 64;
 			if(cmd.hasOption("p"))
 				LEN = new Integer(cmd.getOptionValue("p"));
@@ -152,7 +155,7 @@ public class Task2a {
 			BigInteger[] in = new BigInteger[boblength];
 			int cnt = 0;
 			for(SNPEntry e : data) {
-				in[cnt] = SNPEntry.HashToBI(e.toString(), LEN).negate();
+				in[cnt] = SNPEntry.HashToBI(e.toString(), LEN, seed).negate();
 				cnt++;
 			}
 
