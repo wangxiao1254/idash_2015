@@ -79,7 +79,7 @@ task1b:
 
 task2a:
 ---------------------
- -  Solution using oblivious merge (add -a for automatically generated circuits):
+ -  Solution using oblivious merge (add -a for automatically generated circuits, use -p NUMBER for a trade off between precision and speed):
 
       Generator: `./run.py gen task2astd -f path_file`
 
@@ -95,7 +95,7 @@ task2a:
 
 task2b:
 ---------------------
- -  Solution using oblivious merge (add -a for automatically generated circuits):
+ -  Solution using oblivious merge (add -a for automatically generated circuits, use -p for a trade off between precision and speed):
 
       Generator: `./run.py gen task2bstd -f path_file`
 

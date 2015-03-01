@@ -52,6 +52,8 @@ public class Task2b {
 		Options options = new Options();
 		options.addOption("a", false, "automated");
 		options.addOption("f", "file", true, "file");
+		options.addOption("p", "precision", true, "precision");
+
 
 		CommandLineParser parser = new BasicParser();
 		CommandLine cmd = parser.parse(options, args);
@@ -79,6 +81,8 @@ public class Task2b {
 			CommandLine cmd = processArgs(args);
 			automated = cmd.hasOption("a");
 			HashSet<SNPEntry> data = PrepareData.readFile(cmd.getOptionValue("f"));
+			if(cmd.hasOption("p"))
+				LEN = new Integer(cmd.getOptionValue("p"));
 
 			for(SNPEntry e : data) alicelength +=e.value.length();
 
@@ -164,6 +168,8 @@ public class Task2b {
 			CommandLine cmd = processArgs(args);
 			automated = cmd.hasOption("a");
 			HashSet<SNPEntry> data = PrepareData.readFile(cmd.getOptionValue("f"));
+			if(cmd.hasOption("p"))
+				LEN = new Integer(cmd.getOptionValue("p"));
 
 			for(SNPEntry e : data) boblength +=e.value.length();
 			gen.os.write(ByteBuffer.allocate(4).putInt(boblength).array());

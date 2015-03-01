@@ -53,6 +53,7 @@ public class Task2a {
 		Options options = new Options();
 		options.addOption("a", false, "automated");
 		options.addOption("f", "file", true, "file");
+		options.addOption("p", "precision", true, "precision");
 
 		CommandLineParser parser = new BasicParser();
 		CommandLine cmd = parser.parse(options, args);
@@ -86,6 +87,9 @@ public class Task2a {
 			totalSize = boblength+alicelength;
 
 			int LEN = 64;//(int) (Math.log(totalSize)/Math.log(2)+SP);
+			if(cmd.hasOption("p"))
+				LEN = new Integer(cmd.getOptionValue("p"));
+
 			long[] in = new long[alicelength];
 			int cnt = 0;
 			for(SNPEntry e : data) {
@@ -140,6 +144,8 @@ public class Task2a {
 			byte[] alicelengthraw = Server.readBytes(gen.is, 4);
 			int alicelength = ByteBuffer.wrap(alicelengthraw).getInt();
 			int LEN = 64;
+			if(cmd.hasOption("p"))
+				LEN = new Integer(cmd.getOptionValue("p"));
 
 			long[] in = new long[boblength];
 			int cnt = 0;
