@@ -93,7 +93,7 @@ public class Task2b {
 			totalSize = boblength+alicelength;
 			LEN = (int) Math.ceil((Math.log(totalSize)/Math.log(2)*2+10));
 			if(cmd.hasOption("p"))
-				LEN = new Integer(cmd.getOptionValue("p"));
+				LEN = (int) Math.ceil((Math.log(totalSize)/Math.log(2)*2+new Integer(cmd.getOptionValue("p"))));
 			
 			in = new BigInteger[alicelength];
 			in2 = new BigInteger[alicelength];
@@ -172,7 +172,7 @@ public class Task2b {
 			HashSet<SNPEntry> data = PrepareData.readFile(cmd.getOptionValue("f"));
 			LEN = (int) Math.ceil((Math.log(totalSize)/Math.log(2)*2+10));
 			if(cmd.hasOption("p"))
-				LEN = new Integer(cmd.getOptionValue("p"));
+				LEN = (int) Math.ceil((Math.log(totalSize)/Math.log(2)*2+new Integer(cmd.getOptionValue("p"))));
 
 			for(SNPEntry e : data) boblength +=e.value.length();
 			gen.os.write(ByteBuffer.allocate(4).putInt(boblength).array());
