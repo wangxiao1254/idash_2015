@@ -15,7 +15,7 @@ data, -f is used to specify data when there is only one input(task2), -h is used
 -a is used for automatically generated circuits, -p NUMBER is used for a trade off between precision and speed (task2a/b controled by NUMBER);
 
 
-Recommaend solution:
+Recommended solution:
 =======================
 task1a(MAF):
 ---------------------
@@ -31,7 +31,7 @@ task1b(Chi^2):
 
 task2a(Hamming Distance) 
 ---------------------
-add -p NUMBER to trade off speed for better approximation. e.g. -p 2 for large VCF
+add -p NUMBER for a trade off between speed and accuracy. NUMBER is M/N in bloom filter. Detailed choice of NUMBER can be found in the report.
 
       Generator: `./run.py gen task2abf -f path_file`
 
@@ -39,7 +39,7 @@ add -p NUMBER to trade off speed for better approximation. e.g. -p 2 for large V
 
 task2b(Edit Distance):
 ---------------------
-add -p NUMBER to trade off speed for better approximation. e.g. -p 2 for large VCF
+add -p NUMBER for a trade off between speed and accuracy. NUMBER is M/N in bloom filter. Detailed choice of NUMBER can be found in the report.
 
       Generator: `./run.py gen task2bbf -f path_file` 
 
@@ -78,14 +78,14 @@ task1b:
 
 task2a:
 ---------------------
- -  Solution using oblivious merge (add -a for automatically generated circuits, use -p NUMBER for a trade off between precision and speed):
+ -  Solution using oblivious merge. add -p NUMBER for a trade off between speed and accuracy. NUMBER is M/N in bloom filter. Detailed choice of NUMBER can be found in the report.
 
       Generator: `./run.py gen task2astd -f path_file`
 
       Evaluator: `./run.py eva task2astd -f path_file`
 
 
- -  Solution using bloom filter (add -a for automatically generated circuits, -p NUMBER for higher precision):
+ -  Solution using bloom filter (add -a for automatically generated circuits, -p NUMBER for a trade off between speed and accuracy. NUMBER is number of bits used for hash. Detailed choice of NUMBER can be found in the report):
 
       Generator: `./run.py gen task2abf -f path_file`
 
