@@ -46,7 +46,6 @@ add -p NUMBER to trade off speed for better approximation. e.g. -p 15
       Evaluator: `./run.py eva task2bbf -f path_file`
 
 
-
 Complete Usage example
 =======================
 task1a:
