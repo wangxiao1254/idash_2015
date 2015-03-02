@@ -80,7 +80,7 @@ $k$ be the number of hash functions used. Number of elements in
 the bloom filter can be estimated as 
 $$\frac{\ln(1-\frac{X}{m})}{k\ln(1-1/m)}.$$
 So, in order to compute the union of two sets, each party first builds their own bloom filter locally using the same set of hash functions.
-Then, in secure computation, the two parties union the bloom filter using a bitwise OR, and count number of ones in the new bit array
+Then, in secure computation, the two parties union the bloom filter using bitwise OR, and count number of ones in the new bit array
 ($X$ mentioned above).
 Note that after getting X, the remaining part of the computation can  be done in cleartext.
 
@@ -174,7 +174,9 @@ The code for this approach is presented in Figure~\ref{fig:bf_merge}.
 
 \subsection{Task 2a, Hamming Distance}
 \paragraph{Problem statement.}
-In this problem, we want to compute the hamming distance defined on the website:
+In this problem, 
+Alice and Bob each holds a list of records in VCF files, where each record is of the format $(ref, svtype, alt)$.
+We want to compute the hamming distance defined on the competition website~\cite{idash}:
 \begin{framed}
 {\tt~\\
 d = 0;\\
@@ -185,7 +187,6 @@ if (x == null) || (y == null) || (x.ref == y.ref \&\& x.alt != y.alt)
 end for\\
 }
 \end{framed}
-Alice and Bob each holds a list of records, where each record is of the format $(pos, val)$.
 
 
 \begin{table}[t]
@@ -211,7 +212,7 @@ approximate answer.}
 
 
 \paragraph{Our solution.}
-Each party constructs a set containing all the records from the input: $S^A$ for Alice and $S^B$ for Bob.
+Each party constructs a set containing all the records from their own input: $S^A$ for Alice and $S^B$ for Bob.
 Hamming distance defined above is equivalent to $|S^A\cup S^B| - |S^A\cap S^B|$, that is the sum of number of elements not shared by two parties.
 Note that $|S^A\cup S^B| - |S^A\cap S^B| = 2\times|S^A\cup S^B|-|S^A| - |S^B|$. So we can use the aforementioned algorithms to compute hamming distance.
 
@@ -220,11 +221,13 @@ record to a fixed length bit string. In the code, we hash it to 64-bit numbers, 
 
 \subsection{Task 2b, Edit Distance}
 \paragraph{Problem statement.}
-In this problem, we want to compute the edit distance defined on the website:
+In this problem, 
+Alice and Bob each holds a list of records in VCF files, where each record is of the format $(ref, svtype, alt)$.
+We want to compute the edit distance defined on the competition website~\cite{idash}:
 \begin{framed}
 {\tt~\\
 d = 0;\\
-for all records in the VCF files:\\
+for all records x,y at the same locus in the VCF files:\\
 1. if x == y, continue;\\
 2. if x != y, d += max(D(x), D(y))\\
 end for\\
@@ -235,40 +238,39 @@ if x.svtype == ins, D(x) = len(x)\\
 if x.svtype == del, D(x) = len(x)\\
 }\end{framed}
 
-The input to this problem is the same as Task2a.
 \paragraph{Our solution.}
 We first compute {\tt d1} defined as follows:
 \begin{framed}
 {\tt~\\
 d1 = 0;\\
-for every pos in VCF files:\\
-if there are two records x, y at pos,
+for every position in VCF files:\\
+if there are two records x, y with same ref,
 
 d1 += max(D(x), D(y))\\
-else if there is only one record at pos,
+else if there is only one record at a position,
 
 d1+=D(x)\\}
 \end{framed}
 
-In order to compute {\tt d1}, each party construct a new set as follows:  for every record $(pos, val)$,
-each party insert $(pos, i), i\in[1, len(val)]$ to a new set and get set $S_1^A, S_1^B$ for Alice and Bob. Then we compute
+In order to compute {\tt d1}, each party constructs a new set as follows:  for every record $(ref, svtype, alt)$,
+each party inserts $(ref, i), i\in[1, len(alt)]$ to a new set and get set $S_1^A, S_1^B$ for Alice and Bob. Then we compute
 ${\tt d1} = |S_1^A\cup S_1^B|$.
 
 Then we compute ${\tt d2}$ defined as follows:
 \begin{framed}
 {\tt~\\
 d2 = 0;\\
-for every pos in VCF files:\\
-if there are two records x, y at pos and they are same,
+for every position in VCF files:\\
+if there are two records x, y at the same position and they are same,
 
 d2 += D(x)\\}
 \end{framed}
-In order to compute {\tt d1}, each party construct a new set as follows:  for every record $(pos, val, i)$,
-each party insert $(pos, val, i), i\in[1, len(val)]$ to a new set and get set $S_2^A, S_2^B$ for Alice and Bob. Then we compute
+In order to compute {\tt d1}, each party constructs a new set as follows:  for every record $(ref, svtype, alt)$,
+each party inserts $(ref,svtype, alt, i), i\in[1, len(alt)]$ to a new set and get set $S_2^A, S_2^B$ for Alice and Bob. Then we compute
 ${\tt d2} = |S_2^A\cup S_2^B|$.
 
 
-Finally we compute {\tt d = d2 - d1}.
+The final result can be computed by {\tt d = d2 - d1}.
 %%% Local Variables: 
 %%% mode: latex
 %%% TeX-master: "main"
