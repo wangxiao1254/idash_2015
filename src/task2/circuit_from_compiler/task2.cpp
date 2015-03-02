@@ -2,17 +2,17 @@
 // n : bit length of the result
 struct Task2Automated@m@n{};
 
-int@n Task2Automated@m@n.funct(int@m[public 1] key, public int32 length) {
-   this.obliviousMerge(key, 0, length);
-   int@n ret = 1;
-   for(public int32 i = 1; i < length; i = i + 1) {
+int@n Task2Automated@m@n.funct(int@m[public n] key) {
+   this.obliviousMerge(key, 0, n);
+   int32 ret = 1;
+   for(public int32 i = 1; i < n; i = i + 1) {
       if(key[i-1] != key[i])
          ret = ret + 1;
    }
    return ret;
 }
 
-void Task2Automated@m@n.obliviousMerge(int@m[public 1] key, public int32 lo, public int32 l) {
+void Task2Automated@m@n.obliviousMerge(int@m[public n] key, public int32 lo, public int32 l) {
    if (l > 1) {
       public int32 k = 1;
       while (k < l) k = k << 1;
@@ -24,7 +24,7 @@ void Task2Automated@m@n.obliviousMerge(int@m[public 1] key, public int32 lo, pub
    }
 }
 
-void Task2Automated@m@n.compare(int@m[public 1] key, public int32 i, public int32 j) {
+void Task2Automated@m@n.compare(int@m[public n] key, public int32 i, public int32 j) {
    int@m tmp = key[j];
    int@m tmp2 = key[i];
    if( key[i] < key[j] )

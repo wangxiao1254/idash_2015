@@ -33,8 +33,8 @@ The code used for this task is shown in Figure~\ref{fig:lang-circuit-oram}.
 \begin{figure}[H]
 \begin{tabular}{rl}
 \small 1&\small \tt	\struct Task1aAutomated\at{m}\at{n}\{\};\\
-\small 2&\small \tt	void Task1aAutomated\at{m}\at{n}.\func{funct}(int\at{m}[\public 1] alice\_data, int\at{m}[\public 1] bob\_data,\\
-\small 3&\small \tt	\quad      int\at{m}[\public 1] ret, \public int\at{m} total\_instances) \{\\
+\small 2&\small \tt	void Task1aAutomated\at{m}\at{n}.\func{funct}(int\at{m}[\public n] alice\_data, int\at{m}[\public n] bob\_data,\\
+\small 3&\small \tt	\quad      int\at{m}[\public n] ret, \public int\at{m} total\_instances) \{\\
 \small 4&\small \tt	\quad   int\at{m} total = total\_instances;\\
 \small 5&\small \tt	  \quad int\at{m} half = total\_instances / 2;\\
 \small 6&\small \tt	 \quad  \for(\public int32 i = 0; i < n; i = i + 1) \{\\
@@ -49,15 +49,20 @@ The code used for this task is shown in Figure~\ref{fig:lang-circuit-oram}.
 \end{figure}
 
 
-\subsection*{Task 1b: Computing $\chi$ square statistics}
+\subsection*{Task 1b: Computing $\chi^2$ statistics}
 \paragraph{Problem statement.}
 ~\\
 Input for Alice: two lists of alleles $l^A_{case} = (e^A_1,...,e^A_n)$, $l^A_{control} = (e'^A_1,...,e'^A_n)$.\\
+where each $e^A_i, e'^A_i$ is from $\{A, T, C, G\}$.\\
 Input for Bob: two lists of alleles $l^B_{case} = (e^B_1,...,e^B_n)$, $l^B_{control} = (e'^B_1,...,e'^B_n)$.\\
+where each $e^B_i, e'^B_i$ is from $\{A, T, C, G\}$.\\
 
-First define $a, b$ to be the frequency of two types of alleles in
-$l_{case} = l^A_{case} || l^B_{case}$ and $c, d$ to be the frequency of two types of alleles in
-$l_{control} = l^A_{control} || l^B_{control}$. The problem is to compute the Chi square statistics over $l = l^A||l^B$. This is defined as 
+First let us define $a, b$ be the frequency of two types of alleles in
+$l_{case} = l^A_{case} || l^B_{case}$ and $c, d$ be the frequency of two types of alleles in
+$l_{control} = l^A_{control} || l^B_{control}$. 
+(it is also guaranteed
+that only two types of alleles will appear). 
+The problem is to compute the $\chi^2$ statistics over $l_{case}$ and $l_{control}$, defined as:
 $$n\times\frac{(ad-bc)^2}{rsgk},$$
 where $r = a + b, s = c + d, g = a + c, k = b + d, n =  r + s$; 
 
