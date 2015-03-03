@@ -29,7 +29,7 @@ only requires a circuit of size $O(Dn\log n)$. The {\tt ObliVM-lang} code for th
 %\paragraph{Code used for oblivious merge.}
 %Here we also include the code used of this algorithm in {\tt ObliVM-lang}.
 
-\begin{figure}[t]
+\begin{figure}[H]
 \begin{tabular}{rl}
 \small 1&\small \tt \struct Task2Automated\at{m}\at{n}\{\};\\
 
@@ -42,10 +42,18 @@ only requires a circuit of size $O(Dn\log n)$. The {\tt ObliVM-lang} code for th
 \small 8&\small \tt    \quad\}\\
 \small 9&\small \tt    \quad \return ret;\\
 \small 10&\small \tt \}\\
+
 \small 11&\small \tt void Task2Automated\at{m}\at{n}.\func{obliviousMerge}(int\at{m}[\public n] key, \public int32 lo, \public int32 l) \{\\
 \small 12&\small \tt   \quad \ifs (l > 1) \{\\
 \small 13&\small \tt     \quad\quad  \public int32 k = 1;\\
 \small 14&\small \tt    \quad\quad   \while (k < l) k = k << 1;\\
+\end{tabular}
+\caption{Code for oblivious merge written in {\tt ObliVM}}
+\label{fig:obl_merge}
+\end{figure}
+\begin{figure}[t]
+\begin{tabular}{rl}
+
 \small 15&\small \tt     \quad\quad\quad  k = k >> 1;\\
 \small 16&\small \tt    \quad\quad   \for (\public int32 i = lo; i < lo + l - k; i = i + 1)\\
 \small 17&\small \tt     \quad\quad\quad     this.\func{compare}(key, i, i + k);\\
@@ -53,8 +61,6 @@ only requires a circuit of size $O(Dn\log n)$. The {\tt ObliVM-lang} code for th
 \small 19&\small \tt     \quad\quad  this.\func{obliviousMerge}(key, lo + k, l - k);\\
 \small 20&\small \tt   \quad\}\\
 \small 21&\small \tt \}\\
-
-
 \small 22&\small \tt void Task2Automated\at{m}\at{n}.\func{compare}(int\at{m}[\public n] key, \public int32 i, \public int32 j) \{\\
 \small 23&\small \tt  \quad  int\at{m} tmp = key[j];\\
 \small 24&\small \tt  \quad  int\at{m} tmp2 = key[i];\\
@@ -65,8 +71,8 @@ only requires a circuit of size $O(Dn\log n)$. The {\tt ObliVM-lang} code for th
 \small 29&\small \tt \quad   key[j] = tmp $\wedge$ tmp2;\\
 \small 30&\small \tt \}\\
 \end{tabular}
-\caption{Code for oblivious merge written in {\tt ObliVM}}
-\label{fig:obl_merge}
+\caption{Code for oblivious merge written in {\tt ObliVM} continue}
+\label{fig:obl_merge2}
 \end{figure}
 
 
@@ -119,7 +125,7 @@ it holds that $(\hat{N}-N)/N < \epsilon$.
 
 The code for this approach is presented in Figure~\ref{fig:bf_merge}.
 
-\begin{figure}[t]
+\begin{figure}[H]
 \begin{tabular}{rl}
 \small 1&\small \tt \struct Pair<T1, T2> \{\\
 \small 2&\small \tt  \quad  T1 left;\\
