@@ -24,13 +24,8 @@ the two parties first sum up the frequency by
 $$(f_1, f_2) = (f^A_1+f^A_1, f^B_2+f^B_2),$$
 and then report the smaller number between $f_1$ and $f_2$.
 
-\paragraph{Results.}
-For this task, each test case requires only 40 AND gates for both manually generated circuits and automatically generated circuits.
-
-%\paragraph{Code used for Task1a.}
 The code used for this task is shown in Figure~\ref{fig:lang-circuit-oram}.
-%Here we also include the code used for Task 1a written in {\tt ObliVM-lang}.
-\begin{figure}[t]
+\begin{figure}[H]
 \begin{tabular}{rl}
 \small 1&\small \tt	\struct Task1aAutomated\at{m}\at{n}\{\};\\
 \small 2&\small \tt	void Task1aAutomated\at{m}\at{n}.\func{funct}(int\at{m}[\public n] alice\_data, int\at{m}[\public n] bob\_data,\\
@@ -48,6 +43,12 @@ The code used for this task is shown in Figure~\ref{fig:lang-circuit-oram}.
 \label{fig:lang-circuit-oram}
 \end{figure}
 
+
+\paragraph{Results.}
+For this task, each test case requires only 40 AND gates for both manually generated circuits and automatically generated circuits.
+
+%\paragraph{Code used for Task1a.}
+%Here we also include the code used for Task 1a written in {\tt ObliVM-lang}.
 
 \subsection*{Task 1b: Computing $\chi^2$ statistics}
 \paragraph{Problem statement.}
@@ -73,16 +74,10 @@ In the secure computation we first compute $a = a^A + a^B, b = b^A + b^B,
 c = c^A + c^B,d = d^A + d^B$, then we evaluate the equation mentioned above directly using floating point
 numbers.
 
-\paragraph{Results.}
-Our implementation for this task supports an arbitrary 
-trade-off between precision and speed. We mention two specific cases here.
-For each test case, an implementation that requires 7763 AND gates achieves a maximum absolute error of $1.11\times10^{-4}$
- and an implementation with 14443 AND gates achieves a maximum absolute error of $5.6\times10^{-8}$.
-
 The code used for this task is shown in Figure~\ref{fig:task1b}.
 %\paragraph{Code used for Task1b.}
 %Here we also include the code used for Task1b written in {\tt ObliVM-lang}.
-\begin{figure}[t]
+\begin{figure}[H]
 \begin{tabular}{rl}
 \small 1&\small \tt \struct Task1bAutomated\at{n}\{\};\\
 \small 2&\small \tt float32[\public n] Task1bAutomated\at{n}.\func{func}(\\
@@ -105,6 +100,12 @@ The code used for this task is shown in Figure~\ref{fig:task1b}.
 \caption{Code for Task 1b written in {\tt ObliVM-lang}}
 \label{fig:task1b}
 \end{figure}
+\paragraph{Results.}
+Our implementation for this task supports an arbitrary 
+trade-off between precision and speed. We mention two specific cases here.
+For each test case, an implementation that requires 7763 AND gates achieves a maximum absolute error of $1.11\times10^{-4}$
+ and an implementation with 14443 AND gates achieves a maximum absolute error of $5.6\times10^{-8}$.
+
 
 %%% Local Variables: 
 %%% mode: latex
