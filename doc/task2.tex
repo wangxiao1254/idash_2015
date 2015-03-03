@@ -22,10 +22,10 @@ A strawman approach of computing cardinality of the union is to use oblivious so
 \label{alg1}
 \end{algorithm}
 Suppose there are totally $n$ elements each of size $D$ bits.
-This strawman appraoch involves an oblivious sorting on the input data, which requires a circuit of size $O(Dn\log^2n)$ circuit, 
-using bitonic sorting network~\cite{bitonicsort}. In our implementation of this approach,  we utilize the local computation:
+This strawman approach involves an oblivious sorting on the input data, which requires a circuit of size $O(Dn\log^2n)$, 
+using bitonic sorting network~\cite{bitonicsort}. In our implementation,  we utilize the local computation:
 the two parties first sort their data locally, and then they perform an oblivious merge in secure computation. This improved approach
-only need a circuit of size $O(Dn\log n)$. The {\tt ObliVM-lang} code for this approach is presented in Figure~\ref{fig:obl_merge}.
+only requires a circuit of size $O(Dn\log n)$. The {\tt ObliVM-lang} code for this approach is presented in Figure~\ref{fig:obl_merge}.
 %\paragraph{Code used for oblivious merge.}
 %Here we also include the code used of this algorithm in {\tt ObliVM-lang}.
 
