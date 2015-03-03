@@ -30,7 +30,7 @@ For this task, each test case requires only 40 AND gates for both manually gener
 %\paragraph{Code used for Task1a.}
 The code used for this task is shown in Figure~\ref{fig:lang-circuit-oram}.
 %Here we also include the code used for Task 1a written in {\tt ObliVM-lang}.
-\begin{figure}[H]
+\begin{figure}[t]
 \begin{tabular}{rl}
 \small 1&\small \tt	\struct Task1aAutomated\at{m}\at{n}\{\};\\
 \small 2&\small \tt	void Task1aAutomated\at{m}\at{n}.\func{funct}(int\at{m}[\public n] alice\_data, int\at{m}[\public n] bob\_data,\\
@@ -52,13 +52,11 @@ The code used for this task is shown in Figure~\ref{fig:lang-circuit-oram}.
 \subsection*{Task 1b: Computing $\chi^2$ statistics}
 \paragraph{Problem statement.}
 ~\\
-Input for Alice: two lists of alleles $l^A_{case} = (e^A_1,...,e^A_n)$, $l^A_{control} = (e'^A_1,...,e'^A_n)$.\\
-where each $e^A_i, e'^A_i$ is from $\{A, T, C, G\}$.\\
-Input for Bob: two lists of alleles $l^B_{case} = (e^B_1,...,e^B_n)$, $l^B_{control} = (e'^B_1,...,e'^B_n)$.\\
-where each $e^B_i, e'^B_i$ is from $\{A, T, C, G\}$.\\
+Input for Alice: two lists of alleles $l^A_{case} = (e^A_1,...,e^A_n)$, $l^A_{control} = (e'^A_1,...,e'^A_n)$ where each $e^A_i, e'^A_i$ is from $\{A, T, C, G\}$.\\
+Input for Bob: two lists of alleles $l^B_{case} = (e^B_1,...,e^B_n)$, $l^B_{control} = (e'^B_1,...,e'^B_n)$ where each $e^B_i, e'^B_i$ is from $\{A, T, C, G\}$.\\
 
-First let us define $a, b$ be the frequency of two types of alleles in
-$l_{case} = l^A_{case} || l^B_{case}$ and $c, d$ be the frequency of two types of alleles in
+First let us define $a, b$ to be the frequency of two types of alleles in
+$l_{case} = l^A_{case} || l^B_{case}$ and let $c, d$ be the frequency of two types of alleles in
 $l_{control} = l^A_{control} || l^B_{control}$. 
 (it is also guaranteed
 that only two types of alleles will appear). 
@@ -77,14 +75,14 @@ numbers.
 
 \paragraph{Results.}
 Our implementation for this task supports an arbitrary 
-trade off between precision and speed. We mention two specific cases here.
+trade-off between precision and speed. We mention two specific cases here.
 For each test case, an implementation that requires 7763 AND gates achieves a maximum absolute error of $1.11\times10^{-4}$
  and an implementation with 14443 AND gates achieves a maximum absolute error of $5.6\times10^{-8}$.
 
 The code used for this task is shown in Figure~\ref{fig:task1b}.
 %\paragraph{Code used for Task1b.}
 %Here we also include the code used for Task1b written in {\tt ObliVM-lang}.
-\begin{figure}[H]
+\begin{figure}[t]
 \begin{tabular}{rl}
 \small 1&\small \tt \struct Task1bAutomated\at{n}\{\};\\
 \small 2&\small \tt float32[\public n] Task1bAutomated\at{n}.\func{func}(\\

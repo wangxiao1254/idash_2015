@@ -1,13 +1,13 @@
 \section{Task 2: Secure comparison between genomic data}
 \subsection{A Building Block: Estimating Set Union Cardinality}
-Before describing our solution for Task 2, we first present the solution to estimate the size of union of two sets.
+Before describing our solution for Task 2, we first present a building block to estimate the size of union of two sets.
 Suppose Alice and Bob have sets of elements $S^A = (e^A_1,...,e^A_n)$
 and $S^B = (e^B_1,...,e^B_n)$ respectively. We want to find $|S^A\cup S^B|$. Here, we introduce two algorithms:
 
 \paragraph{Using oblivious merge.}
 A strawman approach of computing cardinality of the union is to use oblivious sorting, as detailed in Algorithm~\ref{alg1}.
 
-\begin{algorithm}
+\begin{algorithm}[t]
 \begin{algorithmic}[1]
 \State Sort the input array $d[]$ obliviously.
 \State $cnt = 1$
@@ -21,17 +21,15 @@ A strawman approach of computing cardinality of the union is to use oblivious so
 \caption{\textbf{Compute the size of union(d[]: a list of elements)}} %\\
 \label{alg1}
 \end{algorithm}
-For $n$ elements, each with size $D$ bits, this approach requires a circuit of size $O(Dn\log^2n)$ using bitonic sorting network~\cite{bitonicsort},
-and can be further reduced to $O(Dn\log n)$ if two parties sort their data locally and perform a bitonic merge using secure computation.
-In the submission, we take the second approach to achieve a better performance.
-
-
-
-The code for this approach is presented in Figure~\ref{fig:obl_merge}.
+Suppose there are totally $n$ elements each of size $D$ bits.
+This strawman appraoch involves an oblivious sorting on the input data, which requires a circuit of size $O(Dn\log^2n)$ circuit, 
+using bitonic sorting network~\cite{bitonicsort}. In our implementation of this approach,  we utilize the local computation:
+the two parties first sort their data locally, and then they perform an oblivious merge in secure computation. This improved approach
+only need a circuit of size $O(Dn\log n)$. The {\tt ObliVM-lang} code for this approach is presented in Figure~\ref{fig:obl_merge}.
 %\paragraph{Code used for oblivious merge.}
 %Here we also include the code used of this algorithm in {\tt ObliVM-lang}.
 
-\begin{figure}[H]
+\begin{figure}[t]
 \begin{tabular}{rl}
 \small 1&\small \tt \struct Task2Automated\at{m}\at{n}\{\};\\
 
@@ -89,7 +87,7 @@ The following table gives typical parameter choices
 and their accuracy guarantees:
 
 
-\begin{table}[H]
+\begin{table}[t]
 \begin{center}
 \begin{tabular}{cccc}
 \toprule
@@ -121,7 +119,7 @@ it holds that $(\hat{N}-N)/N < \epsilon$.
 
 The code for this approach is presented in Figure~\ref{fig:bf_merge}.
 
-\begin{figure}[H]
+\begin{figure}[t]
 \begin{tabular}{rl}
 \small 1&\small \tt \struct Pair<T1, T2> \{\\
 \small 2&\small \tt  \quad  T1 left;\\
@@ -175,7 +173,7 @@ The code for this approach is presented in Figure~\ref{fig:bf_merge}.
 \subsection{Task 2a, Hamming Distance}
 \paragraph{Problem statement.}
 In this problem, 
-Alice and Bob each hold a list of records in VCF files, where each record is of the format $(ref, svtype, alt)$.
+Alice and Bob each holds a list of records in VCF files, where each record is of the format $(ref, svtype, alt)$.
 We want to compute the hamming distance defined on the competition website~\cite{idash}:
 \begin{framed}
 {\tt~\\
