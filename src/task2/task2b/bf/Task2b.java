@@ -1,7 +1,5 @@
 package task2.task2b.bf;
 
-import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.HashSet;
 
@@ -10,7 +8,6 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.Options;
 
-import network.Server;
 import task2.bloomFilter.BF;
 import task2.circuit_from_compiler.BF_circuit;
 import task2.task2b.PrepareData;
@@ -38,7 +35,7 @@ public class Task2b {
 		}
 		return i;
 	}
-	
+
 	public static int parameterChoose(int totalSize) {
 		int l;
 		if(totalSize <= 500)
@@ -48,12 +45,12 @@ public class Task2b {
 		else l =  totalSize;
 		return l;
 	}
-	
+
 	public static<T> T[] computeAuto(CompEnv<T> env, T[] aliceBF, T[] bobBF) throws Exception {
 		BF_circuit<T> lib2 = new BF_circuit<T>(env);
 		return lib2.merge(aliceBF.length, aliceBF, bobBF);
 	}
-	
+
 	static CommandLine processArgs(String[] args) throws Exception {
 		Options options = new Options();
 		options.addOption("f", "file", true, "file");
@@ -87,12 +84,12 @@ public class Task2b {
 
 			int alicelength = 0;			for(SNPEntry e : data) alicelength +=e.value.length();
 
-			gen.os.write(ByteBuffer.allocate(4).putInt(alicelength).array());
-			gen.os.flush();
+			gen.channel.writeInt(alicelength);
+			gen.channel.flush();
 
-			int boblength = ByteBuffer.wrap(Server.readBytes(gen.is, 4)).getInt();
+			int boblength = gen.channel.readInt();
 			totalSize = boblength+alicelength;
-			
+
 			if(cmd.hasOption("p")) {
 				NoM = new Integer(cmd.getOptionValue("p"));
 				bf = new BF(boblength+alicelength, (int) (NoM*totalSize));
@@ -102,11 +99,11 @@ public class Task2b {
 				bf = new BF(boblength+alicelength, parameterChoose(totalSize));
 				bf2 = new BF(boblength+alicelength, parameterChoose(totalSize));
 			}
-			
+
 			bf2.sks = bf.sks;
 			for(int i = 0; i < bf.k; ++i)
-				gen.os.write(bf.sks[i]);
-			gen.os.flush();
+				gen.channel.writeByte(bf.sks[i],bf.sks[i].length);
+			gen.channel.flush();
 
 			for(SNPEntry e : data) {
 				//for every pos: d+=max(d(x), d(y))
@@ -136,7 +133,7 @@ public class Task2b {
 				else tmp = compute(gen, aliceBF, bobBF);
 				res = lib.add(res, lib.padSignal(tmp, 32));
 			}
-			
+
 			res2 = lib.zeros(32);
 			for(int i = 0; i < bf2.bs.length; i+=Flag.OTBlockSize) {
 				int len = Math.min(bf2.bs.length, i+Flag.OTBlockSize);
@@ -147,7 +144,7 @@ public class Task2b {
 					tmp = computeAuto(gen, lib.padSignal(aliceBF, nextPower(aliceBF.length)), lib.padSignal(bobBF, nextPower(bobBF.length)));
 				else tmp = compute(gen, aliceBF, bobBF);				res2 = lib.add(res2, lib.padSignal(tmp, 32));
 			}
-			
+
 			T[] m_X = lib.sub(lib.toSignals(bf.m, res.length), res);
 			T[] m_Y = lib.sub(lib.toSignals(bf.m, res2.length), res2);
 			int length = 2*Math.max(m_X.length, m_Y.length)+2;
@@ -180,10 +177,10 @@ public class Task2b {
 			HashSet<SNPEntry> data = PrepareData.readFile(cmd.getOptionValue("f"));
 
 			int boblength = 0;			for(SNPEntry e : data) boblength +=e.value.length();
-			gen.os.write(ByteBuffer.allocate(4).putInt(boblength).array());
-			gen.os.flush();
+			gen.channel.writeInt(boblength);
+			gen.channel.flush();
 
-			int alicelength = ByteBuffer.wrap(Server.readBytes(gen.is, 4)).getInt();
+			int alicelength = gen.channel.readInt();
 			int totalSize = alicelength + boblength;
 
 			if(cmd.hasOption("p")) {
@@ -195,14 +192,10 @@ public class Task2b {
 				bf = new BF(boblength+alicelength, parameterChoose(totalSize));
 				bf2 = new BF(boblength+alicelength, parameterChoose(totalSize));
 			}
-			
+
 			for(int i = 0; i < bf.k; ++i)
-				try {
-					bf.sks[i] = Server.readBytes(gen.is, bf.sks[i].length);
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+				bf.sks[i] = gen.channel.readBytes(bf.sks[i].length);
+
 			bf2.sks = bf.sks;
 
 
@@ -216,7 +209,7 @@ public class Task2b {
 					bf2.insert(e.PosVal(i));
 			}
 		}
-		
+
 		@Override
 		public void secureCompute(CompEnv<T> gen) throws Exception {
 			IntegerLib<T> lib = new IntegerLib<>(gen);
@@ -231,7 +224,7 @@ public class Task2b {
 				else tmp = compute(gen, aliceBF, bobBF);
 				res = lib.add(res, lib.padSignal(tmp, 32));
 			}
-			
+
 			res2 = lib.zeros(32);
 			for(int i = 0; i < bf2.bs.length; i+=Flag.OTBlockSize) {
 				int len = Math.min(bf2.bs.length, i+Flag.OTBlockSize);
@@ -243,9 +236,9 @@ public class Task2b {
 				else tmp = compute(gen, aliceBF, bobBF);
 				res2 = lib.add(res2, lib.padSignal(tmp, 32));
 			}
-			
 
-//			IntegerLib<T> lib = new IntegerLib<T>(gen);
+
+			//			IntegerLib<T> lib = new IntegerLib<T>(gen);
 			T[] m_X = lib.sub(lib.toSignals(bf.m, res.length), res);
 			T[] m_Y = lib.sub(lib.toSignals(bf.m, res2.length), res2);
 			int length = 2*Math.max(m_X.length, m_Y.length)+2;

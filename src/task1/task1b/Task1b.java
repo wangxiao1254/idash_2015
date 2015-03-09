@@ -1,9 +1,5 @@
 package task1.task1b;
 
-import java.nio.ByteBuffer;
-
-import network.Server;
-
 import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -29,7 +25,7 @@ public class Task1b {
 			return new FloatLib<T>(env, 30, 10);
 		else return new FloatLib<T>(env, 20, 10);
 	}
-	
+
 	public static<T> T[][] compute(CompEnv<T> env, T[][][] aliceCase,
 			T[][][] bobCase,
 			T[][][] aliceControl,
@@ -59,7 +55,7 @@ public class Task1b {
 		return res;
 
 	}
-	
+
 	public static<T> T[][] computeAuto(CompEnv<T> env, T[][][] aliceCase,
 			T[][][] bobCase,
 			T[][][] aliceControl,
@@ -73,11 +69,11 @@ public class Task1b {
 		for(int i = 0; i < bobCase.length; ++i)
 			for(int j = 0; j < bobCase[i].length; ++j)
 				bobCase[i][j] = lib.toSecureFloat(bobCase[i][j], flib);
-		
+
 		for(int i = 0; i < aliceControl.length; ++i)
 			for(int j = 0; j < aliceControl[i].length; ++j) 
 				aliceControl[i][j] = lib.toSecureFloat(aliceControl[i][j], flib);
-			
+
 		for(int i = 0; i < bobControl.length; ++i)
 			for(int j = 0; j < bobControl[i].length; ++j)
 				bobControl[i][j] = lib.toSecureFloat(bobControl[i][j], flib);
@@ -86,8 +82,8 @@ public class Task1b {
 
 		return alib.func(aliceCase, aliceControl, bobCase, bobControl);
 	}
-	
-	
+
+
 	static CommandLine processArgs(String[] args) throws Exception {
 		Options options = new Options();
 		options.addOption("h", false, "automated");
@@ -107,7 +103,7 @@ public class Task1b {
 			System.out.println("Running the program with manually generated circuits");
 		return cmd;
 	}
-	
+
 	public static class Generator<T> extends GenRunnable<T> {
 		T[][][] aliceCase;
 		T[][][] bobCase;
@@ -124,20 +120,20 @@ public class Task1b {
 			automated = cmd.hasOption("a");
 			StatisticsData caseInput = PrepareData.readFile(cmd.getOptionValue("c"));
 			StatisticsData controlInput = PrepareData.readFile(cmd.getOptionValue("t"));
-			
+
 			Statistics[] caseSta = caseInput.data;
 			Statistics[] controlSta = controlInput.data;
 			boolean[][][] caseData = new boolean[caseSta.length][2][Width];
 
-			int caseLength = ByteBuffer.wrap(Server.readBytes(env.is, 4)).getInt();
-			int controlLength = ByteBuffer.wrap(Server.readBytes(env.is, 4)).getInt();
+			int caseLength = env.channel.readInt();
+			int controlLength = env.channel.readInt();
 
 			//extraFactor = n/(r*s)
-			
+
 			extraFactor = 2*(caseLength + controlLength + caseInput.numberOftuples+ controlInput.numberOftuples);
 			extraFactor /= 2*(caseLength + caseInput.numberOftuples);
 			extraFactor /= 2*(controlLength + controlInput.numberOftuples);
-			
+
 			for(int i = 0; i < caseSta.length; ++i) {
 				caseData[i][0] = Utils.fromInt(caseSta[i].numOfG1, Width);
 				caseData[i][1] = Utils.fromInt(caseSta[i].numOfG2, Width);
@@ -187,14 +183,14 @@ public class Task1b {
 			automated = cmd.hasOption("a");
 			StatisticsData caseInput = PrepareData.readFile(cmd.getOptionValue("c"));
 			StatisticsData controlInput = PrepareData.readFile(cmd.getOptionValue("t"));
-			
+
 			Statistics[] caseSta = caseInput.data;
 			Statistics[] controlSta = controlInput.data;
 			boolean[][][] caseData = new boolean[caseSta.length][2][Width];
 
-			env.os.write(ByteBuffer.allocate(4).putInt(caseInput.numberOftuples).array());
-			env.os.write(ByteBuffer.allocate(4).putInt(controlInput.numberOftuples).array());
-			env.os.flush();
+			env.channel.writeInt(caseInput.numberOftuples);
+			env.channel.writeInt(controlInput.numberOftuples);
+			env.channel.flush();
 
 			for(int i = 0; i < caseSta.length; ++i) {
 				caseData[i][0] = Utils.fromInt(caseSta[i].numOfG1, Width);
@@ -212,7 +208,7 @@ public class Task1b {
 			bobControl = env.inputOfBob(controlData);
 			numOfTests = caseSta.length;
 		}
-		
+
 		T[][] res;
 
 		@Override

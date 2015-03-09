@@ -1,11 +1,8 @@
 package task2.task2b.std;
 
 import java.math.BigInteger;
-import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.HashSet;
-
-import network.Server;
 
 import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;
@@ -86,15 +83,15 @@ public class Task2b {
 			for(SNPEntry e : data) alicelength +=e.value.length();
 
 			byte[] seed = new byte[10];CompEnv.rnd.nextBytes(seed);
-			gen.os.write(ByteBuffer.allocate(4).putInt(alicelength).array());
-			gen.os.write(seed);
-			gen.os.flush();
-			boblength = ByteBuffer.wrap(Server.readBytes(gen.is, 4)).getInt();
+			gen.channel.writeInt(alicelength);
+			gen.channel.writeByte(seed, seed.length);
+			gen.channel.flush();
+			boblength = gen.channel.readInt();
 			totalSize = boblength+alicelength;
 			LEN = (int) Math.ceil((Math.log(totalSize)/Math.log(2)*2+10));
 			if(cmd.hasOption("p"))
 				LEN = (int) Math.ceil((Math.log(totalSize)/Math.log(2)*2+new Integer(cmd.getOptionValue("p"))));
-			
+
 			in = new BigInteger[alicelength];
 			in2 = new BigInteger[alicelength];
 			int cnt = 0;
@@ -130,8 +127,8 @@ public class Task2b {
 			System.arraycopy(Alice, 0, scData, 0, Alice.length);
 			System.arraycopy(Bob, 0, scData, Alice.length, Bob.length);
 			res = compute(gen, scData);
-			
-			
+
+
 			clear = new boolean[alicelength][];
 			for(int i = 0; i < in.length;  ++i)
 				clear[i] = Utils.fromBigInteger(in2[i], LEN);
@@ -175,11 +172,11 @@ public class Task2b {
 				LEN = (int) Math.ceil((Math.log(totalSize)/Math.log(2)*2+new Integer(cmd.getOptionValue("p"))));
 
 			for(SNPEntry e : data) boblength +=e.value.length();
-			gen.os.write(ByteBuffer.allocate(4).putInt(boblength).array());
-			gen.os.flush();
+			gen.channel.writeInt(boblength);
+			gen.channel.flush();
 
-			alicelength = ByteBuffer.wrap(Server.readBytes(gen.is, 4)).getInt();
-			byte[] seed = Server.readBytes(gen.is, 10);
+			alicelength = gen.channel.readInt();
+			byte[] seed = gen.channel.readBytes(10);
 			totalSize  = alicelength+boblength;
 
 			in = new BigInteger[boblength];

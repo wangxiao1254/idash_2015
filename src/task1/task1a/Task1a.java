@@ -1,10 +1,5 @@
 package task1.task1a;
 
-import java.io.IOException;
-import java.nio.ByteBuffer;
-
-import network.Server;
-
 import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -32,7 +27,7 @@ public class Task1a {
 		}
 		return res;
 	}
-	
+
 	public static<T> T[][] computeAutomated(CompEnv<T> env, T[][] alice, T[][] bob, int numberOfSta, int width) {
 		Task1aAutomated<T> a;
 		T[][] ret = env.newTArray(alice.length, 0);
@@ -45,8 +40,8 @@ public class Task1a {
 		}
 		return ret;
 	}
-	
-	
+
+
 	static CommandLine processArgs(String[] args) throws Exception {
 		Options options = new Options();
 		options.addOption("a", false, "automated");
@@ -65,7 +60,7 @@ public class Task1a {
 			System.out.println("Running the program with manually generated circuits");
 		return cmd;
 	}
-	
+
 	public static class Generator<T> extends GenRunnable<T> {
 		T[][] alice;
 		T[][] bob;
@@ -91,26 +86,23 @@ public class Task1a {
 				}
 			}
 			int numberOftuples = staDataCase.numberOftuples + staDataControl.numberOftuples; 
-			
-			
-			
+
+
+
 			int boblength = 0;
-			try {
-				env.os.write(ByteBuffer.allocate(4).putInt(numberOftuples).array());
-				env.os.flush();
-				boblength = ByteBuffer.wrap(Server.readBytes(env.is, 4)).getInt();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+
+			env.channel.writeInt(numberOftuples);
+			env.channel.flush();
+			boblength = env.channel.readInt();
+
 			numberOfSta = 2*(boblength + numberOftuples);
 			width = (int) Math.ceil(Math.log(numberOfSta)/Math.log(2));
-			
+
 			boolean[][] input = new boolean[sta.length][width];
 			for(int i = 0; i < sta.length; ++i) {
 				input[i]= Utils.fromInt(sta[i].numOfG1, width);
 			}
-			
+
 			alice = env.inputOfAlice(input);
 			bob = env.inputOfBob(input);		
 		}
@@ -161,24 +153,21 @@ public class Task1a {
 				}
 			}
 			int numberOftuples = staDataCase.numberOftuples + staDataControl.numberOftuples; 
-			
+
 			int boblength = 0;
-			try {
-				env.os.write(ByteBuffer.allocate(4).putInt(numberOftuples).array());
-				env.os.flush();
-				boblength = ByteBuffer.wrap(Server.readBytes(env.is, 4)).getInt();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+
+			env.channel.writeInt(numberOftuples);
+			env.channel.flush();
+			boblength = env.channel.readInt();
+
 			numberOfSta = 2*(boblength + numberOftuples);
 			width = (int) Math.ceil(Math.log(numberOfSta)/Math.log(2));
-			
+
 			boolean[][] input = new boolean[sta.length][width];
 			for(int i = 0; i < sta.length; ++i) {
 				input[i]= Utils.fromInt(sta[i].numOfG1, width);
 			}
-			
+
 			alice = env.inputOfAlice(input);
 			bob = env.inputOfBob(input);
 		}
