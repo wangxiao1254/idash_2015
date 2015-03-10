@@ -11,6 +11,7 @@
 \usepackage{comment}
 \usepackage{algorithm}
 \usepackage{caption}
+\usepackage{framed}
 \usepackage[noend]{algorithmic}
 %\usepackage{vplace}
 \DeclareCaptionFormat{myformat}{#3}
@@ -139,12 +140,12 @@ $(f_1, f_2) = (f^A_1+f^A_1, f^B_2+f^B_2)$\\
 
 \begin{frame}{Building Block: Secure Set Union}
   \myblock{10}{0}{0}{Alice\\
-      $S_A$
+      $S^A$
     }
     \myblock{10}{10}{0}{Bob\\
-      $S_B$
+      $S^B$
     }
-    \myblock{20}{0}{2.5}{Cardinality of the union of the sets i.e. $|S_A \cup S_B|$}
+    \myblock{20}{0}{2.5}{Cardinality of the union of the sets i.e. $|S^B \cup S^B|$}
     \leftblock{20}{0}{6}{Strawman solution:}
     \vspace{30mm}
     \begin{algorithm}[H]
@@ -164,7 +165,7 @@ $(f_1, f_2) = (f^A_1+f^A_1, f^B_2+f^B_2)$\\
 
 \begin{frame}{Set Union: Oblivious Merge}
   \begin{itemize}
-    \item Local sort of $S_A$ and $S_B$
+    \item Local sort of $S^A$ and $S^B$
     \item Oblivious merge of sorted lists $(O(n \log n))$
     \item Compute set union in a single pass
   \end{itemize}
@@ -190,6 +191,65 @@ $(f_1, f_2) = (f^A_1+f^A_1, f^B_2+f^B_2)$\\
     \kartik{image for local computation}
     \item In secure computation, Compute bitwise OR and count number of 1's
     \item Compute $|S|$ in cleartext
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  relative errors?
+\end{frame}
+
+\section{Task 2A}
+\label{sec:task1b}
+
+
+\begin{frame}{Problem Statement: Hamming Distance}
+Alice and Bob maintain records of type $(ref, svtype, alt)$ that differ from the reference
+  \begin{framed}
+{\tt~\\
+d = 0;\\
+for each record of type SNP or SUB\\
+\qquad  if ((x == null) || (y == null) || (x.ref == y.ref \&\& x.alt != y.alt)\\
+\qquad    d += 1;\\
+end for\\
+}
+\end{framed}
+\end{frame}
+
+\begin{frame}{Solution: Hamming Distance}
+  \myblock{10}{0}{0}{Alice\\
+      Set $S^A$
+    }
+    \myblock{10}{10}{0}{Bob\\
+      Set $S^B$
+    }
+\kartik{some image needed?}
+    \myblock{20}{0}{3}{We need all positions that have been modified, but not modified in the same manner}
+    \myblock{20}{0}{5}{
+      $|S^A\cup S^B|$ \pause $ - |S^A\cap S^B|$ \pause $ = 2\times|S^A\cup S^B|-|S^A| - |S^B|$
+    }
+    \myblock{20}{0}{7}{
+      Compute $|S^A\cup S^B|$ as suggested in the building block
+    }
+\end{frame}
+
+\section{Task 2B}
+\label{sec:task2b}
+
+\begin{frame}{Problem Statement: Edit Distance}
+  Alice and Bob maintain records of type $(ref, svtype, alt)$ that differ from the reference
+  \begin{framed}
+{\tt
+Replacement: Calculate like hamming distance\\
+Insertion/Deletion:\\
+\qquad If one party modifies a position, add len(alt) to edit distance\\
+\qquad If both parties modify a position, add len(max(alt1, alt2)) to edit distance
+}
+\end{framed}
+\end{frame}
+
+\begin{frame}{Solution: Edit Distance}
+  \begin{itemize}
+  \item Alice computes $S_1^A$ by inserting $(ref, i), i \in [1, len(alt)]$ for all records $(ref, svtype, alt)$. Similarly for Bob.
   \end{itemize}
 \end{frame}
 \end{document}
