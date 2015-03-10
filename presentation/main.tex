@@ -13,6 +13,9 @@
 \usepackage{caption}
 \usepackage{framed}
 \usepackage[noend]{algorithmic}
+\definecolor{green}{rgb}{0.53, 0.66, 0.42}
+\definecolor{red}{rgb}{0.8, 0.0, 0.0}
+%\usepackage[usenames, dvipsnames]{color}
 %\usepackage{vplace}
 \DeclareCaptionFormat{myformat}{#3}
 \captionsetup[algorithm]{format=myformat}
@@ -20,6 +23,7 @@
 %\usepackage{algorithmicx,color,xspace,xcolor,fullpage,url}
 \setlength{\TPHorizModule}{5mm}
 \setlength{\TPVertModule}{\TPHorizModule}
+
 % The line below is what I talked about that makes all
 % items in a list into overlays
 %\beamerdefaultoverlayspecification{<+->}
@@ -49,33 +53,36 @@
 \frame{
 \maketitle
 }
-\section{Task 1a}
+\section{Task 1A}
 
 \begin{comment}
-\begin{frame}
+\begin{frame}{Compute MAF}
 \begin{itemize}
 \item Compute minor allele frequencies
-\myblock{8}{0}{1}{Alice\\
+\myblock{10}{0}{1}{Alice\\
 $l^A = (e^A_1,...,e^A_n)$
 }
-\myblock{8}{8}{1}{Bob\\
+\myblock{10}{10}{1}{Bob\\
 $l^B = (e^B_1,...,e^B_n)$
 }
 \pause
-\myblock{16}{0}{4}{where $e_i^X \in \{A, T, C, G\}$}
+\myblock{20}{0}{4}{where $e_i^X \in \{A, T, C, G\}$}
 \pause
-\myblock{8}{0}{6}{
+\myblock{10}{0}{6}{
 AA AC AA\\
-$f_1^A = 5, f_2^A = 1$
+\color{green}{$f_1^A = 5, f_2^A = 1$}
 }
-\myblock{8}{8}{6}{
+\myblock{10}{10}{6}{
 AA AC CC\\
-$f_1^B = 3, f_2^B = 3$
+{\color{green}$f_1^B = 3, f_2^B = 3$}
+}
+\myblock{20}{0}{9}{
+Compute $min(f^A_1+f^A_1, f^B_2+f^B_2)$
 }
 \pause
-\myblock{16}{0}{9}{
+\myblock{20}{0}{11}{
 Secure Computation\\
-$(f_1, f_2) = (f^A_1+f^A_1, f^B_2+f^B_2)$\\
+{\color{red}$(f_1, f_2) = (f^A_1+f^A_1, f^B_2+f^B_2)$}\\
 \pause
 40 AND gates
 }
@@ -85,7 +92,7 @@ $(f_1, f_2) = (f^A_1+f^A_1, f^B_2+f^B_2)$\\
 \section{Task 1B}
 \label{sec:task1b}
 
-\begin{frame}{Problem Statement}
+\begin{frame}{Problem Statement: Compute $\chi^2$ statistic}
   \begin{itemize}
     \item Task 1b: Computing $\chi^2$ statistic
     \myblock{10}{0}{1}{Alice\\
@@ -109,7 +116,7 @@ $(f_1, f_2) = (f^A_1+f^A_1, f^B_2+f^B_2)$\\
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Solution: Computing $\chi^2$ statistic}
+\begin{frame}{Solution: Compute $\chi^2$ statistic}
     \leftblock{20}{0}{1}{
       $a, b$: frequencies of two alleles in $l_{case} = l^A_{case} || l^B_{case}$\\
       $c, d$: frequencies of two alleles in $l_{control} = l^A_{control} || l^B_{control}$
@@ -117,12 +124,12 @@ $(f_1, f_2) = (f^A_1+f^A_1, f^B_2+f^B_2)$\\
     \pause
   \vspace{12mm}
   \begin{itemize}
-    \item Compute partial values: \\$a^A,b^A,c^A,d^A$ for Alice \\$a^B,b^B,c^B,d^B$ for Bob
+    \item Compute partial values: {\color{green}\\$a^A,b^A,c^A,d^A$ for Alice \\$a^B,b^B,c^B,d^B$ for Bob}
       \pause
-    \item In Secure Computation, compute $a = a^A + a^B$ \ldots
+    \item In Secure Computation, {\color{red} compute $a = a^A + a^B$ \ldots}
   \end{itemize}
   \myblock{20}{0}{1}{
-    $\chi^2 = n\times\frac{(ad-bc)^2}{rsgk}$
+    {\color{red} $\chi^2 = n\times\frac{(ad-bc)^2}{rsgk}$}
   }
 \end{frame}
 
@@ -150,14 +157,15 @@ $(f_1, f_2) = (f^A_1+f^A_1, f^B_2+f^B_2)$\\
     \vspace{30mm}
     \begin{algorithm}[H]
       \begin{algorithmic}[1]
-        \STATE Sort the input array $d[]$ obliviously.
-        \STATE $cnt = 1$
-        \FOR {$i=0:len(d)-1$}
-	  \IF{$d[i] \neq d[i+1]$}
-		\STATE $cnt = cnt + 1$
-         \ENDIF
-        \ENDFOR
-        \RETURN $cnt$
+        \STATE {\color{red} Sort the input array $d[]$ obliviously}
+        \STATE {\color{red} Compute cardinality in a single pass}
+        %\STATE $cnt = 1$
+        %\FOR {$i=0:len(d)-1$}
+	%  \IF{$d[i] \neq d[i+1]$}
+	%	\STATE $cnt = cnt + 1$
+        % \ENDIF
+        %\ENDFOR
+        %\RETURN $cnt$
       \end{algorithmic}
       \caption{union(d[]: a list of elements) \kartik{xiao}}
     \end{algorithm}
@@ -165,9 +173,9 @@ $(f_1, f_2) = (f^A_1+f^A_1, f^B_2+f^B_2)$\\
 
 \begin{frame}{Set Union: Oblivious Merge}
   \begin{itemize}
-    \item Local sort of $S^A$ and $S^B$
-    \item Oblivious merge of sorted lists $(O(n \log n))$
-    \item Compute set union in a single pass
+    \item {\color{green} Local sort of $S^A$ and $S^B$}
+    \item {\color{red} Oblivious merge of sorted lists $(O(n \log n))$}
+    \item {\color{red} Compute set union in a single pass}
   \end{itemize}
 \end{frame}
 
@@ -187,10 +195,10 @@ $(f_1, f_2) = (f^A_1+f^A_1, f^B_2+f^B_2)$\\
 
 \begin{frame}{Set Union: Bloom Filter}
   \begin{itemize}
-    \item Compute bloom filters locally
+    \item {\color{green} Compute bloom filters locally}
     \kartik{image for local computation}
-    \item In secure computation, Compute bitwise OR and count number of 1's
-    \item Compute $|S|$ in cleartext
+    \item {\color{red} In secure computation, Compute bitwise OR and count number of 1's}
+    \item {\color{green} Compute $|S|$ in cleartext}
   \end{itemize}
 \end{frame}
 
