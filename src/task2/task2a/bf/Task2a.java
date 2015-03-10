@@ -1,10 +1,7 @@
 package task2.task2a.bf;
 
-import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.HashSet;
-
-import network.Server;
 
 import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;
@@ -30,7 +27,7 @@ public class Task2a {
 		T[] aUb = lib.or(aliceBF, bobBF);
 		return lib.numberOfOnes(aUb);
 	}
-	
+
 	public static int nextPower(int a) {
 		int i = 1;
 		while(i < a) {
@@ -38,7 +35,7 @@ public class Task2a {
 		}
 		return i;
 	}
-	
+
 	public static int parameterChoose(int totalSize) {
 		int l;
 		if(totalSize <= 500)
@@ -48,7 +45,7 @@ public class Task2a {
 		else l =  totalSize;
 		return l;
 	}
-	
+
 	public static<T> T[] computeAuto(CompEnv<T> env, T[] aliceBF, T[] bobBF) throws Exception {
 		BF_circuit<T> lib2 = new BF_circuit<T>(env);
 		return lib2.merge(aliceBF.length, aliceBF, bobBF);
@@ -84,9 +81,9 @@ public class Task2a {
 			HashSet<SNPEntry> data = PrepareData.readFile(cmd.getOptionValue("f"));
 
 			int alicelength = data.size();
-			gen.os.write(ByteBuffer.allocate(4).putInt(data.size()).array());
-			gen.os.flush();
-			int boblength = ByteBuffer.wrap(Server.readBytes(gen.is, 4)).getInt();
+			gen.channel.writeInt(data.size());
+			gen.channel.flush();
+			int boblength = gen.channel.readInt();
 			totalSize = boblength+alicelength;
 
 			if(cmd.hasOption("p")) {
@@ -94,10 +91,10 @@ public class Task2a {
 				bf = new BF(boblength+alicelength, (int) (NoM*totalSize));
 			} else 
 				bf = new BF(boblength+alicelength, parameterChoose(totalSize));
-			
+
 			for(int i = 0; i < bf.k; ++i)
-				gen.os.write(bf.sks[i]);
-			gen.os.flush();
+				gen.channel.writeByte(bf.sks[i],bf.sks[i].length);
+			gen.channel.flush();
 
 			for(SNPEntry e : data)
 				bf.insert(e.toString());
@@ -118,7 +115,7 @@ public class Task2a {
 				res = lib.add(res, lib.padSignal(tmp, 32));
 			}
 		}
-		
+
 		@Override
 		public void prepareOutput(CompEnv<T> gen) {
 			int r = Utils.toInt(gen.outputToAlice(res));
@@ -142,9 +139,9 @@ public class Task2a {
 			HashSet<SNPEntry> data = PrepareData.readFile(cmd.getOptionValue("f"));
 			int boblength = data.size();
 
-			gen.os.write(ByteBuffer.allocate(4).putInt(data.size()).array());
-			gen.os.flush();
-			int alicelength = ByteBuffer.wrap(Server.readBytes(gen.is, 4)).getInt();
+			gen.channel.writeInt(data.size());
+			gen.channel.flush();
+			int alicelength = gen.channel.readInt();
 
 			int totalSize = alicelength + boblength;
 			if(cmd.hasOption("p")) {
@@ -153,9 +150,9 @@ public class Task2a {
 			}
 			else 
 				bf = new BF(boblength+alicelength, parameterChoose(totalSize));
-			
+
 			for(int i = 0; i < bf.k; ++i)
-				bf.sks[i] = Server.readBytes(gen.is, bf.sks[i].length);
+				bf.sks[i] = gen.channel.readBytes(bf.sks[i].length);
 
 			for(SNPEntry e : data)
 				bf.insert(e.toString());

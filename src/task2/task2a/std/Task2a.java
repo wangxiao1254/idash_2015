@@ -1,11 +1,8 @@
 package task2.task2a.std;
 
 import java.math.BigInteger;
-import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.HashSet;
-
-import network.Server;
 
 import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;
@@ -83,16 +80,15 @@ public class Task2a {
 			int alicelength = data.size();
 			byte[] seed = new byte[10];
 			CompEnv.rnd.nextBytes(seed);
-			gen.os.write(ByteBuffer.allocate(4).putInt(data.size()).array());
-			gen.os.write(seed);
-			gen.os.flush();
-			byte[] boblengthraw = Server.readBytes(gen.is, 4);
-			int boblength = ByteBuffer.wrap(boblengthraw).getInt();
+			gen.channel.writeInt(data.size());
+			gen.channel.writeByte(seed,seed.length);
+			gen.channel.flush();
+			int boblength = gen.channel.readInt();
 			totalSize = boblength+alicelength;
 
-			
+
 			int LEN = (int) Math.ceil((Math.log(totalSize)/Math.log(2)*2+10));
-					
+
 			if(cmd.hasOption("p"))
 				LEN = (int) Math.ceil((Math.log(totalSize)/Math.log(2)*2+new Integer(cmd.getOptionValue("p"))));
 
@@ -145,13 +141,12 @@ public class Task2a {
 			HashSet<SNPEntry> data = PrepareData.readFile(cmd.getOptionValue("f"));
 
 			int boblength = data.size();
-			gen.os.write(ByteBuffer.allocate(4).putInt(data.size()).array());
-			gen.os.flush();
-			byte[] alicelengthraw = Server.readBytes(gen.is, 4);
-			int alicelength = ByteBuffer.wrap(alicelengthraw).getInt();
-			byte[] seed = Server.readBytes(gen.is, 10);
+			gen.channel.writeInt(data.size());
+			gen.channel.flush();
+			int alicelength = gen.channel.readInt();
+			byte[] seed = gen.channel.readBytes(10);
 			int totalSize = alicelength + boblength;
-			
+
 			int LEN = (int) Math.ceil((Math.log(totalSize)/Math.log(2)*2+10));
 			if(cmd.hasOption("p"))
 				LEN = (int) Math.ceil((Math.log(totalSize)/Math.log(2)*2+new Integer(cmd.getOptionValue("p"))));

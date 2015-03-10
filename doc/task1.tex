@@ -27,7 +27,7 @@ The two parties first compute the frequency of two types of alleles of their own
 $(f^A_1, f^A_2)$ for Alice and $(f^B_1,f^B_2)$ for Bob, ordered by allele type.
 Then, over a secure computation protocol, 
 the two parties first sum up the frequency by
-$$(f_1, f_2) = (f^A_1+f^A_1, f^B_2+f^B_2),$$
+$$(f_1, f_2) = (f^A_1+f^B_1, f^A_2+f^B_2),$$
 and then report the smaller number between $f_1$ and $f_2$.
 
 The code used for this task is shown in Figure~\ref{fig:lang-circuit-oram}.
