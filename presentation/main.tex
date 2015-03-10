@@ -1,0 +1,195 @@
+\documentclass[t,ignorenonframetext]{beamer}
+\mode<presentation> {
+  \usetheme{PaloAlto}
+  %\usecolortheme{seagull}
+  %\usefonttheme{serif}
+}
+
+\usefonttheme{structuresmallcapsserif}
+\usepackage{enumerate,graphicx}
+\usepackage[]{textpos}
+\usepackage{comment}
+\usepackage{algorithm}
+\usepackage{caption}
+\usepackage[noend]{algorithmic}
+%\usepackage{vplace}
+\DeclareCaptionFormat{myformat}{#3}
+\captionsetup[algorithm]{format=myformat}
+%\usepackage{algpseudocode}
+%\usepackage{algorithmicx,color,xspace,xcolor,fullpage,url}
+\setlength{\TPHorizModule}{5mm}
+\setlength{\TPVertModule}{\TPHorizModule}
+% The line below is what I talked about that makes all
+% items in a list into overlays
+%\beamerdefaultoverlayspecification{<+->}
+\newcommand{\tc}[1]{$\backslash$\texttt{#1}}
+\newcommand{\kartik}[1]{{\footnotesize\color{blue}[Kartik: #1]}}
+\newcommand\myblock[4]{%
+\begin{textblock}{#1}(#2, #3)%
+  \begin{center}
+    #4
+  \end{center}
+\end{textblock}
+}
+\newcommand\leftblock[4]{%
+\begin{textblock}{#1}(#2, #3)%
+  \vspace*{\fill}
+    #4
+  \vspace*{\fill}
+\end{textblock}
+}
+%\algtext*{EndWhile}% Remove "end while" text
+%\algtext*{ENDIF}% Remove "end if" text
+
+\title[]{iDASH Secure Genome Analysis Competition Using ObliVM}
+\author[]{Xiao Shaun Wang, Chang Liu, \textbf{Kartik Nayak}, Yan Huang and Elaine Shi}
+\date{University of Maryland, College Park}
+\begin{document}
+\frame{
+\maketitle
+}
+\section{Task 1a}
+
+\begin{comment}
+\begin{frame}
+\begin{itemize}
+\item Compute minor allele frequencies
+\myblock{8}{0}{1}{Alice\\
+$l^A = (e^A_1,...,e^A_n)$
+}
+\myblock{8}{8}{1}{Bob\\
+$l^B = (e^B_1,...,e^B_n)$
+}
+\pause
+\myblock{16}{0}{4}{where $e_i^X \in \{A, T, C, G\}$}
+\pause
+\myblock{8}{0}{6}{
+AA AC AA\\
+$f_1^A = 5, f_2^A = 1$
+}
+\myblock{8}{8}{6}{
+AA AC CC\\
+$f_1^B = 3, f_2^B = 3$
+}
+\pause
+\myblock{16}{0}{9}{
+Secure Computation\\
+$(f_1, f_2) = (f^A_1+f^A_1, f^B_2+f^B_2)$\\
+\pause
+40 AND gates
+}
+\end{itemize}
+\end{frame}
+
+\section{Task 1B}
+\label{sec:task1b}
+
+\begin{frame}{Problem Statement}
+  \begin{itemize}
+    \item Task 1b: Computing $\chi^2$ statistic
+    \myblock{10}{0}{1}{Alice\\
+      $l^A_{case} = (e^A_1,...,e^A_n)$\\
+      $l^A_{control} = (e'^A_1,...,e'^A_n)$
+    }
+    \myblock{10}{10}{1}{Bob\\
+      $l^B_{case} = (e^B_1,...,e^B_n)$\\
+      $l^B_{control} = (e'^B_1,...,e'^B_n)$
+    }
+    \pause
+    \leftblock{20}{0}{5}{
+      $a, b$: frequencies of two alleles in $l_{case} = l^A_{case} || l^B_{case}$\\
+      $c, d$: frequencies of two alleles in $l_{control} = l^A_{control} || l^B_{control}$
+    }
+    \pause
+    \myblock{20}{0}{8}{
+      $\chi^2 = n\times\frac{(ad-bc)^2}{rsgk}$\\
+      where $r = a + b, s = c + d, g = a + c,$\\$k = b + d, n =  r + s$
+    }
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Solution: Computing $\chi^2$ statistic}
+    \leftblock{20}{0}{1}{
+      $a, b$: frequencies of two alleles in $l_{case} = l^A_{case} || l^B_{case}$\\
+      $c, d$: frequencies of two alleles in $l_{control} = l^A_{control} || l^B_{control}$
+    }
+    \pause
+  \vspace{12mm}
+  \begin{itemize}
+    \item Compute partial values: \\$a^A,b^A,c^A,d^A$ for Alice \\$a^B,b^B,c^B,d^B$ for Bob
+      \pause
+    \item In Secure Computation, compute $a = a^A + a^B$ \ldots
+  \end{itemize}
+  \myblock{20}{0}{1}{
+    $\chi^2 = n\times\frac{(ad-bc)^2}{rsgk}$
+  }
+\end{frame}
+
+\begin{frame}{Results: Computing $\chi^2$ statistic}
+  \begin{itemize}
+    \item Floating point computation \kartik{number of bits used}
+    \item Absolute accuracy\\
+      $1.11 \times 10^{-4}$ with 7763 gates\\
+      $5.6 \times 10^{-8}$ with 14443 gates
+  \end{itemize}
+\end{frame}
+
+\section{Set union}
+\label{sec:setunion}
+
+\begin{frame}{Building Block: Secure Set Union}
+  \myblock{10}{0}{0}{Alice\\
+      $S_A$
+    }
+    \myblock{10}{10}{0}{Bob\\
+      $S_B$
+    }
+    \myblock{20}{0}{2.5}{Cardinality of the union of the sets i.e. $|S_A \cup S_B|$}
+    \leftblock{20}{0}{6}{Strawman solution:}
+    \vspace{30mm}
+    \begin{algorithm}[H]
+      \begin{algorithmic}[1]
+        \STATE Sort the input array $d[]$ obliviously.
+        \STATE $cnt = 1$
+        \FOR {$i=0:len(d)-1$}
+	  \IF{$d[i] \neq d[i+1]$}
+		\STATE $cnt = cnt + 1$
+         \ENDIF
+        \ENDFOR
+        \RETURN $cnt$
+      \end{algorithmic}
+      \caption{union(d[]: a list of elements) \kartik{xiao}}
+    \end{algorithm}
+\end{frame}
+
+\begin{frame}{Set Union: Oblivious Merge}
+  \begin{itemize}
+    \item Local sort of $S_A$ and $S_B$
+    \item Oblivious merge of sorted lists $(O(n \log n))$
+    \item Compute set union in a single pass
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Set Union: Bloom Filter}
+  \begin{itemize}
+    \item Used to check for existence of elements
+    \item Approximate the size of the set $S$
+      \myblock{20}{0}{2}{
+        \LARGE{$|S| = \frac{\ln(1-\frac{X}{m})}{k\ln(1-1/m)}$}
+      }
+      \leftblock{20}{0}{6}{
+        where\\ $X$: number of bits set,\\ $m$: number of bits in the bloom filter \\
+        $k$: number of hash functions
+      }
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Set Union: Bloom Filter}
+  \begin{itemize}
+    \item Compute bloom filters locally
+    \kartik{image for local computation}
+    \item In secure computation, Compute bitwise OR and count number of 1's
+    \item Compute $|S|$ in cleartext
+  \end{itemize}
+\end{frame}
+\end{document}
