@@ -34,8 +34,10 @@ The code used for this task is shown in Figure~\ref{fig:lang-circuit-oram}.
 \begin{figure}[H]
 \begin{tabular}{rl}
 \small 1&\small \tt	\struct Task1aAutomated\at{m}\at{n}\{\};\\
-\small 2&\small \tt	void Task1aAutomated\at{m}\at{n}.\func{funct}(int\at{m}[\public n] alice\_data, int\at{m}[\public n] bob\_data,\\
-\small 3&\small \tt	\quad      int\at{m}[\public n] ret, \public int\at{m} total\_instances) \{\\
+\small 2&\small \tt	void Task1aAutomated\at{m}\at{n}.\func{funct}(int\at{m}[\public n] alice\_data,\\
+\small 2&\small \tt \quad \quad \qquad \qquad \qquad \qquad\qquad\qquad\qquad int\at{m}[\public n] bob\_data,\\
+\small 3&\small \tt	\quad \quad \qquad \qquad \qquad \qquad\qquad\qquad\qquad    int\at{m}[\public n] ret,\\
+\small 3&\small \tt	\quad \quad \qquad \qquad \qquad \qquad\qquad\qquad\qquad \public int\at{m} total\_instances) \{\\
 \small 4&\small \tt	\quad   int\at{m} total = total\_instances;\\
 \small 5&\small \tt	  \quad int\at{m} half = total\_instances / 2;\\
 \small 6&\small \tt	 \quad  \for(\public int32 i = 0; i < n; i = i + 1) \{\\
@@ -87,8 +89,8 @@ The code used for this task is shown in Figure~\ref{fig:task1b}.
 \begin{tabular}{rl}
 \small 1&\small \tt \struct Task1bAutomated\at{n}\{\};\\
 \small 2&\small \tt float32[\public n] Task1bAutomated\at{n}.\func{func}(\\
-\small 3&\small \tt \quad      float32[\public n][\public 3] alice\_case, float32[\public n][\public 3] alice\_control,\\
-\small 4&\small \tt  \quad     float32[\public n][\public 3] bob\_case, float32[\public n][\public 3] bob\_control) \{\\
+\small 3&\small \tt \quad \quad     float32[\public n][\public 2] alice\_case, float32[\public n][\public 2] alice\_control,\\
+\small 4&\small \tt  \quad \quad    float32[\public n][\public 2] bob\_case, float32[\public n][\public 2] bob\_control) \{\\
 \small 5&\small \tt \quad   float32[\public n] ret;\\
 \small 6&\small \tt  \quad  \for(\public int32 i = 0; i < n; i = i + 1) \{\\
 \small 7&\small \tt     \quad \quad  float32 a = alice\_case[i][0] + bob\_case[i][0];\\

@@ -13,8 +13,40 @@
 \usepackage{caption}
 \usepackage{framed}
 \usepackage[noend]{algorithmic}
-\definecolor{green}{rgb}{0.53, 0.66, 0.42}
+\usepackage{ragged2e}
+\usepackage{svg}
+%\definecolor{green}{rgb}{0.53, 0.66, 0.42}
 \definecolor{red}{rgb}{0.8, 0.0, 0.0}
+
+
+\definecolor{brown}{RGB}{139, 137, 137}
+\definecolor{maroon}{RGB}{178, 34, 34}
+\definecolor{green}{RGB}{34, 139, 34}
+\definecolor{types}{RGB}{72, 61, 139}
+
+\newcommand{\intn}[1]{\ensuremath{\tt {\color{brown} int#1\xspace}}}
+\newcommand{\rndn}[1]{\ensuremath{\tt {\color{brown} rnd#1\xspace}}}
+\newcommand{\struct}[0]{\ensuremath{\tt {\color{blue} struct~}}}
+\newcommand{\public}[0]{\ensuremath{\tt {\color{maroon} public~}}}
+\newcommand{\secure}[0]{\ensuremath{\tt {\color{maroon} secure~}}}
+\newcommand{\at}[1]{\ensuremath{\tt {\color{green} @#1}}}
+\newcommand{\bit}[1]{\ensuremath{\tt {\color{green} #1\xspace}}}
+\newcommand{\types}[1]{{\tt {\color{types} <#1>}}}
+\newcommand{\type}[1]{{\tt {\color{types} #1}}}
+\newcommand{\while}[0]{\ensuremath{\tt {\color{blue} while~}}}
+\newcommand{\bound}[1]{\ensuremath{\tt {\color{blue} bfor}(#1)}}
+\newcommand{\for}[0]{\ensuremath{\tt {\color{blue} for~}}}
+\newcommand{\ifs}[0]{\ensuremath{\tt {\color{blue} if~}}}
+\newcommand{\then}[0]{\ensuremath{\tt {\color{blue} then~}}}
+\newcommand{\elses}[0]{\ensuremath{\tt {\color{blue} else~}}}
+\newcommand{\return}[0]{\ensuremath{\tt {\color{blue} return~}}}
+\newcommand{\define}[0]{\ensuremath{\tt {\color{blue} define~}}}
+\newcommand{\typedef}[0]{\ensuremath{\tt {\color{blue} typedef~}}}
+\newcommand{\native}[0]{\ensuremath{\tt {\color{blue} native~}}}
+\newcommand{\partf}[0]{\ensuremath{\tt {\color{blue} phantom~}}}
+\newcommand{\dummy}[0]{\ensuremath{\tt {\color{blue} dummy~}}}
+\newcommand{\func}[1]{\ensuremath{\tt {\color{orange} #1}}}
+
 %\usepackage[usenames, dvipsnames]{color}
 %\usepackage{vplace}
 \DeclareCaptionFormat{myformat}{#3}
@@ -36,6 +68,13 @@
   \end{center}
 \end{textblock}
 }
+\newcommand\rightblock[4]{%
+\begin{textblock}{#1}(#2, #3)%
+  \begin{flushright}
+    #4
+  \end{flushright}
+\end{textblock}
+}
 \newcommand\leftblock[4]{%
 \begin{textblock}{#1}(#2, #3)%
   \vspace*{\fill}
@@ -53,6 +92,29 @@
 \frame{
 \maketitle
 }
+
+\section{{\tt ObliVM}}
+
+\begin{frame}{{\tt ObliVM}}
+\myblock{20}{0}{1}{
+\LARGE{Programming framework for Secure Computation}
+}
+\pause
+\leftblock{20}{0}{6}{
+{\color{green}{ \Large Ease-of-use:} }write programs in an imperative language
+}
+\pause
+\leftblock{20}{0}{8}{
+{\color{green}{\Large Efficiency:} }compiles programs to circuit representations
+}
+\pause
+\leftblock{20}{0}{10}{
+{\color{green}{\Large Formal Security:} }formal security guarantees to non-specialist programmers
+}
+\myblock{20}{0}{12}{
+{\LARGE{\url{http://oblivm.com}}}
+}
+\end{frame}
 \section{Task 1A}
 
 \begin{comment}
@@ -69,24 +131,32 @@ $l^B = (e^B_1,...,e^B_n)$
 \myblock{20}{0}{4}{where $e_i^X \in \{A, T, C, G\}$}
 \pause
 \myblock{10}{0}{6}{
-AA AC AA\\
+\color{blue}{AA AC AA}\\
 \color{green}{$f_1^A = 5, f_2^A = 1$}
 }
 \myblock{10}{10}{6}{
-AA AC CC\\
+\color{blue}{AA AC CC}\\
 {\color{green}$f_1^B = 3, f_2^B = 3$}
 }
+\pause
 \myblock{20}{0}{9}{
 Compute $min(f^A_1+f^A_1, f^B_2+f^B_2)$
 }
 \pause
 \myblock{20}{0}{11}{
-Secure Computation\\
+Secure Computation
 {\color{red}$(f_1, f_2) = (f^A_1+f^A_1, f^B_2+f^B_2)$}\\
-\pause
-40 AND gates
+%\pause
+%40 AND gates
 }
 \end{itemize}
+\end{frame}
+
+\begin{frame}{Code in {\tt ObliVM-lang}: Compute MAF }
+\begin{figure}[H]
+\includegraphics[width=\textwidth]{1aa}
+%\caption{Code for Task 1a written in {\tt ObliVM-lang}}
+\end{figure}
 \end{frame}
 
 \section{Task 1B}
@@ -133,13 +203,20 @@ Secure Computation\\
   }
 \end{frame}
 
-\begin{frame}{Results: Computing $\chi^2$ statistic}
+\begin{frame}{Results: Compute $\chi^2$ statistic}
   \begin{itemize}
-    \item Floating point computation \kartik{number of bits used}
+    \item Floating point computation %\kartik{number of bits used}
     \item Absolute accuracy\\
       $1.11 \times 10^{-4}$ with 7763 gates\\
       $5.6 \times 10^{-8}$ with 14443 gates
   \end{itemize}
+\end{frame}
+
+\begin{frame}{Code in {\tt ObliVM-lang}: Compute $\chi^2$ statistic }
+\begin{figure}[H]
+\includegraphics[width=\textwidth]{1b}
+%\caption{Code for Task 1b written in {\tt ObliVM-lang}}
+\end{figure}
 \end{frame}
 
 \section{Set union}
@@ -147,64 +224,86 @@ Secure Computation\\
 
 \begin{frame}{Building Block: Secure Set Union}
   \myblock{10}{0}{0}{Alice\\
-      $S^A$
+      $S^A$\\
+      \color{blue}{\{a, b, c\}}
     }
     \myblock{10}{10}{0}{Bob\\
-      $S^B$
+      $S^B$\\
+      \color{blue}{\{b, d, e\}}
     }
-    \myblock{20}{0}{2.5}{Cardinality of the union of the sets i.e. $|S^B \cup S^B|$}
-    \leftblock{20}{0}{6}{Strawman solution:}
-    \vspace{30mm}
+    \pause
+    \myblock{20}{0}{3.5}{Cardinality of the union of the sets i.e. $|S^A \cup S^B|$\\
+\color{blue}{$|S^A \cup S^B| = 5$}}
+    \pause
+    \leftblock{20}{0}{8}{Strawman solution:}
+    \rightblock{20}{0}{12}{\ldots$O(N \log^2 N)$}
+    \vspace{40mm}
     \begin{algorithm}[H]
       \begin{algorithmic}[1]
-        \STATE {\color{red} Sort the input array $d[]$ obliviously}
+        \STATE {\color{red} Sort the combined array $S^A || S^B$ obliviously}
         \STATE {\color{red} Compute cardinality in a single pass}
-        %\STATE $cnt = 1$
-        %\FOR {$i=0:len(d)-1$}
-	%  \IF{$d[i] \neq d[i+1]$}
-	%	\STATE $cnt = cnt + 1$
-        % \ENDIF
-        %\ENDFOR
-        %\RETURN $cnt$
       \end{algorithmic}
-      \caption{union(d[]: a list of elements) \kartik{xiao}}
+      \caption{union($S^A, S^B$)}
     \end{algorithm}
 \end{frame}
 
 \begin{frame}{Set Union: Oblivious Merge}
-  \begin{itemize}
-    \item {\color{green} Local sort of $S^A$ and $S^B$}
-    \item {\color{red} Oblivious merge of sorted lists $(O(n \log n))$}
-    \item {\color{red} Compute set union in a single pass}
-  \end{itemize}
+  \begin{algorithm}[H]
+      \begin{algorithmic}[1]
+        \STATE {\color{green} Local sort of $S^A$ and $S^B$}
+        \STATE {\color{red} Oblivious merge of sorted lists $(O(n \log n))$}
+        \STATE {\color{red} Compute cardinality in a single pass}
+      \end{algorithmic}
+      \caption{union($S^A, S^B$)}
+    \end{algorithm}
 \end{frame}
 
-\begin{frame}{Set Union: Bloom Filter}
+\begin{frame}[fragile]{Set Union: Bloom Filter}
   \begin{itemize}
     \item Used to check for existence of elements
     \item Approximate the size of the set $S$
+  \end{itemize}
+  \only<1>{
+      \begin{figure}[H]
+        \includegraphics[width=0.8\textwidth]{bloom_filter}
+      \end{figure}
+      }
+      \only<2>{
       \myblock{20}{0}{2}{
         \LARGE{$|S| = \frac{\ln(1-\frac{X}{m})}{k\ln(1-1/m)}$}
       }
+      \pause
       \leftblock{20}{0}{6}{
         where\\ $X$: number of bits set,\\ $m$: number of bits in the bloom filter \\
         $k$: number of hash functions
       }
-  \end{itemize}
+      }
 \end{frame}
 
 \begin{frame}{Set Union: Bloom Filter}
-  \begin{itemize}
-    \item {\color{green} Compute bloom filters locally}
-    \kartik{image for local computation}
-    \item {\color{red} In secure computation, Compute bitwise OR and count number of 1's}
-    \item {\color{green} Compute $|S|$ in cleartext}
-  \end{itemize}
+  \begin{algorithm}[H]
+      \begin{algorithmic}[1]
+        \STATE {\color{green} Compute bloom filters locally}
+        \STATE {\color{red} In secure computation, compute bitwise OR and count number of 1's}
+        \STATE {\color{green} Compute $|S|$ in cleartext}
+      \end{algorithmic}
+      \caption{union($S^A, S^B$)}
+    \end{algorithm}
+  %\begin{itemize}
+  %  \item {\color{green} Compute bloom filters locally}
+    %\kartik{image for local computation}
+  %  \pause
+  %  \item {\color{red} In secure computation, Compute bitwise OR and count number of 1's}
+  %  \pause
+  %  \item {\color{green} Compute $|S|$ in cleartext}
+  %\end{itemize}
+  \pause
+      \rightblock{20}{0}{0}{\ldots$O(m)$ operations, $m$: number of bits in the bloom filter}
 \end{frame}
 
-\begin{frame}
-  relative errors?
-\end{frame}
+%\begin{frame}
+%  relative errors?
+%\end{frame}
 
 \section{Task 2A}
 \label{sec:task1b}
@@ -224,20 +323,31 @@ end for\\
 \end{frame}
 
 \begin{frame}{Solution: Hamming Distance}
-  \myblock{10}{0}{0}{Alice\\
-      Set $S^A$
+  \myblock{10}{0}{0}{Alice
     }
-    \myblock{10}{10}{0}{Bob\\
-      Set $S^B$
+    \myblock{10}{10}{0}{Bob
     }
-\kartik{some image needed?}
-    \myblock{20}{0}{3}{We need all positions that have been modified, but not modified in the same manner}
-    \myblock{20}{0}{5}{
-      $|S^A\cup S^B|$ \pause $ - |S^A\cap S^B|$ \pause $ = 2\times|S^A\cup S^B|-|S^A| - |S^B|$
+
+    \myblock{10}{0}{2}{
+      \footnotesize{\color{blue}{$S^A = $\{(1, T, SNP),(75, G, SNP)\}}}\\
+      \footnotesize{\color{blue}{}}
     }
-    \myblock{20}{0}{7}{
-      Compute $|S^A\cup S^B|$ as suggested in the building block
+    \myblock{10}{10}{2}{
+      \footnotesize{\color{blue}{$S^B = $\{(1, T, SNP),(18, A, SNP)\}}}
     }
+    \myblock{20}{0}{4}{We need all positions that have been modified, but not modified to the same value}
+    \leftblock{20}{0}{7}{
+      {\color{blue}Hamming Distance = $|S^A \cup S^B| - |S^A \cap S^B|$ = $|\{(75, 1),(18, 1)\}|$}
+    }
+    %\leftblock{20}{0}{10}{
+    %  Compute $d1 - d2$
+    %}
+    %\myblock{20}{0}{5}{
+    %  $|S^A\cup S^B|$ \pause $ - |S^A\cap S^B|$ \pause $ = 2\times|S^A\cup S^B|-|S^A| - |S^B|$
+    %}
+    %\myblock{20}{0}{7}{
+    %  Compute $|S^A\cup S^B|$ as suggested earlier
+    %}
 \end{frame}
 
 \section{Task 2B}
@@ -256,8 +366,43 @@ Insertion/Deletion:\\
 \end{frame}
 
 \begin{frame}{Solution: Edit Distance}
-  \begin{itemize}
-  \item Alice computes $S_1^A$ by inserting $(ref, i), i \in [1, len(alt)]$ for all records $(ref, svtype, alt)$. Similarly for Bob.
-  \end{itemize}
+%  \kartik{shoudl be replaced with an example, hard to follow}
+%  \begin{itemize}
+%    \item Alice computes $S_1^A = \{(ref, i), i \in [1, len(alt)] \forall (ref, svtype, alt)\}$. Similarly for Bob.
+%    \item $d1 = |S_1^A \cup S_1^B|$: all the positions that have been modified
+%    \item Alice computes $S_1^B = \{(ref,svtype, alt, i), i\in[1, len(alt)] \forall (ref, svtype, alt)\}$
+%  \end{itemize}
+  \myblock{10}{0}{0}{
+      Alice\\
+      \footnotesize{\color{blue}{\{(1, T, SNP),\\ (10, TCG, INS),\\ (75, G, SNP)\}}}\\
+    }
+    \myblock{10}{10}{0}{
+      Bob\\
+      \footnotesize{\color{blue}{\{(1, T, SNP),\\ (10, CA, INS),\\ (18, A, SNP)\}}}
+    }
+    \pause
+    \leftblock{22}{0}{5}{
+      \small{\color{blue}{$S_1^A = \{(1, 1),(10, 1),(10, 2),(10, 3),(75, 1)\}$ }}\\
+      \small{\color{blue}{$S_2^A = \{(1, T, SNP, 1),(10, T, INS, 1),$\\ \qquad \qquad $(10, C, INS, 2),(10, G, 3, INS),(75, G, SNP, 1)\}$ }}\\
+    }
+    \pause
+    \leftblock{22}{0}{9}{
+      {\color{blue}$d1 = |S_1^A \cup S_1^B| = |\{(1, 1),(10, 1),(10, 2),(10, 3),(75, 1),(18, 1)\}|$}
+    }
+    \pause
+    \leftblock{20}{0}{11}{
+      {\color{blue}$d2 = |S_2^A \cap S_2^B| = |\{(1, T, SNP, 1)\}|$}
+    }
+    \leftblock{20}{0}{13}{
+      Compute $d1 - d2$
+    }
+\end{frame}
+
+\begin{frame}
+  \myblock{20}{0}{4}{\LARGE{Thank You!}}
+
+  \myblock{20}{0}{6}{\color{blue}{\LARGE{http://oblivm.com/}}}
+
+  \rightblock{20}{0}{12}{kartik@cs.umd.edu}
 \end{frame}
 \end{document}
