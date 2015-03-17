@@ -85,9 +85,9 @@
 %\algtext*{EndWhile}% Remove "end while" text
 %\algtext*{ENDIF}% Remove "end if" text
 
-\title[]{iDASH Secure Genome Analysis Competition Using ObliVM}
+\title[]{{\tt iDASH} - Secure Genome Analysis Competition Using {\tt ObliVM}}
 \author[]{Xiao Shaun Wang, Chang Liu, \textbf{Kartik Nayak}, Yan Huang and Elaine Shi}
-\date{University of Maryland, College Park}
+\date{University of Maryland, College Park\\Indiana University, Bloomington}
 \begin{document}
 \frame{
 \maketitle
@@ -95,25 +95,51 @@
 
 \section{{\tt ObliVM}}
 
-\begin{frame}{{\tt ObliVM}}
+\begin{frame}[fragile]{{\tt ObliVM}}
+
 \myblock{20}{0}{1}{
-\LARGE{Programming framework for Secure Computation}
+\LARGE{Programming Framework for Secure Computation}
 }
 \pause
 \leftblock{20}{0}{6}{
-{\color{green}{ \Large Ease-of-use:} }write programs in an imperative language
+{\color{green}{ \Large Ease-of-use:} } easy for non-specialist programmers to use
 }
 \pause
 \leftblock{20}{0}{8}{
-{\color{green}{\Large Efficiency:} }compiles programs to circuit representations
+{\color{green}{\Large Efficiency:} } compiles programs to \emph{small} circuits
 }
-\pause
+
+\end{frame}
+
+\begin{frame}
+
+\begin{figure}[H]
+        \includegraphics[width=\textwidth]{circuit}
+      \end{figure}
+
+\end{frame}
+
+\begin{frame}[fragile]{{\tt ObliVM}}
+
+\myblock{20}{0}{1}{
+\LARGE{Programming Framework for Secure Computation}
+}
+
+\leftblock{20}{0}{6}{
+{\color{green}{ \Large Ease-of-use:} } easy for non-specialist programmers to use
+}
+
+\leftblock{20}{0}{8}{
+{\color{green}{\Large Efficiency:} } compiles programs to \emph{small} circuits
+}
+
 \leftblock{20}{0}{10}{
-{\color{green}{\Large Formal Security:} }formal security guarantees to non-specialist programmers
+{\color{green}{\Large Formal Security:} } type system is being formalized
 }
 \myblock{20}{0}{12}{
 {\LARGE{\url{http://oblivm.com}}}
 }
+
 \end{frame}
 \section{Task 1A}
 
@@ -121,31 +147,35 @@
 \begin{frame}{Compute MAF}
 \begin{itemize}
 \item Compute minor allele frequencies
-\myblock{10}{0}{1}{Alice\\
-$l^A = (e^A_1,...,e^A_n)$
+\myblock{10}{0}{1}{\textbf{Alice}%\\
+%$l^A = (e^A_1,...,e^A_n)$
 }
-\myblock{10}{10}{1}{Bob\\
-$l^B = (e^B_1,...,e^B_n)$
+\myblock{10}{10}{1}{\textbf{Bob}%\\
+%$l^B = (e^B_1,...,e^B_n)$
 }
-\pause
-\myblock{20}{0}{4}{where $e_i^X \in \{A, T, C, G\}$}
-\pause
-\myblock{10}{0}{6}{
+\leftblock{21}{0}{12}{
+  \footnotesize{\color{green}Cleartext}\\
+  \footnotesize{\color{red}Secure}
+}
+%\pause
+%\myblock{20}{0}{4}{where $e_i^X \in \{A, T, C, G\}$}
+%\pause
+\myblock{10}{0}{2}{
 \color{blue}{AA AC AA}\\
-\color{green}{$f_1^A = 5, f_2^A = 1$}
+\color{green}{$f_A^{Alice} = 5, f_C^{Alice} = 1$}
 }
-\myblock{10}{10}{6}{
+\myblock{10}{10}{2}{
 \color{blue}{AA AC CC}\\
-{\color{green}$f_1^B = 3, f_2^B = 3$}
+{\color{green}$f_A^{Bob} = 3, f_C^{Bob} = 3$}
 }
 \pause
-\myblock{20}{0}{9}{
-Compute $min(f^A_1+f^A_1, f^B_2+f^B_2)$
+\myblock{20}{0}{5}{
+Compute $min(f^{Alice}_A + f^{Bob}_A, f^{Alice}_C+f^{Bob}_C)$
 }
 \pause
-\myblock{20}{0}{11}{
-Secure Computation
-{\color{red}$(f_1, f_2) = (f^A_1+f^A_1, f^B_2+f^B_2)$}\\
+\myblock{20}{0}{7}{
+Secure Computation:
+{\color{red}$MAF = min(f^{Alice}_A + f^{Bob}_A, f^{Alice}_C+f^{Bob}_C)$}\\
 %\pause
 %40 AND gates
 }
@@ -165,43 +195,53 @@ Secure Computation
 \begin{frame}{Problem Statement: Compute $\chi^2$ statistic}
   \begin{itemize}
     \item Task 1b: Computing $\chi^2$ statistic
-    \myblock{10}{0}{1}{Alice\\
-      $l^A_{case} = (e^A_1,...,e^A_n)$\\
-      $l^A_{control} = (e'^A_1,...,e'^A_n)$
+    \myblock{10}{0}{1}{\textbf{Alice}\\
+      Case: {\color{blue} AA AC AA}\\
+      Control: {\color{blue} AA CA CA}
+    %   List of case and control alleles
+    %  $l^A_{case} = (e^A_1,...,e^A_n)$\\
+    %  $l^A_{control} = (e'^A_1,...,e'^A_n)$
     }
-    \myblock{10}{10}{1}{Bob\\
-      $l^B_{case} = (e^B_1,...,e^B_n)$\\
-      $l^B_{control} = (e'^B_1,...,e'^B_n)$
+    \myblock{10}{10}{1}{\textbf{Bob}\\
+      Case: {\color{blue} AA AC CC}\\
+      Control: {\color{blue} CA AC CC}
+    %  $l^B_{case} = (e^B_1,...,e^B_n)$\\
+    %  $l^B_{control} = (e'^B_1,...,e'^B_n)$
+    }
+    \leftblock{21}{0}{11}{
+      \footnotesize{\color{green}Cleartext}\\
+      \footnotesize{\color{red}Secure}
     }
     \pause
     \leftblock{20}{0}{5}{
-      $a, b$: frequencies of two alleles in $l_{case} = l^A_{case} || l^B_{case}$\\
-      $c, d$: frequencies of two alleles in $l_{control} = l^A_{control} || l^B_{control}$
+      $a, b$: allele counts for case group \\%in $l_{case} = l^A_{case} || l^B_{case}$\\
+      $c, d$: allele counts for control group \\%in $l_{control} = l^A_{control} || l^B_{control}$
+      (similar to Task 1A)
     }
     \pause
     \myblock{20}{0}{8}{
-      $\chi^2 = n\times\frac{(ad-bc)^2}{rsgk}$\\
+      {\color{red} $\chi^2 = n\times\frac{(ad-bc)^2}{rsgk}$}\\
       where $r = a + b, s = c + d, g = a + c,$\\$k = b + d, n =  r + s$
     }
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Solution: Compute $\chi^2$ statistic}
-    \leftblock{20}{0}{1}{
-      $a, b$: frequencies of two alleles in $l_{case} = l^A_{case} || l^B_{case}$\\
-      $c, d$: frequencies of two alleles in $l_{control} = l^A_{control} || l^B_{control}$
-    }
-    \pause
-  \vspace{12mm}
-  \begin{itemize}
-    \item Compute partial values: {\color{green}\\$a^A,b^A,c^A,d^A$ for Alice \\$a^B,b^B,c^B,d^B$ for Bob}
-      \pause
-    \item In Secure Computation, {\color{red} compute $a = a^A + a^B$ \ldots}
-  \end{itemize}
-  \myblock{20}{0}{1}{
-    {\color{red} $\chi^2 = n\times\frac{(ad-bc)^2}{rsgk}$}
-  }
-\end{frame}
+%\begin{frame}{Solution: Compute $\chi^2$ statistic}
+%    \leftblock{20}{0}{1}{
+%      $a, b$: frequencies of two alleles in $l_{case} = l^A_{case} || l^B_{case}$\\
+%      $c, d$: frequencies of two alleles in $l_{control} = l^A_{control} || l^B_{control}$
+%    }
+%    \pause
+%  \vspace{12mm}
+%  \begin{itemize}
+%    \item Compute partial values: {\color{green}\\$a^A,b^A,c^A,d^A$ for Alice \\$a^B,b^B,c^B,d^B$ for Bob}
+%      \pause
+%    \item In Secure Computation, {\color{red} compute $a = a^A + a^B$ \ldots}
+%  \end{itemize}
+%  \myblock{20}{0}{1}{
+%    {\color{red} $\chi^2 = n\times\frac{(ad-bc)^2}{rsgk}$}
+%  }
+%\end{frame}
 
 \begin{frame}{Results: Compute $\chi^2$ statistic}
   \begin{itemize}
@@ -223,11 +263,11 @@ Secure Computation
 \label{sec:setunion}
 
 \begin{frame}{Building Block: Secure Set Union}
-  \myblock{10}{0}{0}{Alice\\
+  \myblock{10}{0}{0}{\textbf{Alice}\\
       $S^A$\\
       \color{blue}{\{a, b, c\}}
     }
-    \myblock{10}{10}{0}{Bob\\
+    \myblock{10}{10}{0}{\textbf{Bob}\\
       $S^B$\\
       \color{blue}{\{b, d, e\}}
     }
@@ -235,12 +275,17 @@ Secure Computation
     \myblock{20}{0}{3.5}{Cardinality of the union of the sets i.e. $|S^A \cup S^B|$\\
 \color{blue}{$|S^A \cup S^B| = 5$}}
     \pause
+    \rightblock{21}{0}{-1}{
+      \footnotesize{\color{green}Cleartext}\\
+      \footnotesize{\color{red}Secure}
+    }
     \leftblock{20}{0}{8}{Strawman solution:}
-    \rightblock{20}{0}{12}{\ldots$O(N \log^2 N)$}
+    \rightblock{20}{0}{12}{$O(N \log^2 N)$}
     \vspace{40mm}
     \begin{algorithm}[H]
       \begin{algorithmic}[1]
         \STATE {\color{red} Sort the combined array $S^A || S^B$ obliviously}
+        \pause
         \STATE {\color{red} Compute cardinality in a single pass}
       \end{algorithmic}
       \caption{union($S^A, S^B$)}
@@ -248,20 +293,33 @@ Secure Computation
 \end{frame}
 
 \begin{frame}{Set Union: Oblivious Merge}
+  \leftblock{21}{0}{13}{
+      \footnotesize{\color{green}Cleartext}\\
+      \footnotesize{\color{red}Secure}
+    }
   \begin{algorithm}[H]
       \begin{algorithmic}[1]
         \STATE {\color{green} Local sort of $S^A$ and $S^B$}
-        \STATE {\color{red} Oblivious merge of sorted lists $(O(n \log n))$}
+        \pause
+        \STATE {\color{red} Oblivious merge of sorted lists}
+        \pause
         \STATE {\color{red} Compute cardinality in a single pass}
       \end{algorithmic}
       \caption{union($S^A, S^B$)}
     \end{algorithm}
+    \rightblock{20}{0}{-1}{$O(N \log N)$}
 \end{frame}
 
+\begin{frame}{Code: Oblivious Merge}
+  \begin{figure}[H]
+\includegraphics[width=\textwidth]{oblivous_merge}
+%\caption{Code for Task 1b written in {\tt ObliVM-lang}}
+\end{figure}
+\end{frame}
 \begin{frame}[fragile]{Set Union: Bloom Filter}
   \begin{itemize}
-    \item Used to check for existence of elements
-    \item Approximate the size of the set $S$
+    \item Common case: Check for existence of elements
+    \item Our case: Approximate the cardinality of a set $S$
   \end{itemize}
   \only<1>{
       \begin{figure}[H]
@@ -270,22 +328,29 @@ Secure Computation
       }
       \only<2>{
       \myblock{20}{0}{2}{
-        \LARGE{$|S| = \frac{\ln(1-\frac{X}{m})}{k\ln(1-1/m)}$}
+        \LARGE{$|S|_{MLE} = \frac{\ln(1-\frac{X}{m})}{k\ln(1-1/m)}$}
       }
       \pause
       \leftblock{20}{0}{6}{
-        where\\ $X$: number of bits set,\\ $m$: number of bits in the bloom filter \\
-        $k$: number of hash functions
+        where\\ $X$: number of bits set,\\ $m$: number of bits in the bloom filter, \\
+        $k$: number of hash functions,\\ $|S|_{MLE}$: maximum likelihood estimate of $|S|$
       }
       }
 \end{frame}
 
 \begin{frame}{Set Union: Bloom Filter}
+  \leftblock{21}{0}{13}{
+      \footnotesize{\color{green}Cleartext}\\
+      \footnotesize{\color{red}Secure}
+    }
   \begin{algorithm}[H]
       \begin{algorithmic}[1]
         \STATE {\color{green} Compute bloom filters locally}
+        \pause
         \STATE {\color{red} In secure computation, compute bitwise OR and count number of 1's}
-        \STATE {\color{green} Compute $|S|$ in cleartext}
+        \pause
+        \STATE {\color{green} Compute estimated $|S|$ in cleartext}
+        %http://www.l3s.de/~papapetrou/publications/Bloomfilters-DAPD.pdf
       \end{algorithmic}
       \caption{union($S^A, S^B$)}
     \end{algorithm}
@@ -298,9 +363,15 @@ Secure Computation
   %  \item {\color{green} Compute $|S|$ in cleartext}
   %\end{itemize}
   \pause
-      \rightblock{20}{0}{0}{\ldots$O(m)$ operations, $m$: number of bits in the bloom filter}
+      \rightblock{20}{0}{0}{$O(m)$ operations, $m$: number of bits used for bloom filter\\
+      $m = O(N)$, number of elements inserted in the bloom filter}
 \end{frame}
 
+\begin{frame}{Code: CountOnes}
+  \begin{figure}[H]
+        \includegraphics[width=\textwidth]{count_ones}
+      \end{figure}
+\end{frame}
 %\begin{frame}
 %  relative errors?
 %\end{frame}
@@ -337,7 +408,7 @@ end for\\
     }
     \myblock{20}{0}{4}{We need all positions that have been modified, but not modified to the same value}
     \leftblock{20}{0}{7}{
-      {\color{blue}Hamming Distance = $|S^A \cup S^B| - |S^A \cap S^B|$ = $|\{(75, 1),(18, 1)\}|$}
+      {\color{blue}Hamming Distance = $|S^A \cup S^B| - |S^A \cap S^B|$ = $|\{(75, G, SNP),(18, A, SNP)\}|$}
     }
     %\leftblock{20}{0}{10}{
     %  Compute $d1 - d2$
@@ -383,7 +454,7 @@ Insertion/Deletion:\\
     \pause
     \leftblock{22}{0}{5}{
       \small{\color{blue}{$S_1^A = \{(1, 1),(10, 1),(10, 2),(10, 3),(75, 1)\}$ }}\\
-      \small{\color{blue}{$S_2^A = \{(1, T, SNP, 1),(10, T, INS, 1),$\\ \qquad \qquad $(10, C, INS, 2),(10, G, 3, INS),(75, G, SNP, 1)\}$ }}\\
+      \small{\color{blue}{$S_2^A = \{(1, T, 1),(10, T, 1),(10, C, 2),(10, G, 3),(75, G, 1)\}$ }}\\
     }
     \pause
     \leftblock{22}{0}{9}{
@@ -391,7 +462,7 @@ Insertion/Deletion:\\
     }
     \pause
     \leftblock{20}{0}{11}{
-      {\color{blue}$d2 = |S_2^A \cap S_2^B| = |\{(1, T, SNP, 1)\}|$}
+      {\color{blue}$d2 = |S_2^A \cap S_2^B| = |\{(1, T, 1)\}|$}
     }
     \leftblock{20}{0}{13}{
       Compute $d1 - d2$
@@ -399,10 +470,13 @@ Insertion/Deletion:\\
 \end{frame}
 
 \begin{frame}
-  \myblock{20}{0}{4}{\LARGE{Thank You!}}
+  \begin{figure}[H]
+        \includegraphics[width=1\textwidth]{speedup}
+  \end{figure}
+  \leftblock{20}{0}{0}{\LARGE{Thank You!}}
 
-  \myblock{20}{0}{6}{\color{blue}{\LARGE{http://oblivm.com/}}}
+  \rightblock{20}{0}{0}{\color{blue}{\LARGE{http://oblivm.com/}}}
 
-  \rightblock{20}{0}{12}{kartik@cs.umd.edu}
+  \rightblock{20}{0}{2}{kartik@cs.umd.edu}
 \end{frame}
 \end{document}
