@@ -1,5 +1,3 @@
-please contact wangxiao@cs.umd.edu for any difficulties when running the program.
-
 Summary
 ================
 Step 1: open Config.conf and replace localhost to the other party's IP or Domain name
@@ -114,3 +112,5 @@ Compile the circuits:
 All the circuits are precompiled and ready to run. If you would like to recompile
 the circuits, please run:
 java -cp ~/SCVM2/bin/ backend.flexsc.CommandTool [pathToSourceCode] compiledlib
+
+Please contact wangxiao@cs.umd.edu for any difficulties when running the program.
